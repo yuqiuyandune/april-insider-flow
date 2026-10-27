@@ -17,7 +17,7 @@ Source, data and daily pipeline for https://april-insider-flow.com — SEC Form 
 ## Automation (`.github/workflows/`)
 
 - **daily.yml** — weekdays 03:45 UTC (evening Pacific): fetch every missing weekday of the last 10 days → SEC verification → consistency check → anomaly scan → build → deploy to Cloudflare Pages project `april-insider-flow` → commit the new data. Withheld days, urgent anomalies or a failed run open a GitHub issue (GitHub emails you). Run it by hand from the Actions tab; inputs let you refetch specific dates or force a redeploy.
-- **weekly-email.yml** — Saturdays 15:35 UTC: builds the weekly digest (Chinese first, then English) and saves it as a Buttondown **draft**.
+- **weekly-email.yml** — Saturdays 15:35 UTC (08:35 Pacific): builds the weekly digest (Chinese first, then English) and **sends it to subscribers** through Buttondown, but only if the data consistency check passes, the latest weekday is present and the week has no urgent anomalies. Otherwise it saves a draft and opens an issue. Manual runs only save a draft unless "send" is ticked.
 
 Secrets: `CLOUDFLARE_API_TOKEN` (Account → Cloudflare Pages → Edit), `CLOUDFLARE_ACCOUNT_ID`, `BUTTONDOWN_API_KEY`.
 

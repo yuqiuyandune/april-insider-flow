@@ -1,17 +1,29 @@
-name: Weekly email draft
+name: Weekly email
 
-# Saturdays 15:35 UTC = 08:35 PDT / 07:35 PST. Creates a Buttondown DRAFT only; April reviews and sends it.
+# Saturdays 15:35 UTC = 08:35 PDT / 07:35 PST.
+# Scheduled runs SEND the digest to subscribers if every safety check passes;
+# otherwise they only save a Buttondown DRAFT and open an issue.
+# Manual runs save a draft unless "send" is ticked.
 on:
   schedule:
     - cron: "35 15 * * 6"
   workflow_dispatch:
+    inputs:
+      send:
+        description: "Send to subscribers (leave unticked to only save a draft)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
   issues: write
 
+concurrency:
+  group: weekly-email
+  cancel-in-progress: false
+
 jobs:
-  draft:
+  email:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -19,19 +31,67 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Safety check 1, all stored data is consistent and the latest weekday is present
+        id: check
+        continue-on-error: true
+        run: python3 -I scripts/check_data.py --expect-latest
+
       - name: Build digest (Chinese first, English after)
         run: python3 -I scripts/weekly.py data/days --lang both --out week.json | head -3
-      - name: Create Buttondown draft
+
+      - name: Safety check 2, no urgent anomalies in this week's data
+        id: anomaly
+        continue-on-error: true
+        run: |
+          python3 - <<'EOF' > week_files.txt
+          import json, glob, os
+          w = json.load(open("week.json"))
+          for f in sorted(glob.glob("data/days/*.json")):
+              d = os.path.basename(f)[:-5]
+              if w["week_from"] <= d <= w["week_to"]:
+                  print(f)
+          EOF
+          python3 -I scripts/anomaly.py data/days $(cat week_files.txt) | tee anomaly.txt
+          ! grep -q '^ *!!' anomaly.txt
+
+      - name: Decide send or draft
+        run: |
+          mode=draft
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.send }}" = "true" ]; then
+            if [ "${{ steps.check.outcome }}" = "success" ] && [ "${{ steps.anomaly.outcome }}" = "success" ]; then mode=about_to_send; fi
+          fi
+          echo "MODE=$mode" >> "$GITHUB_ENV"
+
+      - name: Create the email in Buttondown
         env:
           BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
         run: |
           if [ -z "$BUTTONDOWN_API_KEY" ]; then echo "BUTTONDOWN_API_KEY secret not set"; exit 1; fi
-          python3 -I scripts/bd_post.py week.json --status draft | tee out.txt
-          grep -q "created draft" out.txt
-          { echo "Draft created in Buttondown. Review and send it there."; echo; python3 -c "import json;w=json.load(open('week.json'));print(w['subject']);print(w['week_from'],'to',w['week_to'])"; } >> "$GITHUB_STEP_SUMMARY"
-      - name: Open an issue on failure
-        if: failure()
+          python3 -I scripts/bd_post.py week.json --status "$MODE" | tee out.txt
+          grep -q "^created" out.txt
+          {
+            if [ "$MODE" = "about_to_send" ]; then echo "### Sent to subscribers"; else echo "### Saved as a DRAFT (not sent)"; fi
+            python3 -c "import json;w=json.load(open('week.json'));print();print(w['subject']);print(w['week_from'],'to',w['week_to'])"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open an issue if the email was not sent automatically, or on failure
+        if: always() && (env.MODE == 'draft' || failure())
         env:
           GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          gh issue create --title "Weekly email draft failed ($(date +%F))" --body "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          {
+            echo "Run: $RUN_URL"; echo
+            if [ "${{ job.status }}" = "failure" ]; then
+              echo "The weekly email run failed. Open the run link for the failing step."
+            elif [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.send }}" = "true" ]; then
+              echo "Not sent automatically: a safety check failed. The digest was saved as a DRAFT in Buttondown; review it and send it by hand."
+              echo; echo "- data consistency check: ${{ steps.check.outcome }}"; echo "- anomaly check: ${{ steps.anomaly.outcome }}"
+              [ -f anomaly.txt ] && { echo; echo '```'; grep -E '^[0-9]{4}-|^ *!!' anomaly.txt; echo '```'; }
+            fi
+            true
+          } > issue.md
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.send }}" = "true" ] || [ "${{ job.status }}" = "failure" ]; then
+            gh issue create --title "Weekly email needs attention ($(date +%F))" --body-file issue.md
+          fi
