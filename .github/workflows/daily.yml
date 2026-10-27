@@ -1,0 +1,109 @@
+name: Daily update
+
+# Weekdays after the EDGAR daily index is out: 03:45 UTC = 20:45 PDT / 19:45 PST.
+on:
+  schedule:
+    - cron: "45 3 * * 2-6"
+  workflow_dispatch:
+    inputs:
+      dates:
+        description: "Only these dates, space separated (blank = every missing weekday in the last 10 days)"
+        required: false
+        default: ""
+      force:
+        description: "Refetch the given dates even if already stored"
+        type: boolean
+        default: false
+      deploy:
+        description: "Rebuild and deploy even if no new day was added"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+env:
+  SEC_UA: "April Insider Tracker yuqiuyandune@gmail.com"
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch new days and verify against SEC
+        env:
+          IN_DATES: ${{ inputs.dates }}
+          IN_FORCE: ${{ inputs.force }}
+        run: |
+          args=(--ua "$SEC_UA")
+          if [ -n "$IN_DATES" ]; then
+            for d in $IN_DATES; do [[ "$d" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "bad date: $d"; exit 1; }; done
+            args+=(--dates $IN_DATES)
+          fi
+          if [ "$IN_FORCE" = "true" ]; then args+=(--force); fi
+          python3 scripts/daily_update.py "${args[@]}"
+          echo "ADDED=$(tr '\n' ' ' < work/added.txt | xargs)" >> "$GITHUB_ENV"
+
+      - name: Consistency check (all stored days)
+        run: python3 -I scripts/check_data.py | tee -a work/check.txt
+
+      - name: Anomaly scan of newly added days
+        if: env.ADDED != ''
+        run: |
+          files=""; for d in $ADDED; do files="$files data/days/$d.json"; done
+          python3 -I scripts/anomaly.py data/days $files | tee work/anomaly.txt
+          {
+            echo "### Anomaly scan"; echo; echo '```'; cat work/anomaly.txt; echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if grep -q '^ *!!' work/anomaly.txt; then
+            { echo "Published, but these filings look like data errors and should be checked by hand:"; echo; echo '```'; grep -E '^[0-9]{4}-|^ *!!' work/anomaly.txt; echo '```'; } >> work/urgent.md
+          fi
+
+      - name: Build site
+        if: env.ADDED != '' || inputs.deploy
+        run: python3 -I scripts/build_site.py data/days site/index.html public
+
+      - name: Deploy to Cloudflare Pages
+        if: env.ADDED != '' || inputs.deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4.151.3 pages deploy public --project-name april-insider-flow --branch main --commit-dirty=true | tee work/deploy.txt
+          grep -q "Deployment complete" work/deploy.txt
+
+      - name: Commit new data
+        if: env.ADDED != ''
+        run: |
+          git config user.name "insider-flow-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/days
+          git commit -m "Add Form 4 data: $ADDED"
+          git push
+
+      - name: Open an issue for withheld days or urgent anomalies
+        if: always() && (hashFiles('work/problems.md') != '' || hashFiles('work/urgent.md') != '' || failure())
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "Run: $RUN_URL"; echo
+            [ -f work/problems.md ] && { echo "## Withheld or missing days"; echo; cat work/problems.md; echo; echo "Withheld days are retried automatically on the next run."; echo; }
+            [ -f work/urgent.md ] && { echo "## Urgent anomalies"; echo; cat work/urgent.md; echo; }
+            [ "${{ job.status }}" = "failure" ] && echo "## The run failed. Open the run link for the failing step (nothing was deployed after the failing step)."
+            true
+          } > issue.md
+          gh issue create --title "Insider Flow daily update needs attention ($(TZ=America/Los_Angeles date +%F))" --body-file issue.md
