@@ -1,0 +1,70 @@
+﻿ticker,英文名,中文名,层序号,层,环节序号,环节,类型,入选理由,涉及层,有Form4
+GEV,GE Vernova,GE Vernova,1,能源,1,发电与电网,核心,燃气轮机积压订单116GW，数据中心订单今年翻倍以上，兼做电网设备,,是
+CEG,Constellation Energy,星座能源,1,能源,1,发电与电网,核心,美国最大核电运营商（约22GW），与微软、Meta、谷歌签长期购电协议,,是
+VST,Vistra,Vistra,1,能源,1,发电与电网,核心,核电约6.6GW，与AWS、Meta签20年购电协议,,是
+TLN,Talen Energy,Talen,1,能源,1,发电与电网,核心,Susquehanna核电站，与AWS签约至2042年,,是
+PWR,Quanta Services,广达服务,1,能源,1,发电与电网,核心,美国最大电网工程承包商，电网扩建直接受益,,是
+OKLO,Oklo,Oklo,1,能源,1,发电与电网,热门,小型核反应堆，尚无商业收入，散户讨论度高,,是
+SMR,NuScale Power,NuScale,1,能源,1,发电与电网,热门,小型模块化核反应堆,,是
+NNE,Nano Nuclear Energy,Nano Nuclear,1,能源,1,发电与电网,热门,微型反应堆，早期、高风险,,是
+BE,Bloom Energy,Bloom Energy,1,能源,1,发电与电网,热门,燃料电池，数据中心现场供电,,是
+ASML,ASML Holding,阿斯麦,2,芯片,2,半导体设备,核心,EUV光刻机全球独家,,否
+AMAT,Applied Materials,应用材料,2,芯片,2,半导体设备,核心,全球最大半导体设备商之一，沉积与刻蚀,,是
+LRCX,Lam Research,泛林集团,2,芯片,2,半导体设备,核心,刻蚀龙头，HBM与先进制程受益,,是
+KLAC,KLA Corp,科磊,2,芯片,2,半导体设备,核心,检测量测龙头,,是
+AXTI,AXT Inc,AXT,2,芯片,3,半导体材料,热门,光通信激光器用磷化铟衬底，光子ETF重仓,,是
+TSM,Taiwan Semiconductor,台积电,2,芯片,4,晶圆代工与封装,核心,先进制程与CoWoS封装，几乎所有AI芯片都在这里生产,基础设施,是
+INTC,Intel,英特尔,2,芯片,4,晶圆代工与封装,核心,美国本土先进制程代工与服务器CPU,,是
+AMKR,Amkor Technology,安靠,2,芯片,4,晶圆代工与封装,核心,美国本土最大封测厂，参与先进封装,,是
+ASX,ASE Technology Holding,日月光投控,2,芯片,4,晶圆代工与封装,核心,全球最大封测厂，承接CoWoS后段与先进封装外溢产能,,是
+NVDA,NVIDIA,英伟达,2,芯片,5,计算芯片,核心,AI芯片约70%份额，网络交换机份额也第一；散户持有最多之一,基础设施,是
+AVGO,Broadcom,博通,2,芯片,5,计算芯片,核心,定制AI芯片（谷歌TPU、Meta、OpenAI）与以太网交换芯片,基础设施,是
+MRVL,Marvell Technology,迈威尔科技,2,芯片,5,计算芯片,核心,亚马逊、微软定制芯片设计伙伴；与博通合计约95%定制芯片设计市场,,是
+AMD,Advanced Micro Devices,超威半导体,2,芯片,5,计算芯片,核心,第二大GPU供应商，服务器CPU,,是
+ARM,Arm Holdings,安谋,2,芯片,5,计算芯片,核心,CPU架构授权，非x86服务器已占服务器市场近一半收入,,是
+CBRS,Cerebras Systems,Cerebras,2,芯片,5,计算芯片,热门,2026年5月上市，晶圆级AI芯片，英伟达挑战者,,是
+MU,Micron Technology,美光,2,芯片,6,存储,核心,三大HBM厂中唯一在美上市的,,是
+SNDK,Sandisk,闪迪,2,芯片,6,存储,核心,NAND与企业级SSD,,是
+WDC,Western Digital,西部数据,2,芯片,6,存储,核心,数据中心机械硬盘双寡头之一,,是
+STX,Seagate Technology,希捷,2,芯片,6,存储,核心,数据中心机械硬盘双寡头之一,,是
+ALAB,Astera Labs,Astera Labs,2,芯片,7,互联与供电芯片,核心,PCIe/CXL重定时器与互联芯片,,是
+CRDO,Credo Technology,Credo,2,芯片,7,互联与供电芯片,核心,有源电缆（AEC）与SerDes,,是
+MPWR,Monolithic Power Systems,芯源系统,2,芯片,7,互联与供电芯片,核心,AI服务器板级供电芯片,,是
+ANET,Arista Networks,Arista网络,3,基础设施,8,网络与光通信,核心,数据中心以太网交换机份额18.7%,,是
+CSCO,Cisco Systems,思科,3,基础设施,8,网络与光通信,核心,数据中心以太网交换机份额18.2%,,是
+COHR,Coherent,相干,3,基础设施,8,网络与光通信,核心,光模块与激光器，英伟达入股,,是
+LITE,Lumentum,Lumentum,3,基础设施,8,网络与光通信,核心,光器件与激光器，英伟达入股，供应CPO激光,,是
+FN,Fabrinet,Fabrinet,3,基础设施,8,网络与光通信,核心,光模块精密代工,,是
+CIEN,Ciena,Ciena,3,基础设施,8,网络与光通信,核心,数据中心互联光传输,,是
+GLW,Corning,康宁,3,基础设施,8,网络与光通信,核心,光纤光缆龙头,,是
+AAOI,Applied Optoelectronics,应用光电,3,基础设施,8,网络与光通信,热门,小盘光模块，波动大,,是
+DELL,Dell Technologies,戴尔,3,基础设施,9,服务器整机,核心,AI服务器出货增长最快的品牌商,,是
+SMCI,Super Micro Computer,超微电脑,3,基础设施,9,服务器整机,核心,AI服务器与机柜，散户关注高,,是
+HPE,Hewlett Packard Enterprise,慧与,3,基础设施,9,服务器整机,核心,AI服务器与网络（Juniper）,,是
+CLS,Celestica,天弘,3,基础设施,9,服务器整机,核心,交换机与服务器代工,,是
+VRT,Vertiv,维谛,3,基础设施,10,数据中心电源与散热,核心,精密制冷约23%份额，电源与液冷纯标的,,是
+ETN,Eaton,伊顿,3,基础设施,10,数据中心电源与散热,核心,数据中心配电设备龙头之一,,是
+MOD,Modine,Modine,3,基础设施,10,数据中心电源与散热,热门,小盘液冷与散热,,是
+EQIX,Equinix,易昆尼克斯,3,基础设施,11,数据中心与算力租赁,核心,全球最大数据中心REIT,,是
+DLR,Digital Realty,Digital Realty,3,基础设施,11,数据中心与算力租赁,核心,大型批发型数据中心REIT,,是
+CRWV,CoreWeave,CoreWeave,3,基础设施,11,数据中心与算力租赁,核心,最大的独立GPU云（neocloud）,,是
+IREN,IREN,IREN,3,基础设施,11,数据中心与算力租赁,核心,GPU云，2026年化收入目标超40亿美元，戴尔AI服务器大客户,,是
+NBIS,Nebius Group,Nebius,3,基础设施,11,数据中心与算力租赁,核心,欧洲GPU云,,是
+APLD,Applied Digital,Applied Digital,3,基础设施,11,数据中心与算力租赁,热门,小盘AI数据中心开发商,,是
+MSFT,Microsoft,微软,3,基础设施,12,云厂商,核心,Azure，全球最大AI资本开支方之一,模型;应用,是
+AMZN,Amazon,亚马逊,3,基础设施,12,云厂商,核心,AWS，Trainium自研芯片,芯片;模型;应用,是
+ORCL,Oracle,甲骨文,3,基础设施,12,云厂商,核心,OCI云，大额AI算力合同,应用,是
+GOOGL,Alphabet,谷歌,4,模型,13,大模型,核心,Gemini，自研TPU与谷歌云,芯片;基础设施;应用,是
+META,Meta Platforms,Meta,4,模型,13,大模型,核心,Llama，2026年资本开支指引1250–1450亿美元,基础设施;应用,是
+SPCX,SpaceX,SpaceX,4,模型,13,大模型,核心,2026年2月并入xAI（Grok），6月上市,基础设施,是
+ANT,Anthropic,Anthropic,4,模型,13,大模型,核心,10月26日提交S-1，计划以ANT上市（待上市）,,是
+PLTR,Palantir,Palantir,5,应用,14,企业AI软件,核心,企业AI平台，收入加速增长；散户热门,,是
+NOW,ServiceNow,ServiceNow,5,应用,14,企业AI软件,核心,企业工作流与AI代理,,是
+CRM,Salesforce,Salesforce,5,应用,14,企业AI软件,核心,最大SaaS之一，被视为受AI冲击，估值大幅下修,,是
+ADBE,Adobe,Adobe,5,应用,14,企业AI软件,核心,创意软件龙头，被视为受AI冲击,,是
+CRWD,CrowdStrike,CrowdStrike,5,应用,14,企业AI软件,核心,网络安全龙头,,是
+SNOW,Snowflake,Snowflake,5,应用,14,企业AI软件,热门,数据云,,是
+DDOG,Datadog,Datadog,5,应用,14,企业AI软件,热门,可观测性，AI工作负载受益,,是
+MDB,MongoDB,MongoDB,5,应用,14,企业AI软件,热门,数据库,,是
+AAPL,Apple,苹果,5,应用,15,端侧与实体AI,核心,最大消费设备平台，端侧AI；散户持有最多之一,,是
+TSLA,Tesla,特斯拉,5,应用,15,端侧与实体AI,核心,自动驾驶、Robotaxi、Optimus机器人；散户持有第一,芯片,是

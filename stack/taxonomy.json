@@ -1,0 +1,37 @@
+{
+  "layers": [
+    {"id": 1, "zh": "能源", "hue": 75,
+     "name": {"zh": "能源", "tw": "能源", "en": "Energy"},
+     "sub":  {"zh": "AI 的电力来源", "tw": "AI 的電力來源", "en": "Where the power comes from"}},
+    {"id": 2, "zh": "芯片", "hue": 205,
+     "name": {"zh": "芯片", "tw": "晶片", "en": "Chips"},
+     "sub":  {"zh": "算力的硅片、存储，以及制造它们的设备", "tw": "算力的矽片、儲存，以及製造它們的設備", "en": "Silicon, memory and the machines that make them"}},
+    {"id": 3, "zh": "基础设施", "hue": 250,
+     "name": {"zh": "基础设施", "tw": "基礎設施", "en": "Infrastructure"},
+     "sub":  {"zh": "把芯片变成可租用的算力", "tw": "把晶片變成可租用的算力", "en": "Turning chips into rentable compute"}},
+    {"id": 4, "zh": "模型", "hue": 285,
+     "name": {"zh": "模型", "tw": "模型", "en": "Models"},
+     "sub":  {"zh": "训练和运行前沿大模型的公司", "tw": "訓練和運行前沿大模型的公司", "en": "Labs that train and run frontier models"}},
+    {"id": 5, "zh": "应用", "hue": 325,
+     "name": {"zh": "应用", "tw": "應用", "en": "Applications"},
+     "sub":  {"zh": "把 AI 交到用户手上的软件和设备", "tw": "把 AI 交到使用者手上的軟體和裝置", "en": "Software and devices that put AI in users' hands"}}
+  ],
+  "segments": [
+    {"id": 1,  "layer": 1, "zh": "发电与电网",       "name": {"zh": "发电与电网", "tw": "發電與電網", "en": "Power generation and grid"}},
+    {"id": 2,  "layer": 2, "zh": "半导体设备",       "name": {"zh": "半导体设备", "tw": "半導體設備", "en": "Chip equipment"}},
+    {"id": 3,  "layer": 2, "zh": "半导体材料",       "name": {"zh": "半导体材料", "tw": "半導體材料", "en": "Chip materials"}},
+    {"id": 4,  "layer": 2, "zh": "晶圆代工与封装",   "name": {"zh": "晶圆代工与封装", "tw": "晶圓代工與封裝", "en": "Foundry and packaging"}},
+    {"id": 5,  "layer": 2, "zh": "计算芯片",         "name": {"zh": "计算芯片", "tw": "運算晶片", "en": "Compute chips"}},
+    {"id": 6,  "layer": 2, "zh": "存储",             "name": {"zh": "存储", "tw": "儲存", "en": "Memory and storage"}},
+    {"id": 7,  "layer": 2, "zh": "互联与供电芯片",   "name": {"zh": "互联与供电芯片", "tw": "互連與供電晶片", "en": "Interconnect and power chips"}},
+    {"id": 8,  "layer": 3, "zh": "网络与光通信",     "name": {"zh": "网络与光通信", "tw": "網路與光通訊", "en": "Networking and optics"}},
+    {"id": 9,  "layer": 3, "zh": "服务器整机",       "name": {"zh": "服务器整机", "tw": "伺服器整機", "en": "Servers"}},
+    {"id": 10, "layer": 3, "zh": "数据中心电源与散热", "name": {"zh": "数据中心电源与散热", "tw": "資料中心電源與散熱", "en": "Data-center power and cooling"}},
+    {"id": 11, "layer": 3, "zh": "数据中心与算力租赁", "name": {"zh": "数据中心与算力租赁", "tw": "資料中心與算力租賃", "en": "Data centers and GPU clouds"}},
+    {"id": 12, "layer": 3, "zh": "云厂商",           "name": {"zh": "云厂商", "tw": "雲端廠商", "en": "Cloud providers"}},
+    {"id": 13, "layer": 4, "zh": "大模型",           "name": {"zh": "大模型", "tw": "大模型", "en": "Frontier models"}},
+    {"id": 14, "layer": 5, "zh": "企业AI软件",       "name": {"zh": "企业 AI 软件", "tw": "企業 AI 軟體", "en": "Enterprise AI software"}},
+    {"id": 15, "layer": 5, "zh": "端侧与实体AI",     "name": {"zh": "端侧与实体 AI", "tw": "端側與實體 AI", "en": "Devices and physical AI"}}
+  ],
+  "unlisted": ["ANT"]
+}

@@ -1,0 +1,70 @@
+﻿ticker,name_tw,reason_en,reason_tw
+GEV,GE Vernova,Gas-turbine backlog of 116 GW; data-center orders more than doubled this year; also sells grid equipment,燃氣輪機積壓訂單116GW，資料中心訂單今年翻倍以上，兼做電網設備
+CEG,星座能源,"Largest US nuclear operator (about 22 GW); long-term power deals with Microsoft, Meta and Google",美國最大核電營運商（約22GW），與微軟、Meta、谷歌簽長期購電協議
+VST,Vistra,About 6.6 GW of nuclear; 20-year power deals with AWS and Meta,核電約6.6GW，與AWS、Meta簽20年購電協議
+TLN,Talen,Susquehanna nuclear plant; AWS contract through 2042,Susquehanna核電站，與AWS簽約至2042年
+PWR,廣達服務,Largest US grid contractor; direct beneficiary of the grid build-out,美國最大電網工程承包商，電網擴建直接受益
+OKLO,Oklo,Small modular reactors; no commercial revenue yet; heavily discussed by retail investors,小型核反應爐，尚無商業收入，散戶討論度高
+SMR,NuScale,Small modular reactor developer,小型模組化核反應爐
+NNE,Nano Nuclear,Microreactors; early-stage and high-risk,微型反應爐，早期、高風險
+BE,Bloom Energy,Fuel cells for on-site data-center power,燃料電池，資料中心現場供電
+ASML,艾司摩爾,Sole supplier of EUV lithography machines,EUV光刻機全球獨家
+AMAT,應用材料,One of the largest chip-equipment makers; deposition and etch,全球最大半導體設備商之一，沉積與蝕刻
+LRCX,科林研發,Etch leader; benefits from HBM and advanced nodes,蝕刻龍頭，HBM與先進製程受益
+KLAC,科磊,Inspection and metrology leader,檢測量測龍頭
+AXTI,AXT,Indium phosphide substrates for optical lasers; a top holding of photonics ETFs,光通訊雷射器用磷化銦基板，光子ETF重倉
+TSM,台積電,Advanced nodes and CoWoS packaging; nearly every AI chip is made here,先進製程與CoWoS封裝，幾乎所有AI晶片都在這裡生產
+INTC,英特爾,US-based advanced foundry and server CPUs,美國本土先進製程代工與伺服器CPU
+AMKR,艾克爾,Largest US-based chip packaging and test company; involved in advanced packaging,美國本土最大封測廠，參與先進封裝
+ASX,日月光投控,World's largest chip packaging and test company; takes advanced-packaging overflow from the CoWoS back end,全球最大封測廠，承接CoWoS後段與先進封裝外溢產能
+NVDA,輝達,About 70% of AI chips and No. 1 in data-center Ethernet switching; among retail investors' most-held stocks,AI晶片約70%份額，網路交換器份額也第一；散戶持有最多之一
+AVGO,博通,"Custom AI chips (Google TPU, Meta, OpenAI) and Ethernet switch chips",客製AI晶片（谷歌TPU、Meta、OpenAI）與乙太網交換晶片
+MRVL,邁威爾科技,"Custom-chip design partner for Amazon and Microsoft; with Broadcom, about 95% of custom-chip design",亞馬遜、微軟客製晶片設計夥伴；與博通合計約95%客製晶片設計市場
+AMD,超微,Second-largest GPU supplier; server CPUs,第二大GPU供應商，伺服器CPU
+ARM,安謀,CPU architecture licensor; non-x86 servers are now close to half of server revenue,CPU架構授權，非x86伺服器已佔伺服器市場近一半收入
+CBRS,Cerebras,Listed in May 2026; wafer-scale AI chips; an Nvidia challenger,2026年5月上市，晶圓級AI晶片，輝達挑戰者
+MU,美光,The only one of the three HBM makers listed in the US,三大HBM廠中唯一在美上市的
+SNDK,晟碟,NAND flash and enterprise SSDs,NAND與企業級SSD
+WDC,威騰,One of two data-center hard-drive makers,資料中心機械硬碟雙寡頭之一
+STX,希捷,One of two data-center hard-drive makers,資料中心機械硬碟雙寡頭之一
+ALAB,Astera Labs,PCIe/CXL retimers and interconnect chips,PCIe/CXL重定時器與互連晶片
+CRDO,Credo,Active electrical cables (AEC) and SerDes,有源電纜（AEC）與SerDes
+MPWR,芯源系統,Board-level power chips for AI servers,AI伺服器板級供電晶片
+ANET,Arista網路,18.7% of data-center Ethernet switching,資料中心乙太網交換器份額18.7%
+CSCO,思科,18.2% of data-center Ethernet switching,資料中心乙太網交換器份額18.2%
+COHR,科希倫,Optical modules and lasers; Nvidia is an investor,光模組與雷射器，輝達入股
+LITE,Lumentum,Optical components and lasers; Nvidia is an investor; supplies lasers for CPO,光器件與雷射器，輝達入股，供應CPO雷射
+FN,Fabrinet,Precision contract manufacturer of optical modules,光模組精密代工
+CIEN,Ciena,Optical transport for data-center interconnect,資料中心互連光傳輸
+GLW,康寧,Leader in optical fiber and cable,光纖光纜龍頭
+AAOI,應用光電,Small-cap optical modules; volatile,小盤光模組，波動大
+DELL,戴爾,Fastest-growing AI server brand,AI伺服器出貨增長最快的品牌商
+SMCI,美超微,AI servers and racks; high retail attention,AI伺服器與機櫃，散戶關注高
+HPE,慧與,AI servers and networking (Juniper),AI伺服器與網路（Juniper）
+CLS,天弘,Contract maker of switches and servers,交換器與伺服器代工
+VRT,維諦,About 23% of precision cooling; a pure play on data-center power and liquid cooling,精密製冷約23%份額，電源與液冷純標的
+ETN,伊頓,One of the leaders in data-center power distribution,資料中心配電設備龍頭之一
+MOD,Modine,Small-cap liquid cooling and thermal management,小盤液冷與散熱
+EQIX,易昆尼克斯,World's largest data-center REIT,全球最大資料中心REIT
+DLR,Digital Realty,Large wholesale data-center REIT,大型批發型資料中心REIT
+CRWV,CoreWeave,Largest independent GPU cloud (neocloud),最大的獨立GPU雲（neocloud）
+IREN,IREN,GPU cloud; 2026 annualized revenue target above $4B; a major Dell AI-server customer,GPU雲，2026年化收入目標超40億美元，戴爾AI伺服器大客戶
+NBIS,Nebius,European GPU cloud,歐洲GPU雲
+APLD,Applied Digital,Small-cap AI data-center developer,小盤AI資料中心開發商
+MSFT,微軟,Azure; one of the largest AI capex spenders,Azure，全球最大AI資本開支方之一
+AMZN,亞馬遜,AWS and Trainium in-house chips,AWS，Trainium自研晶片
+ORCL,甲骨文,OCI cloud; large AI compute contracts,OCI雲，大型AI算力合約
+GOOGL,谷歌,"Gemini, in-house TPU and Google Cloud",Gemini，自研TPU與谷歌雲
+META,Meta,Llama; 2026 capex guidance of $125-145B,Llama，2026年資本開支指引1250–1450億美元
+SPCX,SpaceX,Absorbed xAI (Grok) in February 2026; listed in June,2026年2月併入xAI（Grok），6月上市
+ANT,Anthropic,Filed its S-1 on Oct 26 and plans to list as ANT (not yet listed),10月26日提交S-1，計劃以ANT上市（待上市）
+PLTR,Palantir,Enterprise AI platform with accelerating revenue; popular with retail investors,企業AI平台，收入加速增長；散戶熱門
+NOW,ServiceNow,Enterprise workflows and AI agents,企業工作流與AI代理
+CRM,Salesforce,One of the largest SaaS companies; seen as exposed to AI disruption; valuation cut sharply,最大SaaS之一，被視為受AI衝擊，估值大幅下修
+ADBE,Adobe,Creative-software leader; seen as exposed to AI disruption,創意軟體龍頭，被視為受AI衝擊
+CRWD,CrowdStrike,Cybersecurity leader,網路安全龍頭
+SNOW,Snowflake,Data cloud,資料雲
+DDOG,Datadog,Observability; AI workloads help,可觀測性，AI工作負載受益
+MDB,MongoDB,Database,資料庫
+AAPL,蘋果,Largest consumer-device platform; on-device AI; among retail investors' most-held stocks,最大消費設備平台，端側AI；散戶持有最多之一
+TSLA,特斯拉,"Self-driving, robotaxi and Optimus robots; retail investors' most-held stock",自動駕駛、Robotaxi、Optimus機器人；散戶持有第一
