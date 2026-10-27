@@ -73,7 +73,9 @@ jobs:
 
       - name: Build site
         if: env.ADDED != '' || inputs.deploy
-        run: python3 -I scripts/build_site.py data/days site/index.html public
+        run: |
+          python3 -I scripts/build_stack.py
+          python3 -I scripts/build_site.py data/days site/index.html public
 
       - name: Deploy to Cloudflare Pages
         if: env.ADDED != '' || inputs.deploy
