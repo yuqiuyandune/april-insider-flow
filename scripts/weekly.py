@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Weekly digest email for April's Insider Flow, built from the verified day files.
+"""Weekly digest email for April's Stock Atlas, built from the verified day files.
 
 Usage: weekly.py DAYS_DIR [--end YYYY-MM-DD] [--lang both|en|zh] [--out FILE.json]   (both = Chinese first, then English)
 Writes {"subject", "body" (Markdown), "week_from", "week_to"}; the week is the 7 calendar days ending --end

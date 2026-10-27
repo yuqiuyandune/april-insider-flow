@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>April's Insider Flow</title>
+<title>Insider Flow · April's Stock Atlas</title>
 <meta name="description" content="每日美股内部人买卖（SEC Form 4）：板块资金流、集群买入、持股变化、拟出售 Form 144，每天核对原始申报。Daily SEC Form 4 insider buying and selling, verified.">
-<meta property="og:type" content="website"><meta property="og:site_name" content="April's Insider Flow"><meta property="og:title" content="April's Insider Flow · 每日美股内部人买卖">
+<meta property="og:type" content="website"><meta property="og:site_name" content="April's Stock Atlas"><meta property="og:title" content="April's Stock Atlas · 每日美股内部人买卖">
 <meta property="og:description" content="板块资金流、集群买入、持股变化、拟出售 Form 144，每天核对 SEC 原始申报。"><meta property="og:url" content="https://april-insider-flow.com/"><meta property="og:image" content="https://april-insider-flow.com/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://april-insider-flow.com/og.png">
-<link rel="alternate" type="application/rss+xml" title="April's Insider Flow · 内部人动向" href="/feed.xml"><link rel="alternate" type="application/rss+xml" title="April's Insider Flow · Insider flow (English)" href="/feed-en.xml">
+<link rel="alternate" type="application/rss+xml" title="April's Stock Atlas · 内部人动向" href="/feed.xml"><link rel="alternate" type="application/rss+xml" title="April's Stock Atlas · Insider flow (English)" href="/feed-en.xml">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b111b" media="(prefers-color-scheme: dark)">
@@ -364,7 +364,7 @@ details.card[open] summary::after{content:"−"}
     <div class="topin">
       <div class="brand">
         <span class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18"><rect x="2" y="9" width="3" height="7" rx="1.5" fill="#ff7b72"/><rect x="7.5" y="5" width="3" height="11" rx="1.5" fill="#3ddc9b"/><rect x="13" y="2" width="3" height="14" rx="1.5" fill="#3ddc9b"/></svg></span>
-        <b><i>April's</i> Insider Flow</b>
+        <b><i>April's</i> Stock Atlas</b>
       </div>
       <button type="button" class="subhd" id="subopen"><svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 4.5 8 9l5.5-4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span id="subopen-t"></span></button>
       <div class="lang" role="group" aria-label="Language / 语言">
@@ -1104,7 +1104,7 @@ function shareImage(){const t=L(),S=SHARE;if(!S)return;
   // brand
   const bars=[[0,24,"#ff7b72"],[22,40,"#3ddc9b"],[44,56,"#3ddc9b"]];g.fillStyle=C.card;g.beginPath();g.roundRect(72,72,84,84,22);g.fill();
   bars.forEach(([x,h,col])=>{g.fillStyle=col;g.beginPath();g.roundRect(94+x,136-h,14,h,6);g.fill()});
-  g.font=F(800,44);g.fillStyle=C.acc;g.fillText("April's",180,128);const bw=g.measureText("April's ").width;g.fillStyle=C.ink;g.fillText("Insider Flow",180+bw,128);
+  g.font=F(800,44);g.fillStyle=C.acc;g.fillText("April's",180,128);const bw=g.measureText("April's ").width;g.fillStyle=C.ink;g.fillText("Stock Atlas",180+bw,128);
   g.font=F(500,34);g.fillStyle=C.mut;g.fillText(fit(S.range,W-144),72,232);
   // big number
   const net=S.buy-S.sell;g.font=F(600,36);g.fillStyle=C.mut;g.fillText(`${S.win} · ${S.label}`,72,330);

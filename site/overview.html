@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>概览 · April's Stock Atlas</title>
+<meta name="description" content="April's Stock Atlas 把美股里分散的公开信息整理在一起：AI 产业链五层全景、每日美股内部人买卖、每季财报解读，以及每周邮件。An overview of April's Stock Atlas: the AI supply chain, daily US insider trades, quarterly earnings reads and a weekly email.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="April's Stock Atlas"><meta property="og:title" content="April's Stock Atlas · 概览 Overview">
+<meta property="og:description" content="AI 产业链、内部人动向、财报解读，以及每周邮件：这个网站能帮你做什么。"><meta property="og:url" content="https://april-insider-flow.com/overview/"><meta property="og:image" content="https://april-insider-flow.com/og.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://april-insider-flow.com/og.png">
+<link rel="canonical" href="https://april-insider-flow.com/overview/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b111b" media="(prefers-color-scheme: dark)">
+<style>
+@font-face{font-family:'Figtree';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/f1.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/f2.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/f3.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/f4.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{
+  --bg:#eef1f5; --surface:#ffffff; --surface-2:#f5f7fa; --ink:#0e1726; --muted:#5d6879; --faint:#7d8798; --line:#e1e6ed;
+  --buy:#0f9d6e; --sell:#e0483f; --accent:#2c49c9; --hero:#0f1b2d; --hero-ink:#eef2f8; --hero-muted:#9fb0c8;
+  --shadow:0 1px 2px rgba(14,23,38,.05),0 6px 20px rgba(14,23,38,.06);
+  --display:"Bricolage Grotesque","Figtree","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --body:"Figtree","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0b111b; --surface:#131c2a; --surface-2:#1a2535; --ink:#e8edf4; --muted:#9aa6b8; --faint:#7a869a; --line:#243146;
+  --buy:#34d399; --sell:#ff7b72; --accent:#8ea6ff; --hero:#16243a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--body);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;align-items:center;gap:12px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1;color:var(--ink);text-decoration:none}
+.logo{width:30px;height:30px;border-radius:9px;background:var(--hero);display:grid;place-items:center;flex:none}
+.brand b{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.01em;white-space:nowrap}
+.brand b i{font-style:normal;color:var(--accent)}
+.lang{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px;flex:none}
+.lang button{border:0;background:none;padding:5px 10px;border-radius:999px;font-size:13px;color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+/* hero: the one bold moment — a dark plate with the three views stacked like map layers */
+.hero{background:var(--hero);color:var(--hero-ink);border-radius:24px;padding:clamp(26px,5vw,52px);margin:8px 0 40px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:36px;align-items:center}
+.hero h1{font:700 clamp(30px,5vw,50px)/1.08 var(--display);letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}
+.hero .lead{font-size:clamp(16px,1.9vw,18px);color:var(--hero-muted);margin:0 0 26px;max-width:46ch}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;font-size:15px;padding:12px 18px;border-radius:12px;border:0;cursor:pointer;background:var(--ink);color:var(--bg)}
+.hero .btn{background:#fff;color:#0e1726}
+.hero .btn.ghost{background:transparent;color:var(--hero-ink);box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+.layers{display:grid;gap:10px}
+.layers a{display:grid;grid-template-columns:40px minmax(0,1fr);gap:4px 14px;align-items:center;text-decoration:none;color:var(--hero-ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;transition:background .15s,transform .15s}
+.layers a:hover{background:rgba(255,255,255,.11)}
+.layers a:nth-child(2){margin-left:14px}.layers a:nth-child(3){margin-left:28px}
+.layers .ic{grid-row:span 2;width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:grid;place-items:center}
+.layers b{font-size:15.5px}
+.layers span{font-size:13.5px;color:var(--hero-muted);line-height:1.45}
+
+section{margin:0 0 48px}
+h2{font:700 clamp(24px,3vw,30px)/1.2 var(--display);letter-spacing:-.015em;margin:0 0 16px}
+.intro{color:var(--muted);max-width:62ch;margin:-6px 0 20px}
+
+.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.why div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.why b{display:block;font-size:16.5px;margin-bottom:6px}
+.why p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.6}
+.so{margin:16px 0 0;padding-left:14px;border-left:3px solid var(--accent);max-width:68ch}
+
+.prod{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr);gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:clamp(20px,3.4vw,32px);margin-bottom:14px;box-shadow:var(--shadow)}
+.prod .name{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:var(--muted);margin:0 0 10px}
+.prod .name i{width:30px;height:30px;border-radius:9px;background:var(--hero);display:grid;place-items:center;color:#fff}
+.prod .q{font:700 clamp(21px,2.6vw,26px)/1.25 var(--display);letter-spacing:-.01em;margin:0 0 16px;text-wrap:balance}
+.prod .what{margin:0 0 14px}
+.prod h3{font-size:14px;font-weight:700;margin:18px 0 8px}
+.prod ul{margin:0;padding-left:20px}
+.prod li{margin:0 0 6px}
+.prod li::marker{color:var(--accent)}
+.tip{margin:16px 0 0;font-size:14.5px;color:var(--muted);background:var(--surface-2);border-radius:12px;padding:12px 14px}
+.tip b{color:var(--ink)}
+.prod .btn{margin-top:18px}
+.cover{font-size:14px;color:var(--muted);margin:14px 0 0}
+
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:0;display:grid;gap:12px;max-width:760px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:36px minmax(0,1fr);gap:14px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:700;font-size:15px}
+.after{color:var(--muted);margin:14px 0 0;max-width:68ch}
+
+.mail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+.mail p{margin:0 0 14px}
+.fine{font-size:14px;color:var(--muted)}
+.letter{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.letter .hd{padding:14px 18px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--muted);display:grid;gap:2px}
+.letter .hd b{color:var(--ink);font-size:15px}
+.letter ul{list-style:none;margin:0;padding:8px 18px 14px}
+.letter li{padding:10px 0;border-bottom:1px dashed var(--line);display:grid;gap:2px}
+.letter li:last-child{border-bottom:0}
+.letter li b{font-size:14.5px}
+.letter li span{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+.data ul{margin:0;padding-left:20px;max-width:72ch}
+.data li{margin:0 0 8px;color:var(--muted)}
+footer{padding:24px 0 48px;color:var(--faint);font-size:13px;border-top:1px solid var(--line)}
+
+@media (max-width:640px){.lang .l2{display:none}}
+@media (max-width:380px){.brand b{font-size:16.5px}}
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;gap:26px}
+  .layers a:nth-child(2),.layers a:nth-child(3){margin-left:0}
+  .why{grid-template-columns:1fr}
+  .prod{grid-template-columns:1fr;gap:4px}
+  .mail{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<script src="/earnings/switcher.js"></script>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/" aria-label="April's Stock Atlas">
+      <span class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18"><rect x="2" y="9" width="3" height="7" rx="1.5" fill="#ff7b72"/><rect x="7.5" y="5" width="3" height="11" rx="1.5" fill="#3ddc9b"/><rect x="13" y="2" width="3" height="14" rx="1.5" fill="#3ddc9b"/></svg></span>
+      <b><i>April's</i> Stock Atlas</b>
+    </a>
+    <div class="lang" role="group" aria-label="Language / 语言">
+      <button type="button" id="lang-en" aria-pressed="false">EN</button>
+      <button type="button" id="lang-zh" aria-pressed="true" lang="zh-CN">简<span class="l2">体</span></button>
+      <button type="button" id="lang-tw" aria-pressed="false" lang="zh-TW">繁<span class="l2">體</span></button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer id="foot"></footer>
+</div>
+
+<script>
+"use strict";
+const ICO={
+  chain:'<svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true"><rect x="2" y="2.5" width="14" height="3" rx="1.2" fill="currentColor"/><rect x="2" y="7.5" width="14" height="3" rx="1.2" fill="currentColor" opacity=".75"/><rect x="2" y="12.5" width="14" height="3" rx="1.2" fill="currentColor" opacity=".5"/></svg>',
+  ins:'<svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true"><rect x="2" y="9" width="3" height="7" rx="1.5" fill="#ff7b72"/><rect x="7.5" y="5" width="3" height="11" rx="1.5" fill="#3ddc9b"/><rect x="13" y="2" width="3" height="14" rx="1.5" fill="#3ddc9b"/></svg>',
+  earn:'<svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true"><rect x="2.5" y="1.5" width="13" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 12.5v-2.5M9 12.5v-5M12.5 12.5V9" stroke="#7d9bff" stroke-width="1.8" stroke-linecap="round"/></svg>'
+};
+const HREF={chain:"/",ins:"/insider/",earn:"/earnings/"};
+
+const T={
+zh:{
+ title:"概览 · April's Stock Atlas",
+ h1:"把美股里分散的公开信息，整理成一张看得懂的地图",
+ lead:"AI 产业链的结构、公司高管和董事用自己的钱做的买卖、每季财报的重点，放在同一个地方，彼此连通。这里不荐股，也不给买卖建议，只帮你更快看清楚，再自己做判断。",
+ ctaStart:"从 AI 产业链开始", ctaSub:"订阅每周邮件",
+ layers:{chain:["AI 产业链","AI 五层，每层最重要的美股公司"],ins:["内部人动向","高管和董事的真实买卖，每个交易日更新"],earn:["财报解读","每季一页，读懂业绩、估值和管理层"]},
+ whyH:"为什么做这个网站",
+ why:[["信息太散","内部人申报在 SEC，财报在公司官网和电话会里，产业链上谁和谁有关系，要自己一点点拼。"],
+      ["噪音太多","大部分内部人卖出来自预先设定的交易计划、期权行权或缴税，并不代表他们的看法。直接看原始数据，很容易被误导。"],
+      ["缺少上下文","一笔买入值不值得关注，要看这家公司在产业链的什么位置，业绩和估值怎么样。单看一个数字说明不了什么。"]],
+ so:"所以这里做三件事：每天核对原始申报、剔除噪音；把公司放回它在产业链里的位置；把财报的重点讲清楚。",
+ prodH:"三个页面，各回答一个问题",
+ prodIntro:"每个页面都可以单独用，也可以互相跳转：从产业链点进一家公司，就能看到它的内部人买卖和财报解读。",
+ usesH:"适合用来", tipH:"读的时候记住",
+ prods:{
+  chain:{q:"AI 这条链上有哪些公司，各在哪一环？",
+   what:"按黄仁勋提出的 AI 五层：能源、芯片、基础设施、模型、应用，列出每一层最重要的美股公司。实线框是「核心」公司：份额领先、难以替代，或者是 AI 资本开支的主要买方；虚线框是「热门」公司：散户关注度高的补充。",
+   uses:["弄清一家公司在 AI 链条的哪个位置，和谁在同一个环节","找可比公司：看完一家存储公司，顺手看看同一环节的其他几家","一眼看到哪一层最近有内部人净买入（▲）或净卖出（▼），统计的是近 30 天"],
+   tip:"点任何一家公司，可以看到它为什么入选、还涉及哪些层，并直接跳到它的内部人明细或财报解读。",
+   btn:"打开 AI 产业链"},
+  ins:{q:"最了解公司的人，正在用自己的钱做什么？",
+   what:"美股公司的高管、董事和大股东买卖自家股票，要在两个工作日内向 SEC 申报（Form 4）。这里每个交易日更新，覆盖所有美股，不只是 AI 公司。默认只看「有效买卖」：高管和董事在公开市场主动的买卖，已经排除预设交易计划（10b5-1）、期权行权当天的卖出、缴税卖出和 IPO 认购等。",
+   uses:["看资金往哪个板块走：按当日、近 1 周、近 1 月、近 3 月比较各板块的净买入","找值得研究的公司：集群买入（30 天内 2 位以上高管或董事各自买入）、CEO 或 CFO 亲自买入、单笔 100 万美元以上的买入、大幅增持和新建仓","查一家公司：谁买、谁卖、什么价格、买完以后持股变了多少","提前看到大额减持：Form 144 是内部人准备卖出时提交的预告"],
+   tip:"<b>卖出的理由很多，买入的理由通常只有一个。</b>内部人卖股票可能是为了缴税、分散投资或者买房；用自己的钱买，通常是因为觉得股价会涨。所以买入，尤其是几个人同时买，通常比卖出更值得留意。但它只是线索，不代表股价一定会涨。",
+   btn:"打开内部人动向"},
+  earn:{q:"这一季到底怎么样，现在的价格合理吗？",
+   what:"每家公司每个季度一页，用四个问题读财报：业绩做得怎么样；现在的价格贵不贵；管理层说过的话有没有兑现；内部人在买还是在卖。另外有财报日历，列出接下来哪些公司要发财报。",
+   uses:["财报出来后几分钟抓住重点，不用读完整份财报和电话会","跟踪管理层的承诺：说过要做的事，后来做到了没有","把估值放在过去几个季度里比较，看看现在算贵还是便宜"],
+   tip:"财报解读只整理事实和数据，不给目标价，也不给买卖评级。",
+   cover:t=>`目前覆盖：${t}。每个财报季陆续增加，优先覆盖 AI 产业链上的公司。`,
+   btn:"打开财报解读"}},
+ flowH:"一个常见的用法",
+ flowIntro:"三个页面连在一起用，最能看出东西。比如：",
+ flow:["在 AI 产业链里，看到某个环节有一家公司标着 ▼。",
+       "点开它，看近 30 天内部人卖了多少，再点「查看内部人动向明细」：是谁在卖？一个人还是好几个？是不是预设计划？持股减少了多少？",
+       "如果这家公司有财报解读，看看最近一季的业绩和估值，再判断这次卖出说明了什么。"],
+ flowAfter:"反过来也可以：在内部人动向里发现一家公司出现集群买入，如果它在 AI 产业链上，就回到产业链看看它所在的那一环，以及同一环节的其他公司。",
+ mailH:"订阅每周邮件",
+ mailP:"没时间每天打开网站？每周六早上（美国西部时间）收到一封邮件，五分钟看完一周的内部人动向。",
+ mailP2:"中文在前，英文在后。免费，随时可以退订。邮件里不荐股，也不给目标价。",
+ mailBtn:"订阅每周邮件",
+ letterFrom:"April's Stock Atlas · 每周六", letterSubj:"本周内部人动向（日期）：有效净买入或净卖出多少",
+ letter:[["一句话","本周有效买入、卖出和净额，和上周相比"],["板块","净买入和净卖出最多的板块"],["集群买入","多位高管或董事同时在买的公司"],["最大的买入","金额最大的几笔，以及买完以后持股变了多少"],["持股大幅增加","增持比例最高的人，包括新建仓"],["卖出最多","有效净卖出最多的公司"],["拟出售（Form 144）","金额最大的几份卖出预告"]],
+ letterFoot:"每家公司都能一键打开网站上的逐笔申报。",
+ dataH:"数据从哪里来",
+ data:["内部人数据来自 SEC EDGAR 的 Form 4 和 Form 144 原始申报，每个交易日更新，并和原件核对；明显填错的申报会剔除并单独标出。",
+       "数字按申报的提交日归档，实际交易日通常早 0–2 个工作日，逐笔申报里写明了交易日。",
+       "AI 产业链的公司名单由人工维护，每个财报季回顾一次。",
+       "财报解读整理公司公开的财报、电话会和市场数据。",
+       "这里的所有内容都是公开信息的整理，仅供研究参考，不构成投资建议。"],
+ foot:"April's Stock Atlas · april-insider-flow.com"
+},
+tw:{
+ title:"概覽 · April's Stock Atlas",
+ h1:"把美股裡分散的公開資訊，整理成一張看得懂的地圖",
+ lead:"AI 產業鏈的結構、公司高管和董事用自己的錢做的買賣、每季財報的重點，放在同一個地方，彼此連通。這裡不薦股，也不給買賣建議，只幫你更快看清楚，再自己做判斷。",
+ ctaStart:"從 AI 產業鏈開始", ctaSub:"訂閱每週郵件",
+ layers:{chain:["AI 產業鏈","AI 五層，每層最重要的美股公司"],ins:["內部人動向","高管和董事的真實買賣，每個交易日更新"],earn:["財報解讀","每季一頁，讀懂業績、估值和管理層"]},
+ whyH:"為什麼做這個網站",
+ why:[["資訊太散","內部人申報在 SEC，財報在公司官網和法說會裡，產業鏈上誰和誰有關係，要自己一點點拼。"],
+      ["雜訊太多","大部分內部人賣出來自預先設定的交易計畫、選擇權行使或繳稅，並不代表他們的看法。直接看原始資料，很容易被誤導。"],
+      ["缺少脈絡","一筆買入值不值得關注，要看這家公司在產業鏈的什麼位置，業績和估值怎麼樣。單看一個數字說明不了什麼。"]],
+ so:"所以這裡做三件事：每天核對原始申報、剔除雜訊；把公司放回它在產業鏈裡的位置；把財報的重點講清楚。",
+ prodH:"三個頁面，各回答一個問題",
+ prodIntro:"每個頁面都可以單獨用，也可以互相跳轉：從產業鏈點進一家公司，就能看到它的內部人買賣和財報解讀。",
+ usesH:"適合用來", tipH:"讀的時候記住",
+ prods:{
+  chain:{q:"AI 這條鏈上有哪些公司，各在哪一環？",
+   what:"依黃仁勳提出的 AI 五層：能源、晶片、基礎設施、模型、應用，列出每一層最重要的美股公司。實線框是「核心」公司：市占領先、難以替代，或是 AI 資本支出的主要買方；虛線框是「熱門」公司：散戶關注度高的補充。",
+   uses:["弄清一家公司在 AI 鏈條的哪個位置，和誰在同一個環節","找可比公司：看完一家記憶體公司，順手看看同一環節的其他幾家","一眼看到哪一層最近有內部人淨買入（▲）或淨賣出（▼），統計的是近 30 天"],
+   tip:"點任何一家公司，可以看到它為什麼入選、還涉及哪些層，並直接跳到它的內部人明細或財報解讀。",
+   btn:"開啟 AI 產業鏈"},
+  ins:{q:"最了解公司的人，正在用自己的錢做什麼？",
+   what:"美股公司的高管、董事和大股東買賣自家股票，要在兩個工作日內向 SEC 申報（Form 4）。這裡每個交易日更新，涵蓋所有美股，不只是 AI 公司。預設只看「有效買賣」：高管和董事在公開市場主動的買賣，已經排除預設交易計畫（10b5-1）、選擇權行使當天的賣出、繳稅賣出和 IPO 認購等。",
+   uses:["看資金往哪個板塊走：依當日、近 1 週、近 1 月、近 3 月比較各板塊的淨買入","找值得研究的公司：集群買入（30 天內 2 位以上高管或董事各自買入）、CEO 或 CFO 親自買入、單筆 100 萬美元以上的買入、大幅增持和新建倉","查一家公司：誰買、誰賣、什麼價格、買完以後持股變了多少","提前看到大額減持：Form 144 是內部人準備賣出時提交的預告"],
+   tip:"<b>賣出的理由很多，買入的理由通常只有一個。</b>內部人賣股票可能是為了繳稅、分散投資或買房；用自己的錢買，通常是因為覺得股價會漲。所以買入，尤其是幾個人同時買，通常比賣出更值得留意。但它只是線索，不代表股價一定會漲。",
+   btn:"開啟內部人動向"},
+  earn:{q:"這一季到底怎麼樣，現在的價格合理嗎？",
+   what:"每家公司每個季度一頁，用四個問題讀財報：業績做得怎麼樣；現在的價格貴不貴；管理層說過的話有沒有兌現；內部人在買還是在賣。另外有財報日曆，列出接下來哪些公司要發財報。",
+   uses:["財報出來後幾分鐘抓住重點，不用讀完整份財報和法說會","追蹤管理層的承諾：說過要做的事，後來做到了沒有","把估值放在過去幾個季度裡比較，看看現在算貴還是便宜"],
+   tip:"財報解讀只整理事實和數據，不給目標價，也不給買賣評級。",
+   cover:t=>`目前涵蓋：${t}。每個財報季陸續增加，優先涵蓋 AI 產業鏈上的公司。財報解讀目前以簡體中文撰寫。`,
+   btn:"開啟財報解讀"}},
+ flowH:"一個常見的用法",
+ flowIntro:"三個頁面連在一起用，最能看出東西。比如：",
+ flow:["在 AI 產業鏈裡，看到某個環節有一家公司標著 ▼。",
+       "點開它，看近 30 天內部人賣了多少，再點「查看內部人動向明細」：是誰在賣？一個人還是好幾個？是不是預設計畫？持股減少了多少？",
+       "如果這家公司有財報解讀，看看最近一季的業績和估值，再判斷這次賣出說明了什麼。"],
+ flowAfter:"反過來也可以：在內部人動向裡發現一家公司出現集群買入，如果它在 AI 產業鏈上，就回到產業鏈看看它所在的那一環，以及同一環節的其他公司。",
+ mailH:"訂閱每週郵件",
+ mailP:"沒時間每天打開網站？每週六早上（美國西部時間）收到一封郵件，五分鐘看完一週的內部人動向。",
+ mailP2:"中文在前，英文在後（中文為簡體）。免費，隨時可以退訂。郵件裡不薦股，也不給目標價。",
+ mailBtn:"訂閱每週郵件",
+ letterFrom:"April's Stock Atlas · 每週六", letterSubj:"本週內部人動向（日期）：有效淨買入或淨賣出多少",
+ letter:[["一句話","本週有效買入、賣出和淨額，和上週相比"],["板塊","淨買入和淨賣出最多的板塊"],["集群買入","多位高管或董事同時在買的公司"],["最大的買入","金額最大的幾筆，以及買完以後持股變了多少"],["持股大幅增加","增持比例最高的人，包括新建倉"],["賣出最多","有效淨賣出最多的公司"],["擬出售（Form 144）","金額最大的幾份賣出預告"]],
+ letterFoot:"每家公司都能一鍵打開網站上的逐筆申報。",
+ dataH:"資料從哪裡來",
+ data:["內部人資料來自 SEC EDGAR 的 Form 4 和 Form 144 原始申報，每個交易日更新，並和原件核對；明顯填錯的申報會剔除並單獨標出。",
+       "數字依申報的提交日歸檔，實際交易日通常早 0–2 個工作日，逐筆申報裡寫明了交易日。",
+       "AI 產業鏈的公司名單由人工維護，每個財報季回顧一次。",
+       "財報解讀整理公司公開的財報、法說會和市場數據。",
+       "這裡的所有內容都是公開資訊的整理，僅供研究參考，不構成投資建議。"],
+ foot:"April's Stock Atlas · april-insider-flow.com"
+},
+en:{
+ title:"Overview · April's Stock Atlas",
+ h1:"Scattered public stock data, turned into a map you can read",
+ lead:"How the AI supply chain fits together, what company officers and directors are doing with their own money, and what each quarter's earnings really said, in one place and linked to each other. No stock picks and no buy or sell calls: just a faster way to see clearly, so you can make your own decisions.",
+ ctaStart:"Start with the supply chain", ctaSub:"Get the weekly email",
+ layers:{chain:["Supply Chain","Five layers of AI, the key US stocks in each"],ins:["Insider Flow","Real trades by officers and directors, every trading day"],earn:["Earnings Lens","One page per quarter: results, valuation, management"]},
+ whyH:"Why this site exists",
+ why:[["The information is scattered","Insider filings live at the SEC, earnings live in reports and calls, and who connects to whom in the supply chain is left for you to piece together."],
+      ["Most of it is noise","Most insider selling comes from pre-set trading plans, option exercises or tax payments. None of that is an opinion, and raw data makes it easy to be misled."],
+      ["It lacks context","Whether a purchase matters depends on where the company sits in its supply chain and how its results and valuation look. A single number says little."]],
+ so:"So the site does three things: checks the original filings every day and removes the noise, puts each company back in its place in the supply chain, and lays out what matters in each earnings report.",
+ prodH:"Three views, each answering one question",
+ prodIntro:"Each view works on its own, and they link to each other: open a company on the supply chain and jump straight to its insider trades or its earnings read.",
+ usesH:"Use it to", tipH:"Keep in mind",
+ prods:{
+  chain:{q:"Which companies make up AI, and where does each one sit?",
+   what:"Following Jensen Huang's five layers of AI (energy, chips, infrastructure, models and applications), this view lists the US-listed companies that matter most in each layer. Solid outlines are core companies: market leaders, hard to replace, or major buyers of AI capacity. Dashed outlines are popular names that retail investors follow closely.",
+   uses:["See where a company sits in the AI chain and who shares its segment","Find comparable companies: after one memory maker, check the others in the same segment","Spot which layers have insiders net buying (▲) or net selling (▼) over the last 30 days"],
+   tip:"Open any company to see why it is on the map, which other layers it touches, and jump to its insider trades or earnings read.",
+   btn:"Open the supply chain"},
+  ins:{q:"What are the people who know a company best doing with their own money?",
+   what:"Officers, directors and large holders of US companies must report trades in their own company's stock to the SEC within two business days (Form 4). This view updates every trading day and covers all US stocks, not only AI. By default it shows effective trades only: open-market buys and sells by officers and directors, with pre-set 10b5-1 plans, sales on option exercise days, tax sales and IPO purchases filtered out.",
+   uses:["See where money is moving by sector, for the day, week, month or three months","Find companies worth a closer look: cluster buys (two or more officers or directors buying within 30 days), CEO or CFO purchases, single buys of $1M or more, large stake increases and new positions","Check one company: who bought, who sold, at what price, and how their holdings changed","See large sales coming: Form 144 is the notice insiders file when they plan to sell"],
+   tip:"<b>Insiders sell for many reasons, but buy for usually just one.</b> A sale may pay a tax bill, diversify or fund a house. Buying with their own money usually means they expect the stock to rise. So purchases, especially several at once, tend to say more than sales. They are a lead to research, not a promise that the price will go up.",
+   btn:"Open Insider Flow"},
+  earn:{q:"How did the quarter really go, and is the price reasonable?",
+   what:"One page per company per quarter, built around four questions: how the business did, whether the stock looks expensive, whether management delivered on what it said, and whether insiders are buying or selling. An earnings calendar shows which companies report next.",
+   uses:["Get the key points minutes after a report, without reading the whole filing or call","Track management's record: what they promised, and whether it happened","Compare today's valuation with the past few quarters to judge whether it looks cheap or rich"],
+   tip:"Earnings reads lay out facts and figures only. No price targets and no buy or sell ratings.",
+   cover:t=>`Now covering ${t}, with more added each earnings season, starting with companies on the AI supply chain. Earnings reads are currently written in Chinese.`,
+   btn:"Open Earnings Lens"}},
+ flowH:"How the views work together",
+ flowIntro:"The views say the most when you use them together. For example:",
+ flow:["On the supply chain, you notice a company in one segment marked ▼.",
+       "Open it to see how much insiders sold in the last 30 days, then tap “See insider trade details”: who is selling, one person or several, under a pre-set plan or not, and how much of their stake?",
+       "If the company has an earnings read, check the latest quarter's results and valuation before deciding what the selling tells you."],
+ flowAfter:"It works the other way too: when Insider Flow shows a cluster buy at a company on the AI supply chain, go back to the map to see its segment and the companies next to it.",
+ mailH:"Get the weekly email",
+ mailP:"No time to check the site every day? One email every Saturday morning (US Pacific time) covers the week's insider activity in about five minutes.",
+ mailP2:"Chinese first, English below. Free, unsubscribe anytime. No stock picks and no price targets.",
+ mailBtn:"Get the weekly email",
+ letterFrom:"April's Stock Atlas · every Saturday", letterSubj:"Insider flow this week (dates): effective net buying or selling",
+ letter:[["In one line","The week's effective buying, selling and net, compared with last week"],["Sectors","The sectors with the most net buying and net selling"],["Cluster buys","Companies where several officers or directors are buying"],["Largest purchases","The biggest buys, and how much each buyer's stake grew"],["Big stake increases","The largest percentage increases, including new positions"],["Most selling","Companies with the largest effective net selling"],["Planned sales (Form 144)","The largest notices of planned sales"]],
+ letterFoot:"Every company links to its filing-by-filing page on the site.",
+ dataH:"Where the data comes from",
+ data:["Insider data comes from the original Form 4 and Form 144 filings on SEC EDGAR, updated every trading day and checked against the source. Filings with obvious errors are removed and listed separately.",
+       "Figures are grouped by filing date. Trades usually happen 0–2 business days earlier, and each filing shows its trade date.",
+       "The supply-chain list is maintained by hand and reviewed every earnings season.",
+       "Earnings reads draw on public reports, earnings calls and market data.",
+       "Everything here is a summary of public information for research, not investment advice."],
+ foot:"April's Stock Atlas · april-insider-flow.com"
+}};
+
+const LANGS=["en","zh","tw"],LOC={en:"en",zh:"zh-CN",tw:"zh-TW"};
+function detectLang(){const ls=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||"en"]).map(x=>String(x).toLowerCase());
+  for(const l of ls){if(l.startsWith("zh"))return /hant|-tw|-hk|-mo/.test(l)?"tw":"zh";if(l.startsWith("en"))return "en"}return "en"}
+let lang=detectLang();
+try{const v=localStorage.getItem("sif-lang");if(LANGS.includes(v))lang=v}catch(e){}
+try{const q=new URLSearchParams(location.search).get("lang");if(LANGS.includes(q))lang=q}catch(e){}
+let COVER=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function render(){
+  const s=T[lang];
+  document.documentElement.lang=LOC[lang];document.title=s.title;
+  LANGS.forEach(k=>$("lang-"+k).setAttribute("aria-pressed",String(lang===k)));
+  const layer=k=>`<a href="${HREF[k]}"><span class="ic">${ICO[k]}</span><b>${esc(s.layers[k][0])}</b><span>${esc(s.layers[k][1])}</span></a>`;
+  const prod=k=>{const p=s.prods[k];
+    return `<article class="prod" id="${k}"><div><p class="name"><i>${ICO[k]}</i>${esc(s.layers[k][0])}</p><h3 class="q">${esc(p.q)}</h3></div>
+      <div><p class="what">${esc(p.what)}</p><h3>${esc(s.usesH)}</h3><ul>${p.uses.map(u=>`<li>${esc(u)}</li>`).join("")}</ul>
+      <p class="tip">${p.tip}</p>${p.cover&&COVER?`<p class="cover">${esc(p.cover(COVER.join(lang==="en"?", ":"、")))}</p>`:""}
+      <a class="btn" href="${HREF[k]}">${esc(p.btn)}</a></div></article>`};
+  $("main").innerHTML=`
+  <div class="hero"><div><h1>${esc(s.h1)}</h1><p class="lead">${esc(s.lead)}</p>
+    <div class="cta"><a class="btn" href="/">${esc(s.ctaStart)}</a><button type="button" class="btn ghost" data-sub>${esc(s.ctaSub)}</button></div></div>
+    <nav class="layers" aria-label="${esc(s.prodH)}">${layer("chain")}${layer("ins")}${layer("earn")}</nav></div>
+  <section><h2>${esc(s.whyH)}</h2><div class="why">${s.why.map(w=>`<div><b>${esc(w[0])}</b><p>${esc(w[1])}</p></div>`).join("")}</div><p class="so">${esc(s.so)}</p></section>
+  <section><h2>${esc(s.prodH)}</h2><p class="intro">${esc(s.prodIntro)}</p>${prod("chain")}${prod("ins")}${prod("earn")}</section>
+  <section><h2>${esc(s.flowH)}</h2><p class="intro">${esc(s.flowIntro)}</p><ol class="steps">${s.flow.map(f=>`<li><span>${esc(f)}</span></li>`).join("")}</ol><p class="after">${esc(s.flowAfter)}</p></section>
+  <section class="mail" id="subscribe"><div><h2>${esc(s.mailH)}</h2><p>${esc(s.mailP)}</p><p class="fine">${esc(s.mailP2)}</p><button type="button" class="btn" data-sub>${esc(s.mailBtn)}</button></div>
+    <div class="letter" aria-hidden="true"><div class="hd"><span>${esc(s.letterFrom)}</span><b>${esc(s.letterSubj)}</b></div>
+      <ul>${s.letter.map(l=>`<li><b>${esc(l[0])}</b><span>${esc(l[1])}</span></li>`).join("")}<li><span>${esc(s.letterFoot)}</span></li></ul></div></section>
+  <section class="data"><h2>${esc(s.dataH)}</h2><ul>${s.data.map(d=>`<li>${esc(d)}</li>`).join("")}</ul></section>`;
+  $("foot").textContent=s.foot;
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest&&e.target.closest("[data-sub]")){const b=document.getElementById("aps-open");if(b)b.click();else location.href="/insider/?sub=1"}
+});
+LANGS.forEach(k=>$("lang-"+k).addEventListener("click",()=>{lang=k;try{localStorage.setItem("sif-lang",k)}catch(e){}render()}));
+render();
+fetch("/earnings/data/index.json").then(r=>r.ok?r.json():null).then(j=>{
+  if(j&&j.companies&&j.companies.length){COVER=j.companies.map(c=>c.t);render()}}).catch(()=>{});
+</script>
+</body>
+</html>

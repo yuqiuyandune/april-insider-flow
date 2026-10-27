@@ -1,4 +1,4 @@
-# April's Insider Flow
+# April's Stock Atlas
 
 Source, data and daily pipeline for https://april-insider-flow.com — SEC Form 4 open-market insider buys and sells, by sector.
 
