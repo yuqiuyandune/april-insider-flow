@@ -71,6 +71,7 @@ a{color:var(--accent)}
 .tab{border:0;background:none;padding:7px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer}
 .tabs .tab{display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:700;padding:10px 18px;border-radius:12px;color:var(--ink);background:var(--surface);border:1px solid var(--line)}
 .tabs a.tab{text-decoration:none}
+@media(max-width:400px){.tabs{gap:6px}.tabs .tab{padding:10px 12px;font-size:15px}}
 .tabs .tab svg{flex:none;opacity:.75}
 .tabs .tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);box-shadow:var(--shadow)}
 .tabs .tab[aria-pressed="true"] svg{opacity:1}
@@ -411,7 +412,7 @@ const SEC_ZH={"Basic Materials":"基础材料","Communication Services":"通信�
 const SEC_TW={"Basic Materials":"基礎材料","Communication Services":"通訊服務","Consumer Cyclical":"週期性消費","Consumer Defensive":"防禦性消費","Energy":"能源","Financial Services":"金融服務","Healthcare":"醫療保健","Industrials":"工業","Real Estate":"房地產","Technology":"科技","Utilities":"公用事業","Unclassified":"未分類"};
 const WK={en:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],zh:["周日","周一","周二","周三","周四","周五","周六"],tw:["週日","週一","週二","週三","週四","週五","週六"]};
 const T={
- zh:{vStack:"AI 五层蛋糕",vSectors:"市场动向",vSearch:"个股查询",whoEff:"有效买卖",whoOd:"高管与董事",whoAll:"全部内部人",
+ zh:{vStack:"AI 产业链",vSectors:"市场动向",vSearch:"个股查询",whoEff:"有效买卖",whoOd:"高管与董事",whoAll:"全部内部人",
   hint:{eff:"只看信号最强的交易：高管、董事的公开市场买卖，已排除计划内交易、IPO/认购、行权卖出等。",od:"高管与董事的全部公开市场买卖，含计划内交易。",all:"所有内部人（含 10% 大股东、基金）的公开市场买卖。"},
   heroLabel:{eff:"近 7 天有效净买入",od:"近 7 天高管董事净买入",all:"近 7 天内部人净买入"},
   bought:"买入",sold:"卖出",ratio:"买卖比",vsPrev:(b,s)=>`较前 7 天：买入 ${b}，卖出 ${s}`,
@@ -462,7 +463,7 @@ const T={
    ["板块","按发行人 SIC 行业代码映射到 11 个板块，与 secform4 的分类相近但不完全相同。没有 SIC 代码的基金、信托归入“未分类”。"],
    ["数据核验","每天对有效买卖前 10 名背后的每份申报，加上随机抽取的申报，用另一套程序从 SEC 官方 Form 4 页面重新读取，逐股逐美元核对，并核对申报→公司→板块的合计。全部通过才发布；未通过的日期暂不发布并自动重试。"],
    ["集群买入与持股变化","集群买入：近 30 天内至少 2 位不同的高管或董事有效买入同一家公司（同一人多次买入只算一位；关联方联合申报按第一申报人计）。持股变化 = 本次买入股数 ÷ 买入前持有的同类股份（直接与间接持股合计，取自 Form 4 的“交易后持有数量”）；买入前为 0 显示为“新建仓”。选了时间范围时，只列出这段时间内又有新买入的集群，人数仍按近 30 天计算。"],["异常值","单笔超过 10 亿美元或每股超过 1 万美元的交易，申报价格明显超出其脚注所写成交价区间的交易，以及经人工核实为填写错误的个别申报，都不计入合计，单独列出。每天另有自动检查，发现可疑数字（如价格与该股以往价格相差数倍、脚注提到外币但未换算）会提醒人工复核。"]]},
- tw:{vStack:"AI 五層蛋糕",vSectors:"市場動向",vSearch:"個股查詢",whoEff:"有效買賣",whoOd:"高管與董事",whoAll:"全部內部人",
+ tw:{vStack:"AI 產業鏈",vSectors:"市場動向",vSearch:"個股查詢",whoEff:"有效買賣",whoOd:"高管與董事",whoAll:"全部內部人",
   hint:{eff:"只看訊號最強的交易：高管、董事的公開市場買賣，已排除計劃內交易、IPO/認購、行權賣出等。",od:"高管與董事的全部公開市場買賣，含計劃內交易。",all:"所有內部人（含 10% 大股東、基金）的公開市場買賣。"},
   heroLabel:{eff:"近 7 天有效淨買入",od:"近 7 天高管董事淨買入",all:"近 7 天內部人淨買入"},
   bought:"買入",sold:"賣出",ratio:"買賣比",vsPrev:(b,s)=>`較前 7 天：買入 ${b}，賣出 ${s}`,
@@ -513,7 +514,7 @@ const T={
    ["板塊","按發行人 SIC 行業程式碼對映到 11 個板塊，與 secform4 的分類相近但不完全相同。沒有 SIC 程式碼的基金、信託歸入“未分類”。"],
    ["資料核驗","每天對有效買賣前 10 名背後的每份申報，加上隨機抽取的申報，用另一套程式從 SEC 官方 Form 4 頁面重新讀取，逐股逐美元核對，並核對申報→公司→板塊的合計。全部通過才釋出；未通過的日期暫不釋出並自動重試。"],
    ["集群買入與持股變化","集群買入：近 30 天內至少 2 位不同的高管或董事有效買入同一家公司（同一人多次買入只算一位；關聯方聯合申報按第一申報人計）。持股變化 = 本次買入股數 ÷ 買入前持有的同類股份（直接與間接持股合計，取自 Form 4 的“交易後持有數量”）；買入前為 0 顯示為“新建倉”。選了時間範圍時，只列出這段時間內又有新買入的集群，人數仍按近 30 天計算。"],["異常值","單筆超過 10 億美元或每股超過 1 萬美元的交易，申報價格明顯超出其腳註所寫成交價區間的交易，以及經人工核實為填寫錯誤的個別申報，都不計入合計，單獨列出。每天另有自動檢查，發現可疑數字（如價格與該股以往價格相差數倍、腳註提到外幣但未換算）會提醒人工複核。"]]},
- en:{vStack:"AI cake",vSectors:"Market",vSearch:"Ticker search",whoEff:"Effective",whoOd:"Officers & directors",whoAll:"All insiders",
+ en:{vStack:"AI layers",vSectors:"Market",vSearch:"Ticker search",whoEff:"Effective",whoOd:"Officers & directors",whoAll:"All insiders",
   hint:{eff:"The strongest signal only: officer and director open-market trades, excluding planned trades, IPO/offering buys, option-exercise sales and more.",od:"All open-market trades by officers and directors, including planned trades.",all:"Open-market trades by every insider, including 10% owners and funds."},
   heroLabel:{eff:"Effective net buying, last 7 days",od:"Officer & director net buying, last 7 days",all:"Insider net buying, last 7 days"},
   bought:"Bought",sold:"Sold",ratio:"Buy/sell",vsPrev:(b,s)=>`vs prior 7 days: buys ${b}, sales ${s}`,

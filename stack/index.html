@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>The AI five-layer cake · April's Insider Flow</title>
-<meta name="description" content="AI 五层蛋糕：能源、芯片、基础设施、模型、应用，每一层最重要的美股公司，以及近 30 天内部人买卖。The AI five-layer cake: the key US-listed companies in each layer, with 30-day insider activity.">
-<meta property="og:type" content="website"><meta property="og:site_name" content="April's Insider Flow"><meta property="og:title" content="AI 五层蛋糕 · The AI five-layer cake">
+<title>The AI supply chain in five layers · April's Insider Flow</title>
+<meta name="description" content="AI 产业链：五层全景：能源、芯片、基础设施、模型、应用，每一层最重要的美股公司，以及近 30 天内部人买卖。The AI supply chain in five layers: the key US-listed companies in each layer, with 30-day insider activity.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="April's Insider Flow"><meta property="og:title" content="AI 产业链：五层全景 · The AI supply chain in five layers">
 <meta property="og:description" content="能源、芯片、基础设施、模型、应用，每层最重要的美股公司与近 30 天内部人买卖。"><meta property="og:url" content="https://april-insider-flow.com/stack/"><meta property="og:image" content="https://april-insider-flow.com/og.png">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://april-insider-flow.com/og.png">
 <link rel="canonical" href="https://april-insider-flow.com/stack/">
@@ -172,7 +172,7 @@ footer{padding:20px 0 44px;font-size:12.5px;color:var(--faint)}
   </header>
 
   <main>
-    <h1 id="title">The AI five-layer cake</h1>
+    <h1 id="title">The AI supply chain in five layers</h1>
     <p class="deck" id="deck"></p>
     <p class="asof" id="asof"></p>
 
@@ -200,7 +200,7 @@ footer{padding:20px 0 44px;font-size:12.5px;color:var(--faint)}
 "use strict";
 const NV="https://blogs.nvidia.com/blog/ai-5-layer-cake";
 const T={
-en:{title:"The AI five-layer cake",
+en:{title:"The AI supply chain in five layers",
  deck:"Jensen Huang splits AI into five layers, each built on the one below. This page places the US-listed companies that matter most in each layer, plus the ones retail investors watch.",
  asof:(d,f,t)=>`Insider data through ${d}. Markers cover effective trades from ${f} to ${t}.`,
  search:"Search ticker or name, e.g. NVDA", fAll:n=>`All ${n}`, fCore:n=>`Core only ${n}`,
@@ -214,7 +214,7 @@ en:{title:"The AI five-layer cake",
  notes:[`<b>How to read.</b> Jensen Huang describes AI as a five-layer cake: energy, chips, infrastructure, models and applications, each built on the one below (<a href="${NV}" rel="noopener">NVIDIA blog</a>). Each company sits in the layer where it mainly earns its money; companies that span layers say so in the detail panel.`,
   `<b>Insider markers.</b> Only effective trades in SEC Form 4 filings are counted: 10b5-1 plan trades, option exercises, tax withholding, IPO and SPAC purchases are excluded. This summarizes public filings and is not a trading signal.`,
   `<b>The list.</b> Maintained by hand, not a recommendation, and revisited each earnings season.`]},
-zh:{title:"AI 五层蛋糕",
+zh:{title:"AI 产业链：五层全景",
  deck:"黄仁勋把 AI 产业拆成五层，每一层都建立在下一层之上。这里按这五层，列出美股里每一层最重要的公司，再补上散户关注度高的。",
  asof:(d,f,t)=>`内部人数据截至 ${d}。标记统计 ${f} 至 ${t} 的有效交易。`,
  search:"搜索代码或公司名，如 NVDA、台积电", fAll:n=>`全部 ${n}`, fCore:n=>`仅核心 ${n}`,
@@ -228,7 +228,7 @@ zh:{title:"AI 五层蛋糕",
  notes:[`<b>怎么读。</b>黄仁勋用“五层蛋糕”描述 AI 产业：能源、芯片、基础设施、模型、应用，每一层都建立在下一层之上（<a href="${NV}" rel="noopener">NVIDIA 官方博客</a>）。每家公司放在它主要赚钱的那一层，跨层的公司会在详情里标出。`,
   `<b>内部人标记。</b>只统计 SEC Form 4 里的有效交易，已排除 10b5-1 交易计划、期权行权、税务代扣、IPO 与 SPAC 买入。这是公开申报的汇总，不是买卖信号。`,
   `<b>名单。</b>由人工维护，不是推荐，每个财报季会回顾调整。`]},
-tw:{title:"AI 五層蛋糕",
+tw:{title:"AI 產業鏈：五層全景",
  deck:"黃仁勳把 AI 產業拆成五層，每一層都建立在下一層之上。這裡依這五層，列出美股裡每一層最重要的公司，再補上散戶關注度高的。",
  asof:(d,f,t)=>`內部人資料截至 ${d}。標記統計 ${f} 至 ${t} 的有效交易。`,
  search:"搜尋代號或公司名，如 NVDA、台積電", fAll:n=>`全部 ${n}`, fCore:n=>`僅核心 ${n}`,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build stack/data.json for the five-layer AI cake chart (stack/index.html).
+"""Build stack/data.json for the five-layer AI supply-chain chart (stack/index.html).
 
   python3 scripts/build_stack.py            # reads stack/*.csv, stack/taxonomy.json, data/days/*.json
 
