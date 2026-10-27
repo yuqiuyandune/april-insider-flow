@@ -6,7 +6,7 @@
 <title>The AI supply chain in five layers · April's Insider Flow</title>
 <meta name="description" content="AI 产业链：五层全景：能源、芯片、基础设施、模型、应用，每一层最重要的美股公司，以及近 30 天内部人买卖。The AI supply chain in five layers: the key US-listed companies in each layer, with 30-day insider activity.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="April's Insider Flow"><meta property="og:title" content="AI 产业链：五层全景 · The AI supply chain in five layers">
-<meta property="og:description" content="能源、芯片、基础设施、模型、应用，每层最重要的美股公司与近 30 天内部人买卖。"><meta property="og:url" content="https://april-insider-flow.com/stack/"><meta property="og:image" content="https://april-insider-flow.com/og.png">
+<meta property="og:description" content="能源、芯片、基础设施、模型、应用，每层最重要的美股公司与近 30 天内部人买卖。"><meta property="og:url" content="https://april-insider-flow.com/"><meta property="og:image" content="https://april-insider-flow.com/og.png">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://april-insider-flow.com/og.png">
 <link rel="canonical" href="https://april-insider-flow.com/stack/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -50,8 +50,8 @@ a{color:var(--accent)}
 .lang button{border:0;background:none;padding:5px 10px;border-radius:999px;font-size:13px;color:var(--muted);cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 
-h1{font:700 clamp(30px,4.6vw,44px)/1.08 var(--display);letter-spacing:-.015em;margin:26px 0 12px}
-.deck{max-width:60ch;color:var(--muted);margin:0 0 8px;font-size:16px}
+h1{font:700 clamp(24px,3.4vw,30px)/1.12 var(--display);letter-spacing:-.015em;margin:8px 0 6px}
+.deck{max-width:70ch;color:var(--muted);margin:0 0 4px;font-size:14.5px}
 .asof{font-size:13px;color:var(--faint);margin:0}
 
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 12px}
@@ -119,6 +119,8 @@ h1{font:700 clamp(30px,4.6vw,44px)/1.08 var(--display);letter-spacing:-.015em;ma
 .fig.z b{color:var(--faint)}
 .row .note{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .row p.msg{margin:0;font-size:14px;color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.btn.alt{background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:9px 15px}
 .btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:600;font-size:14px;padding:10px 16px;border-radius:12px}
 .fine{margin:12px 0 0;font-size:12px;color:var(--faint)}
 .empty h2{font-size:20px}
@@ -158,6 +160,7 @@ footer{padding:20px 0 44px;font-size:12.5px;color:var(--faint)}
 </style>
 </head>
 <body>
+<script src="/earnings/switcher.js"></script>
 <div class="wrap">
   <header class="top">
     <a class="brand" href="/" aria-label="April's Insider Flow">
@@ -198,10 +201,12 @@ footer{padding:20px 0 44px;font-size:12.5px;color:var(--faint)}
 
 <script>
 "use strict";
+/* old links to the tracker used the site root: /#t=NVDA, /?sub=1 */
+try{if(/^#[tp]=/.test(location.hash)||new URLSearchParams(location.search).has("sub"))location.replace("/insider/"+location.search+location.hash)}catch(e){}
 const NV="https://blogs.nvidia.com/blog/ai-5-layer-cake";
 const T={
 en:{title:"The AI supply chain in five layers",
- deck:"Jensen Huang splits AI into five layers, each built on the one below. This page places the US-listed companies that matter most in each layer, plus the ones retail investors watch.",
+ deck:"Jensen Huang's five layers of AI, each built on the one below, with the US-listed companies that matter most in each.",
  asof:(d,f,t)=>`Insider data through ${d}. Markers cover effective trades from ${f} to ${t}.`,
  search:"Search ticker or name, e.g. NVDA", fAll:n=>`All ${n}`, fCore:n=>`Core only ${n}`,
  lCore:"Core: leads its segment, is hard to replace, or is a major buyer of AI capex", lHot:"Popular: added because retail investors watch it",
@@ -210,12 +215,12 @@ en:{title:"The AI supply chain in five layers",
  core:"Core", hot:"Popular", also:"Also touches", ins:"Insider activity, last 30 days", buy:"Effective buying", sell:"Effective selling",
  days:n=>`${n} filing ${n===1?"day":"days"} in the window`, onlyExcl:"Filings exist, but all are of types the site excludes (10b5-1 plans, option exercises, tax withholding and similar).",
  noWin:"No open-market buy or sell filings in the last 30 days.", notListed:"Not listed yet, so no data.", noRec:f=>`No open-market buy or sell filings for this company in the site's data since ${f}.`,
- details:"See insider trade details", fine:"A summary of public filings, not trading advice.", close:"Close", err:"Could not load the data. Please refresh.",
+ details:"See insider trade details", earn:"See earnings analysis", fine:"A summary of public filings, not trading advice.", close:"Close", err:"Could not load the data. Please refresh.",
  notes:[`<b>How to read.</b> Jensen Huang describes AI as a five-layer cake: energy, chips, infrastructure, models and applications, each built on the one below (<a href="${NV}" rel="noopener">NVIDIA blog</a>). Each company sits in the layer where it mainly earns its money; companies that span layers say so in the detail panel.`,
   `<b>Insider markers.</b> Only effective trades in SEC Form 4 filings are counted: 10b5-1 plan trades, option exercises, tax withholding, IPO and SPAC purchases are excluded. This summarizes public filings and is not a trading signal.`,
   `<b>The list.</b> Maintained by hand, not a recommendation, and revisited each earnings season.`]},
 zh:{title:"AI 产业链：五层全景",
- deck:"黄仁勋把 AI 产业拆成五层，每一层都建立在下一层之上。这里按这五层，列出美股里每一层最重要的公司，再补上散户关注度高的。",
+ deck:"黄仁勋的 AI 五层，每层建立在下一层之上，列出每层最重要的美股公司。",
  asof:(d,f,t)=>`内部人数据截至 ${d}。标记统计 ${f} 至 ${t} 的有效交易。`,
  search:"搜索代码或公司名，如 NVDA、台积电", fAll:n=>`全部 ${n}`, fCore:n=>`仅核心 ${n}`,
  lCore:"核心：该环节份额领先、地位难以替代，或是 AI 资本开支的主要买方", lHot:"热门：散户关注度高的补充",
@@ -224,12 +229,12 @@ zh:{title:"AI 产业链：五层全景",
  core:"核心", hot:"热门", also:"也涉及", ins:"近 30 天内部人动向", buy:"有效买入", sell:"有效卖出",
  days:n=>`期间共 ${n} 个申报日`, onlyExcl:"有申报，但都属于站点已排除的类型（10b5-1 计划、期权行权、税务代扣等）。",
  noWin:"近 30 天没有公开市场买卖申报。", notListed:"尚未上市，暂无数据。", noRec:f=>`自 ${f} 起，站点数据里没有这家公司的公开市场买卖申报。`,
- details:"查看内部人交易明细", fine:"这是公开申报的汇总，不是买卖建议。", close:"关闭", err:"数据加载失败，请刷新重试。",
+ details:"查看内部人动向明细", earn:"查看财报解读", fine:"这是公开申报的汇总，不是买卖建议。", close:"关闭", err:"数据加载失败，请刷新重试。",
  notes:[`<b>怎么读。</b>黄仁勋用“五层蛋糕”描述 AI 产业：能源、芯片、基础设施、模型、应用，每一层都建立在下一层之上（<a href="${NV}" rel="noopener">NVIDIA 官方博客</a>）。每家公司放在它主要赚钱的那一层，跨层的公司会在详情里标出。`,
   `<b>内部人标记。</b>只统计 SEC Form 4 里的有效交易，已排除 10b5-1 交易计划、期权行权、税务代扣、IPO 与 SPAC 买入。这是公开申报的汇总，不是买卖信号。`,
   `<b>名单。</b>由人工维护，不是推荐，每个财报季会回顾调整。`]},
 tw:{title:"AI 產業鏈：五層全景",
- deck:"黃仁勳把 AI 產業拆成五層，每一層都建立在下一層之上。這裡依這五層，列出美股裡每一層最重要的公司，再補上散戶關注度高的。",
+ deck:"黃仁勳的 AI 五層，每層建立在下一層之上，列出每層最重要的美股公司。",
  asof:(d,f,t)=>`內部人資料截至 ${d}。標記統計 ${f} 至 ${t} 的有效交易。`,
  search:"搜尋代號或公司名，如 NVDA、台積電", fAll:n=>`全部 ${n}`, fCore:n=>`僅核心 ${n}`,
  lCore:"核心：該環節市占領先、地位難以取代，或是 AI 資本支出的主要買方", lHot:"熱門：散戶關注度高的補充",
@@ -238,7 +243,7 @@ tw:{title:"AI 產業鏈：五層全景",
  core:"核心", hot:"熱門", also:"也涉及", ins:"近 30 天內部人動向", buy:"有效買入", sell:"有效賣出",
  days:n=>`期間共 ${n} 個申報日`, onlyExcl:"有申報，但都屬於站點已排除的類型（10b5-1 計畫、選擇權行使、稅務代扣等）。",
  noWin:"近 30 天沒有公開市場買賣申報。", notListed:"尚未上市，暫無資料。", noRec:f=>`自 ${f} 起，站點資料裡沒有這家公司的公開市場買賣申報。`,
- details:"查看內部人交易明細", fine:"這是公開申報的彙總，不是買賣建議。", close:"關閉", err:"資料載入失敗，請重新整理。",
+ details:"查看內部人動向明細", earn:"查看財報解讀", fine:"這是公開申報的彙總，不是買賣建議。", close:"關閉", err:"資料載入失敗，請重新整理。",
  notes:[`<b>怎麼讀。</b>黃仁勳用「五層蛋糕」描述 AI 產業：能源、晶片、基礎設施、模型、應用，每一層都建立在下一層之上（<a href="${NV}" rel="noopener">NVIDIA 官方部落格</a>）。每家公司放在它主要賺錢的那一層，跨層的公司會在詳情裡標出。`,
   `<b>內部人標記。</b>只統計 SEC Form 4 裡的有效交易，已排除 10b5-1 交易計畫、選擇權行使、稅務代扣、IPO 與 SPAC 買入。這是公開申報的彙總，不是買賣訊號。`,
   `<b>名單。</b>由人工維護，不是推薦，每個財報季會回顧調整。`]}
@@ -288,6 +293,7 @@ function applyDim(){document.querySelectorAll("#stack .chip").forEach(el=>{const
 function touchLayers(){const c=sel&&D.companies.find(x=>x.t===sel);const ids=c?c.also:[];
   document.querySelectorAll("#stack .band").forEach(b=>b.classList.toggle("touch",ids.includes(+b.dataset.layer)))}
 
+let EARN=null;const earnHas=t=>!!EARN&&EARN.has(t);
 function renderPanel(){
   const p=$("panel"),c=sel&&D.companies.find(x=>x.t===sel),s=t();
   p.classList.toggle("open",!!c);
@@ -309,7 +315,7 @@ function renderPanel(){
     <p class="reason">${esc(c.reason[lang]||c.reason.zh)}</p>
     ${also?`<div class="row"><h4>${esc(s.also)}</h4><div class="tags">${also}</div></div>`:""}
     <div class="row"><h4>${esc(s.ins)}</h4>${insHtml}</div>
-    ${href?`<a class="btn" href="${href}">${esc(s.details)}</a>`:""}
+    ${href||earnHas(c.t)?`<div class="links">${href?`<a class="btn" href="${href}">${esc(s.details)}</a>`:""}${earnHas(c.t)?`<a class="btn alt" href="/earnings/#${encodeURIComponent(c.t)}">${esc(s.earn)}</a>`:""}</div>`:""}
     <p class="fine">${esc(s.fine)}</p>`;
 }
 
@@ -353,7 +359,8 @@ $("q").addEventListener("keydown",e=>{if(e.key!=="Enter"||!query)return;
   const hit=D.companies.find(c=>visible(c)&&matches(c));if(hit){e.preventDefault();select(hit.t,true)}});
 
 renderStatic();
-fetch("data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
+fetch("/earnings/data/index.json").then(r=>r.ok?r.json():null).then(j=>{if(j&&j.companies){EARN=new Set(j.companies.map(c=>c.t));if(D)renderPanel()}}).catch(()=>{});
+fetch("/stack/data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
   D=d;renderStatic();renderStack();
   let h="";try{h=decodeURIComponent(location.hash.slice(1))}catch(e){}
   const hit=h&&D.companies.find(c=>c.t===h.toUpperCase());

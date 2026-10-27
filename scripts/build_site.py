@@ -131,14 +131,14 @@ def company_pages(days, out):
 <title>{E(title)}</title><meta name="description" content="{E(desc)}"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="canonical" href="{SITE}/s/{sl}.html"><link rel="alternate" hreflang="zh-Hans" href="{SITE}/s/{sl}.html"><link rel="alternate" hreflang="zh-Hant" href="{SITE}/tw/s/{sl}.html">
 <meta property="og:type" content="article"><meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
 <meta property="og:url" content="{SITE}/s/{sl}.html"><meta property="og:image" content="{SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
-<link rel="alternate" type="application/rss+xml" title="April's Insider Flow" href="{SITE}/feed.xml"><style>{PAGE_CSS}</style></head><body><main>
+<link rel="alternate" type="application/rss+xml" title="April's Insider Flow" href="{SITE}/feed.xml"><style>{PAGE_CSS}</style></head><body><script src="/earnings/switcher.js"></script><main>
 <a class="brand" href="/">April's Insider Flow</a><span class="lsw"><b>简体</b> · <a href="/tw/s/{sl}.html" lang="zh-TW">繁體</a></span>
 <div class="card"><span class="tag">{E(SEC_ZH.get(sec, sec))} · {E(sec)}</span>
 <h1>{E(tk)} · {E(nm)}</h1><div class="sub">内部人交易（Form 4）· Insider trading · {first} – {last}</div>
 <p>{E(desc)}</p>
 <div class="tiles"><div class="tile"><span>买入 Bought</span><b class="pos">{money(b)}</b></div><div class="tile"><span>卖出 Sold</span><b class="neg">{money(s_)}</b></div>
 <div class="tile"><span>有效买入 Effective bought</span><b class="pos">{money(eb)}</b></div><div class="tile"><span>有效卖出 Effective sold</span><b class="neg">{money(es)}</b></div></div>
-<a class="cta" href="/#t={E(tk or nm)}">打开互动页面（K 线、成交价图）Open interactive page →</a></div>
+<a class="cta" href="/insider/#t={E(tk or nm)}">打开互动页面（K 线、成交价图）Open interactive page →</a></div>
 <div class="card"><h2>最近申报 Recent filings</h2><div class="tw"><table><tr><th>交易日</th><th>内部人</th><th>类型</th><th class="r">股数</th><th class="r">价格</th><th class="r">金额</th><th></th></tr>{''.join(trs)}</table></div>
 <div class="sub" style="margin-top:8px">「有效」= 高管或董事的公开市场主动买卖，排除 10b5-1 计划、行权卖出、缴税卖出、IPO/认购等。</div></div>
 {f'<div class="card"><h2>拟出售 Form 144</h2><div class="tw"><table><tr><th>预计出售日</th><th>申报人</th><th class="r">股数</th><th class="r">约金额</th><th></th></tr>{t144}</table></div></div>' if t144 else ''}
@@ -195,7 +195,7 @@ def feeds(days, out):
         items_zh.append((t_zh, " ".join(zh), date, pub)); items_en.append((t_en, " ".join(en), date, pub))
     items_tw = [(tw(t), tw(d_), date, pub) for t, d_, date, pub in items_zh]
     for fn, items, title, lang in (("feed.xml", items_zh, "April's Insider Flow · 内部人动向", "zh-cn"), ("feed-tw.xml", items_tw, tw("April's Insider Flow · 内部人动向"), "zh-tw"), ("feed-en.xml", items_en, "April's Insider Flow · Insider flow", "en")):
-        body = "".join(f"<item><title>{E(t)}</title><link>{SITE}/{"tw/" if lang == "zh-tw" else "en/" if lang == "en" else ""}</link><guid isPermaLink=\"false\">insider-flow-{lang}-{date}</guid><pubDate>{pub}</pubDate><description>{E(desc)}</description></item>" for t, desc, date, pub in items)
+        body = "".join(f"<item><title>{E(t)}</title><link>{SITE}/{"tw/" if lang == "zh-tw" else "en/" if lang == "en" else "zh/"}</link><guid isPermaLink=\"false\">insider-flow-{lang}-{date}</guid><pubDate>{pub}</pubDate><description>{E(desc)}</description></item>" for t, desc, date, pub in items)
         last = items[0][3] if items else format_datetime(dt.datetime.now(dt.timezone.utc))
         open(f"{out}/{fn}", "w", encoding="utf-8").write(f"""<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>{E(title)}</title><link>{SITE}/</link><description>{E('每日美股内部人买卖要点（SEC Form 4）' if lang == 'zh-cn' else tw('每日美股内部人买卖要点（SEC Form 4）') if lang == 'zh-tw' else 'Daily US insider trading highlights from SEC Form 4')}</description><language>{lang}</language><lastBuildDate>{last}</lastBuildDate>{body}</channel></rss>""")
 
@@ -210,7 +210,11 @@ def lang_pages(html, out):
     alt = (f'<link rel="alternate" hreflang="x-default" href="{SITE}/"><link rel="alternate" hreflang="en" href="{SITE}/en/">'
            f'<link rel="alternate" hreflang="zh-Hans" href="{SITE}/zh/"><link rel="alternate" hreflang="zh-Hant" href="{SITE}/tw/">')
     root = html.replace("</head>", alt + "</head>", 1)
-    open(f"{out}/index.html", "w", encoding="utf-8").write(root)
+    os.makedirs(f"{out}/insider", exist_ok=True)
+    ins = root.replace(f'<meta property="og:url" content="{SITE}/">', f'<meta property="og:url" content="{SITE}/insider/">', 1)
+    ins = ins.replace('<meta charset="utf-8">', f'<meta charset="utf-8"><link rel="canonical" href="{SITE}/insider/">', 1)
+    ins = ins.replace(f'hreflang="x-default" href="{SITE}/"', f'hreflang="x-default" href="{SITE}/insider/"', 1)
+    open(f"{out}/insider/index.html", "w", encoding="utf-8").write(ins)
     h = root.index("<style>")
     head, rest = root[:h], root[h:]
     for l in ("en", "zh", "tw"):
@@ -229,12 +233,15 @@ def lang_pages(html, out):
 
 
 def stack_page(out):
-    """Five-layer AI supply-chain chart: copy stack/index.html and the freshly generated stack/data.json to /stack/."""
+    """Homepage = the AI supply-chain chart (stack/index.html); its data lives at /stack/data.json. /stack/ redirects to /."""
     src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "stack")
-    if not os.path.exists(os.path.join(src, "data.json")): return
+    if not os.path.exists(os.path.join(src, "data.json")): return False
     os.makedirs(f"{out}/stack", exist_ok=True)
-    for fn in ("index.html", "data.json"):
-        shutil.copyfile(os.path.join(src, fn), f"{out}/stack/{fn}")
+    shutil.copyfile(os.path.join(src, "data.json"), f"{out}/stack/data.json")
+    page = open(os.path.join(src, "index.html"), encoding="utf-8").read()
+    page = page.replace('<meta charset="utf-8">', f'<meta charset="utf-8"><link rel="canonical" href="{SITE}/">', 1)
+    open(f"{out}/index.html", "w", encoding="utf-8").write(page)
+    return True
 
 
 # ---------------------------------------------------------------- main
@@ -298,13 +305,12 @@ def main():
     lang_pages(open(index_html, encoding="utf-8").read(), out)
     pages = company_pages(days, out)
     feeds(days, out)
-    sm = [f"<url><loc>{SITE}/</loc><lastmod>{dates[-1]}</lastmod><changefreq>daily</changefreq></url>"]
-    sm += [f"<url><loc>{SITE}/{l}/</loc><lastmod>{dates[-1]}</lastmod><changefreq>daily</changefreq></url>" for l in ("en", "zh", "tw")]
-    sm += [f"<url><loc>{SITE}/stack/</loc><lastmod>{dates[-1]}</lastmod><changefreq>daily</changefreq></url>"]
+    sm = [f"<url><loc>{SITE}/{p}</loc><lastmod>{dates[-1]}</lastmod><changefreq>daily</changefreq></url>" for p in ("", "insider/", "en/", "zh/", "tw/")]
     sm += [f"<url><loc>{SITE}/s/{s}.html</loc><lastmod>{lm}</lastmod></url><url><loc>{SITE}/tw/s/{s}.html</loc><lastmod>{lm}</lastmod></url>" for s, lm in sorted(pages)]
     open(f"{out}/sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(sm) + "</urlset>")
     open(f"{out}/robots.txt", "w").write(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
-    stack_page(out)
+    has_home = stack_page(out)
+    if not has_home: shutil.copyfile(f"{out}/insider/index.html", f"{out}/index.html")
     open(f"{out}/favicon.svg", "w").write(ICON_SVG)
     for n, b64 in ICONS.items():
         open(f"{out}/{n}.png", "wb").write(base64.b64decode(b64))
@@ -316,8 +322,9 @@ def main():
         if b64: open(f"{out}/{fn}", "wb").write(base64.b64decode(b64))
     open(f"{out}/_headers", "w").write("/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/data/*\n  Cache-Control: public, max-age=300\n/index.html\n  Cache-Control: public, max-age=300\n"
                                        "/feed*.xml\n  Content-Type: application/rss+xml; charset=utf-8\n  Cache-Control: public, max-age=900\n"
-                                       "/stack/data.json\n  Cache-Control: public, max-age=300\n/stack/\n  Cache-Control: public, max-age=300\n"
+                                       "/stack/data.json\n  Cache-Control: public, max-age=300\n/insider/\n  Cache-Control: public, max-age=300\n"
                                        "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n")
+    open(f"{out}/_redirects", "w").write("/stack / 301\n/stack/ / 301\n")
     print(f"built {len(dates)} days: {dates[0]} .. {dates[-1]}; {len(pages)} company pages; feeds + sitemap")
 
 
