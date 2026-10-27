@@ -66,6 +66,21 @@ h1{font:700 clamp(24px,3.4vw,30px)/1.12 var(--display);letter-spacing:-.015em;ma
 .legend .sw{width:22px;height:14px;border-radius:5px;border:1px solid var(--faint);background:var(--surface)}
 .legend .sw.hot{border-style:dashed;background:transparent}
 
+.about{margin:2px 0 14px;border:1px solid var(--line);background:var(--surface);border-radius:16px}
+.about>summary{cursor:pointer;list-style:none;padding:11px 16px;font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:8px}
+.about>summary::-webkit-details-marker{display:none}
+.about>summary::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translate(-2px,-2px);transition:transform .15s}
+.about[open]>summary::after{transform:rotate(-135deg) translate(-2px,-2px)}
+.about-in{padding:0 16px 14px}
+.about-in h2{font:700 clamp(19px,2.6vw,23px)/1.2 var(--display);margin:0 0 12px;letter-spacing:-.01em}
+.about-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.about-grid a{display:block;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:var(--bg)}
+.about-grid a:hover{border-color:var(--accent)}
+.about-grid b{display:block;font-size:15px;margin-bottom:3px}
+.about-grid span{display:block;font-size:13.5px;line-height:1.5;color:var(--muted)}
+.about-fine{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.about-sub{font:inherit;font-size:13px;font-weight:700;border:0;border-radius:999px;padding:5px 12px;margin-left:4px;background:var(--ink);color:var(--bg);cursor:pointer;vertical-align:baseline}
+@media (max-width:760px){.about-grid{grid-template-columns:1fr}}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:20px;align-items:start}
 
 .tint{--bg-t:oklch(var(--lb) var(--cb) var(--h));--rail-t:oklch(var(--lr) var(--cr) var(--h));--bd-t:oklch(var(--ld) var(--cd) var(--h));--ink-t:oklch(var(--li) var(--ci) var(--h))}
@@ -175,6 +190,11 @@ footer{padding:20px 0 44px;font-size:12.5px;color:var(--faint)}
   </header>
 
   <main>
+    <details class="about" id="about" open>
+      <summary id="about-q"></summary>
+      <div class="about-in"><h2 id="about-h"></h2><div class="about-grid" id="about-grid"></div>
+        <p class="about-fine"><span id="about-fine"></span> <button type="button" class="about-sub" id="about-sub"></button></p></div>
+    </details>
     <h1 id="title">The AI supply chain in five layers</h1>
     <p class="deck" id="deck"></p>
     <p class="asof" id="asof"></p>
@@ -206,6 +226,11 @@ try{if(/^#[tp]=/.test(location.hash)||new URLSearchParams(location.search).has("
 const NV="https://blogs.nvidia.com/blog/ai-5-layer-cake";
 const T={
 en:{title:"The AI supply chain in five layers",
+ aboutQ:"What is this site?", aboutH:"Follow the money behind AI, in three views",
+ about:[["The supply chain","This page. Jensen Huang's five layers of AI, with the US-listed companies that matter most in each, and a marker when insiders have been net buying or selling lately.","#stack"],
+  ["Insider flow","Open-market buys and sells by US company officers and directors, updated every trading day and grouped by sector. Planned sales, option exercises and tax sales are filtered out.","/insider/"],
+  ["Earnings lens","One page per company per quarter: how it did, whether the price looks expensive, whether management can be trusted, and what insiders are doing.","/earnings/"]],
+ aboutFine:"Public information only, not investment advice. Want the week's highlights? One email every weekend.", aboutSub:"Subscribe",
  deck:"Jensen Huang's five layers of AI, each built on the one below, with the US-listed companies that matter most in each.",
  asof:(d,f,t)=>`Insider data through ${d}. Markers cover effective trades from ${f} to ${t}.`,
  search:"Search ticker or name, e.g. NVDA", fAll:n=>`All ${n}`, fCore:n=>`Core only ${n}`,
@@ -220,6 +245,11 @@ en:{title:"The AI supply chain in five layers",
   `<b>Insider markers.</b> Only effective trades in SEC Form 4 filings are counted: 10b5-1 plan trades, option exercises, tax withholding, IPO and SPAC purchases are excluded. This summarizes public filings and is not a trading signal.`,
   `<b>The list.</b> Maintained by hand, not a recommendation, and revisited each earnings season.`]},
 zh:{title:"AI 产业链：五层全景",
+ aboutQ:"这个网站是做什么的？", aboutH:"从三个角度，看 AI 背后的资金动向",
+ about:[["AI 产业链","就是这一页。黄仁勋的 AI 五层，每层最重要的美股公司，近期内部人在净买入还是净卖出，直接标在公司旁边。","#stack"],
+  ["内部人动向","美股高管和董事在公开市场的买卖，每个交易日更新，按板块查看。已经剔除了计划内卖出、期权行权和缴税卖出。","/insider/"],
+  ["财报解读","每家公司每个季度一页：业绩怎么样、价格贵不贵、管理层的话可信吗、内部人在买还是卖。","/earnings/"]],
+ aboutFine:"只整理公开信息，不构成投资建议。想看每周要点？每个周末一封邮件。", aboutSub:"订阅",
  deck:"黄仁勋的 AI 五层，每层建立在下一层之上，列出每层最重要的美股公司。",
  asof:(d,f,t)=>`内部人数据截至 ${d}。标记统计 ${f} 至 ${t} 的有效交易。`,
  search:"搜索代码或公司名，如 NVDA、台积电", fAll:n=>`全部 ${n}`, fCore:n=>`仅核心 ${n}`,
@@ -234,6 +264,11 @@ zh:{title:"AI 产业链：五层全景",
   `<b>内部人标记。</b>只统计 SEC Form 4 里的有效交易，已排除 10b5-1 交易计划、期权行权、税务代扣、IPO 与 SPAC 买入。这是公开申报的汇总，不是买卖信号。`,
   `<b>名单。</b>由人工维护，不是推荐，每个财报季会回顾调整。`]},
 tw:{title:"AI 產業鏈：五層全景",
+ aboutQ:"這個網站是做什麼的？", aboutH:"從三個角度，看 AI 背後的資金動向",
+ about:[["AI 產業鏈","就是這一頁。黃仁勳的 AI 五層，每層最重要的美股公司，近期內部人在淨買入還是淨賣出，直接標在公司旁邊。","#stack"],
+  ["內部人動向","美股高管和董事在公開市場的買賣，每個交易日更新，依板塊查看。已經剔除了計畫內賣出、選擇權行使和繳稅賣出。","/insider/"],
+  ["財報解讀","每家公司每個季度一頁：業績如何、價格貴不貴、管理層的話可信嗎、內部人在買還是賣。","/earnings/"]],
+ aboutFine:"只整理公開資訊，不構成投資建議。想看每週要點？每個週末一封郵件。", aboutSub:"訂閱",
  deck:"黃仁勳的 AI 五層，每層建立在下一層之上，列出每層最重要的美股公司。",
  asof:(d,f,t)=>`內部人資料截至 ${d}。標記統計 ${f} 至 ${t} 的有效交易。`,
  search:"搜尋代號或公司名，如 NVDA、台積電", fAll:n=>`全部 ${n}`, fCore:n=>`僅核心 ${n}`,
@@ -327,8 +362,13 @@ function select(tk,scroll){
   if(scroll&&sel){const el=document.querySelector(`#stack .chip[data-t="${CSS.escape(sel)}"]`);if(el)el.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})}
 }
 
+function renderAbout(s){
+  $("about-q").textContent=s.aboutQ;$("about-h").textContent=s.aboutH;
+  $("about-grid").innerHTML=s.about.map(a=>`<a href="${a[2]}"><b>${esc(a[0])}</b><span>${esc(a[1])}</span></a>`).join("");
+  $("about-fine").textContent=s.aboutFine;$("about-sub").textContent=s.aboutSub;
+}
 function renderStatic(){
-  const s=t();document.documentElement.lang=LOC[lang];
+  const s=t();renderAbout(s);document.documentElement.lang=LOC[lang];
   document.title=`${s.title} · April's Insider Flow`;
   $("title").textContent=s.title;$("deck").textContent=s.deck;
   $("q").placeholder=s.search;$("q-l").textContent=s.search;
@@ -344,6 +384,11 @@ function renderStatic(){
 }
 function renderAll(){renderStatic();if(D){renderStack();renderPanel()}}
 
+(()=>{const a=$("about");let v=null;try{v=localStorage.getItem("sif-about")}catch(e){}
+  /* first visit: show the intro open, then keep it collapsed on later visits unless the reader reopens it */
+  if(v==="1")a.open=false;else if(v===null){try{localStorage.setItem("sif-about","1")}catch(e){}}
+  a.querySelector("summary").addEventListener("click",()=>setTimeout(()=>{try{localStorage.setItem("sif-about",a.open?"0":"1")}catch(e){}},0))})();
+$("about-sub").addEventListener("click",()=>{const b=document.getElementById("aps-open");if(b)b.click()});
 document.addEventListener("click",e=>{
   const chip=e.target.closest&&e.target.closest("#stack .chip");
   if(chip){select(chip.dataset.t===sel?null:chip.dataset.t);return}
