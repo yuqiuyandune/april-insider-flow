@@ -229,7 +229,7 @@ def lang_pages(html, out):
 
 
 def stack_page(out):
-    """Five-layer AI chart: copy stack/index.html and the freshly generated stack/data.json to /stack/."""
+    """Five-layer AI cake chart: copy stack/index.html and the freshly generated stack/data.json to /stack/."""
     src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "stack")
     if not os.path.exists(os.path.join(src, "data.json")): return
     os.makedirs(f"{out}/stack", exist_ok=True)
