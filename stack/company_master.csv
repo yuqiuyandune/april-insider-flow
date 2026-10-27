@@ -68,3 +68,10 @@ DDOG,Datadog,Datadog,5,应用,14,企业AI软件,热门,可观测性，AI工作�
 MDB,MongoDB,MongoDB,5,应用,14,企业AI软件,热门,数据库,,是
 AAPL,Apple,苹果,5,应用,15,端侧与实体AI,核心,最大消费设备平台，端侧AI；散户持有最多之一,,是
 TSLA,Tesla,特斯拉,5,应用,15,端侧与实体AI,核心,自动驾驶、Robotaxi、Optimus机器人；散户持有第一,芯片,是
+JPM,JPMorgan Chase,摩根大通,0,资金方,16,银行,核心,数据中心项目贷款的主要牵头行之一，2026 年与 MUFG 牵头德州约 220 亿美元的数据中心融资,,是
+MS,Morgan Stanley,摩根士丹利,0,资金方,16,银行,核心,为 Meta 路易斯安那 Hyperion 数据中心安排约 270 亿美元债券融资，也参与 Meta 埃尔帕索数据中心融资,,是
+GS,Goldman Sachs,高盛,0,资金方,16,银行,核心,为 AI 数据中心开发商安排融资，例如 Applied Digital 的过桥贷款和沙特 Humain 的数据中心融资,,是
+OWL,Blue Owl Capital,Blue Owl,0,资金方,17,资产管理与私募信贷,核心,与 Meta 合资建设 Hyperion 数据中心（约 270 亿美元），私募信贷为 AI 数据中心出资的主力之一,基础设施,是
+BX,Blackstone,黑石,0,资金方,17,资产管理与私募信贷,核心,持有 QTS、AirTrunk 等数据中心，是全球最大的数据中心投资者之一,基础设施,是
+BAM,Brookfield Asset Management,布鲁克菲尔德,0,资金方,17,资产管理与私募信贷,核心,2026 年推出 1000 亿美元 AI 基础设施计划，英伟达参与出资,基础设施;能源,是
+APO,Apollo Global Management,阿波罗,0,资金方,17,资产管理与私募信贷,核心,为 Valor 与 xAI 的 54 亿美元算力交易提供 35 亿美元融资，私募信贷进入 AI 芯片融资,,是

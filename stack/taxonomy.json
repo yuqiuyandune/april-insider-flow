@@ -14,7 +14,10 @@
      "sub":  {"zh": "训练和运行前沿大模型的公司", "tw": "訓練和運行前沿大模型的公司", "en": "Labs that train and run frontier models"}},
     {"id": 5, "zh": "应用", "hue": 325,
      "name": {"zh": "应用", "tw": "應用", "en": "Applications"},
-     "sub":  {"zh": "把 AI 交到用户手上的软件和设备", "tw": "把 AI 交到使用者手上的軟體和裝置", "en": "Software and devices that put AI in users' hands"}}
+     "sub":  {"zh": "把 AI 交到用户手上的软件和设备", "tw": "把 AI 交到使用者手上的軟體和裝置", "en": "Software and devices that put AI in users' hands"}},
+    {"id": 0, "zh": "资金方", "hue": 150,
+     "name": {"zh": "资金方", "tw": "資金方", "en": "Capital"},
+     "sub":  {"zh": "不属于五层，用贷款、债券和股权为整条链提供资金", "tw": "不屬於五層，用貸款、債券和股權為整條鏈提供資金", "en": "Outside the five layers: the loans, bonds and equity that fund the whole stack"}}
   ],
   "segments": [
     {"id": 1,  "layer": 1, "zh": "发电与电网",       "name": {"zh": "发电与电网", "tw": "發電與電網", "en": "Power generation and grid"}},
@@ -31,7 +34,9 @@
     {"id": 12, "layer": 3, "zh": "云厂商",           "name": {"zh": "云厂商", "tw": "雲端廠商", "en": "Cloud providers"}},
     {"id": 13, "layer": 4, "zh": "大模型",           "name": {"zh": "大模型", "tw": "大模型", "en": "Frontier models"}},
     {"id": 14, "layer": 5, "zh": "企业AI软件",       "name": {"zh": "企业 AI 软件", "tw": "企業 AI 軟體", "en": "Enterprise AI software"}},
-    {"id": 15, "layer": 5, "zh": "端侧与实体AI",     "name": {"zh": "端侧与实体 AI", "tw": "端側與實體 AI", "en": "Devices and physical AI"}}
+    {"id": 15, "layer": 5, "zh": "端侧与实体AI",     "name": {"zh": "端侧与实体 AI", "tw": "端側與實體 AI", "en": "Devices and physical AI"}},
+    {"id": 16, "layer": 0, "zh": "银行",             "name": {"zh": "银行", "tw": "銀行", "en": "Banks"}},
+    {"id": 17, "layer": 0, "zh": "资产管理与私募信贷", "name": {"zh": "资产管理与私募信贷", "tw": "資產管理與私募信貸", "en": "Asset managers and private credit"}}
   ],
   "unlisted": ["ANT"]
 }

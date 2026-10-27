@@ -66,6 +66,7 @@ h1{font:700 clamp(24px,3.4vw,30px)/1.12 var(--display);letter-spacing:-.015em;ma
 .legend .sw{width:22px;height:14px;border-radius:5px;border:1px solid var(--faint);background:var(--surface)}
 .legend .sw.hot{border-style:dashed;background:transparent}
 
+.band[data-layer="0"]{margin-top:14px;border-style:dashed}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:20px;align-items:start}
 
 .tint{--bg-t:oklch(var(--lb) var(--cb) var(--h));--rail-t:oklch(var(--lr) var(--cr) var(--h));--bd-t:oklch(var(--ld) var(--cd) var(--h));--ink-t:oklch(var(--li) var(--ci) var(--h))}
@@ -218,6 +219,7 @@ en:{title:"The AI supply chain in five layers",
  details:"See insider trade details", earn:"See earnings analysis", fine:"A summary of public filings, not trading advice.", close:"Close", err:"Could not load the data. Please refresh.",
  notes:[`<b>How to read.</b> Jensen Huang describes AI as a five-layer cake: energy, chips, infrastructure, models and applications, each built on the one below (<a href="${NV}" rel="noopener">NVIDIA blog</a>). Each company sits in the layer where it mainly earns its money; companies that span layers say so in the detail panel.`,
   `<b>Insider markers.</b> Only effective trades in SEC Form 4 filings are counted: 10b5-1 plan trades, option exercises, tax withholding, IPO and SPAC purchases are excluded. This summarizes public filings and is not a trading signal.`,
+  `<b>Capital.</b> Banks and asset managers sit below the five layers. They make nothing in the stack, but their loans, bonds and equity pay for much of it, so their earnings show whether the money behind AI spending is still flowing.`,
   `<b>The list.</b> Maintained by hand, not a recommendation, and revisited each earnings season.`]},
 zh:{title:"AI 产业链：五层全景",
  deck:"黄仁勋的 AI 五层，每层建立在下一层之上，列出每层最重要的美股公司。",
@@ -232,6 +234,7 @@ zh:{title:"AI 产业链：五层全景",
  details:"查看内部人动向明细", earn:"查看财报解读", fine:"这是公开申报的汇总，不是买卖建议。", close:"关闭", err:"数据加载失败，请刷新重试。",
  notes:[`<b>怎么读。</b>黄仁勋用“五层蛋糕”描述 AI 产业：能源、芯片、基础设施、模型、应用，每一层都建立在下一层之上（<a href="${NV}" rel="noopener">NVIDIA 官方博客</a>）。每家公司放在它主要赚钱的那一层，跨层的公司会在详情里标出。`,
   `<b>内部人标记。</b>只统计 SEC Form 4 里的有效交易，已排除 10b5-1 交易计划、期权行权、税务代扣、IPO 与 SPAC 买入。这是公开申报的汇总，不是买卖信号。`,
+  `<b>资金方。</b>银行和资产管理公司放在五层之下。它们不生产链上的东西，但 AI 建设的很大一部分钱来自它们的贷款、债券和股权投资，它们的财报能看出 AI 资本开支背后的钱还在不在流动。`,
   `<b>名单。</b>由人工维护，不是推荐，每个财报季会回顾调整。`]},
 tw:{title:"AI 產業鏈：五層全景",
  deck:"黃仁勳的 AI 五層，每層建立在下一層之上，列出每層最重要的美股公司。",
@@ -246,6 +249,7 @@ tw:{title:"AI 產業鏈：五層全景",
  details:"查看內部人動向明細", earn:"查看財報解讀", fine:"這是公開申報的彙總，不是買賣建議。", close:"關閉", err:"資料載入失敗，請重新整理。",
  notes:[`<b>怎麼讀。</b>黃仁勳用「五層蛋糕」描述 AI 產業：能源、晶片、基礎設施、模型、應用，每一層都建立在下一層之上（<a href="${NV}" rel="noopener">NVIDIA 官方部落格</a>）。每家公司放在它主要賺錢的那一層，跨層的公司會在詳情裡標出。`,
   `<b>內部人標記。</b>只統計 SEC Form 4 裡的有效交易，已排除 10b5-1 交易計畫、選擇權行使、稅務代扣、IPO 與 SPAC 買入。這是公開申報的彙總，不是買賣訊號。`,
+  `<b>資金方。</b>銀行和資產管理公司放在五層之下。它們不生產鏈上的東西，但 AI 建設的很大一部分錢來自它們的貸款、債券和股權投資，它們的財報能看出 AI 資本支出背後的錢還在不在流動。`,
   `<b>名單。</b>由人工維護，不是推薦，每個財報季會回顧調整。`]}
 };
 const LANGS=["en","zh","tw"],LOC={en:"en",zh:"zh-CN",tw:"zh-TW"};
@@ -284,7 +288,7 @@ function renderStack(){
       const sc=ls.filter(c=>c.seg===s.id);
       return sc.length?`<div class="seg"><h3>${esc(s.name[lang])}</h3><div class="chips">${sc.map(chipHtml).join("")}</div></div>`:""}).join("");
     return `<section class="band tint" data-layer="${L.id}" style="--h:${L.hue};--i:${L.id-1}" aria-label="${esc(L.name[lang])}">
-      <header class="rail"><span class="num" aria-hidden="true">${L.id}</span><h2>${esc(L.name[lang])}</h2><p>${esc(L.sub[lang])}</p>
+      <header class="rail"><span class="num" aria-hidden="true">${L.id||"$"}</span><h2>${esc(L.name[lang])}</h2><p>${esc(L.sub[lang])}</p>
         <div class="mood"><span class="lbl">${esc(t().mood)}</span><span class="m" role="img" aria-label="${esc(t().m_up+": "+t().unit(up))}">${mkSvg("up")}${esc(t().unit(up))}</span><span class="m" role="img" aria-label="${esc(t().m_down+": "+t().unit(dn))}">${mkSvg("down")}${esc(t().unit(dn))}</span></div></header>
       <div class="segs">${segs}</div></section>`}).join("");
   applyDim();touchLayers();

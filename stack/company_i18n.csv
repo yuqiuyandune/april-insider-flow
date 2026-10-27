@@ -68,3 +68,10 @@ DDOG,Datadog,Observability; AI workloads help,可觀測性，AI工作負載受�
 MDB,MongoDB,Database,資料庫
 AAPL,蘋果,Largest consumer-device platform; on-device AI; among retail investors' most-held stocks,最大消費設備平台，端側AI；散戶持有最多之一
 TSLA,特斯拉,"Self-driving, robotaxi and Optimus robots; retail investors' most-held stock",自動駕駛、Robotaxi、Optimus機器人；散戶持有第一
+JPM,摩根大通,One of the main lead lenders on data-center project loans; in 2026 co-led a roughly $22B Texas data-center financing with MUFG,資料中心專案貸款的主要牽頭行之一，2026 年與 MUFG 牽頭德州約 220 億美元的資料中心融資
+MS,摩根士丹利,Arranged about $27B of bonds for Meta's Hyperion data center in Louisiana and worked on Meta's El Paso data-center deal,為 Meta 路易斯安那 Hyperion 資料中心安排約 270 億美元債券融資，也參與 Meta 艾爾帕索資料中心融資
+GS,高盛,"Arranges financing for AI data-center developers, such as a bridge loan for Applied Digital and data-center financing for Saudi Arabia's Humain",為 AI 資料中心開發商安排融資，例如 Applied Digital 的過橋貸款和沙烏地 Humain 的資料中心融資
+OWL,Blue Owl,Joint venture with Meta on the roughly $27B Hyperion data center; one of the biggest private-credit funders of AI data centers,與 Meta 合資建設 Hyperion 資料中心（約 270 億美元），私募信貸為 AI 資料中心出資的主力之一
+BX,黑石,Owns data-center operators such as QTS and AirTrunk; one of the largest data-center investors in the world,持有 QTS、AirTrunk 等資料中心，是全球最大的資料中心投資者之一
+BAM,布魯克菲爾德,"Launched a $100B AI infrastructure program in 2026, with NVIDIA as an investor",2026 年推出 1000 億美元 AI 基礎設施計畫，輝達參與出資
+APO,阿波羅,"Provided $3.5B of financing for the $5.4B Valor and xAI compute deal, bringing private credit into AI chip financing",為 Valor 與 xAI 的 54 億美元算力交易提供 35 億美元融資，私募信貸進入 AI 晶片融資
