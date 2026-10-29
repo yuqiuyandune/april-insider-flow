@@ -97,9 +97,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/days
           git commit -m "Add Form 4 data: $ADDED"
+          # the build step rewrites tracked files (e.g. stack/data.json); keep only the data commit
+          git checkout -- . && git clean -fdq -e work -e public
           # other people or sessions also push to main: rebase on top of them and retry
           for i in 1 2 3 4 5; do
-            git pull --rebase origin main && git push && exit 0
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
             sleep $((i * 5))
           done
           echo "could not push the new data commit"; exit 1
