@@ -12,12 +12,13 @@ Source, data and daily pipeline for https://april-insider-flow.com — SEC Form 
 - `scripts/anomaly.py` — flags likely data errors (`!!` urgent, `~` review) in newly added days.
 - `scripts/build_site.py` — builds `public/`: language pages, per-company pages `s/<TICKER>.html`, RSS feeds, sitemap, share images.
 - `scripts/daily_update.py` — orchestrates fetch → verify → keep passing days.
-- `scripts/weekly.py`, `scripts/bd_post.py` — weekly digest email (Buttondown draft).
+- `scripts/weekly.py`, `scripts/whatsnew.py`, `scripts/bd_post.py` — weekly digest email (Buttondown).
 
 ## Automation (`.github/workflows/`)
 
 - **daily.yml** — weekdays 03:45 UTC (evening Pacific): fetch every missing weekday of the last 10 days → SEC verification → consistency check → anomaly scan → build → deploy to Cloudflare Pages project `april-insider-flow` → commit the new data. Withheld days, urgent anomalies or a failed run open a GitHub issue (GitHub emails you). Run it by hand from the Actions tab; inputs let you refetch specific dates or force a redeploy.
-- **weekly-email.yml** — Saturdays 15:35 UTC (08:35 Pacific): builds the weekly digest (Chinese first, then English) and **sends it to subscribers** through Buttondown, but only if the data consistency check passes, the latest weekday is present and the week has no urgent anomalies. Otherwise it saves a draft and opens an issue. Manual runs only save a draft unless "send" is ticked.
+- **weekly-email.yml** — Saturdays 15:35 UTC (08:35 Pacific): builds the weekly digest (Chinese first, then English) and **sends it to subscribers** through Buttondown, but only if the data consistency check passes, the latest weekday is present and the week has no urgent anomalies. Otherwise it saves a draft and opens an issue. Manual runs only save a draft unless "send" is ticked. GitHub sometimes drops scheduled runs, so catch-up runs follow (Sat 19:41 and 23:17, Sun 04:53 UTC); each run first checks Buttondown and stops if this week's email already exists, so nothing is sent twice.
+- **Top of the weekly email, "本周上线 / New this week"**: earnings reports new since the last sent email (live `april-insider-flow.com/earnings/data/index.json` compared with `data/earnings_seen.json`, which is updated after each send) and new features from `data/whatsnew.json` dated this week. To announce a feature, add `{"date": "YYYY-MM-DD", "zh": "...", "en": "..."}` to that file.
 
 Secrets: `CLOUDFLARE_API_TOKEN` (Account → Cloudflare Pages → Edit), `CLOUDFLARE_ACCOUNT_ID`, `BUTTONDOWN_API_KEY`.
 

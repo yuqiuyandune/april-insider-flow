@@ -58,7 +58,7 @@ def totals(days):
     return b, s_
 
 
-def digest(all_days, end, lang):
+def digest(all_days, end, lang, news=""):
     end_d = dt.date.fromisoformat(end)
     frm = (end_d - dt.timedelta(days=6)).isoformat()
     pfrm, pto = (end_d - dt.timedelta(days=13)).isoformat(), (end_d - dt.timedelta(days=7)).isoformat()
@@ -124,6 +124,7 @@ def digest(all_days, end, lang):
     if zh:
         subject = f"本周内部人动向（{rng}）：有效{'净买入' if net >= 0 else '净卖出'} {money(abs(net))}"
         out.append(f"你好，这是 **{rng}** 的内部人买卖周报。只看最有信号意义的交易：高管和董事在公开市场自己掏钱的买卖，已排除计划内交易、认购、行权卖出等。")
+        if news: out.append(news)
         out.append("## 一句话")
         line = f"高管和董事本周有效买入 **{money(b)}**，有效卖出 **{money(s_)}**，{'净买入' if net >= 0 else '净卖出'} **{money(abs(net))}**。"
         if pw and pb and ps: line += f" 较上周：买入 {pct(b, pb):+.0f}%，卖出 {pct(s_, ps):+.0f}%。"
@@ -160,6 +161,7 @@ def digest(all_days, end, lang):
     else:
         subject = f"Insider flow this week ({rng}): effective net {'buying' if net >= 0 else 'selling'} {money(abs(net))}"
         out.append(f"Hi, here is the insider trading digest for **{rng}**. It covers the trades with the most signal: officers and directors buying or selling their own company's shares in the open market, excluding planned (10b5-1) trades, offerings and exercise-day sales.")
+        if news: out.append(news)
         out.append("## The week in one line")
         line = f"Officers and directors made **{money(b)}** of effective purchases and **{money(s_)}** of effective sales, net **{money(net, True)}**."
         if pw and pb and ps: line += f" Versus last week: buying {pct(b, pb):+.0f}%, selling {pct(s_, ps):+.0f}%."
@@ -242,15 +244,17 @@ def to_html(md):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("days"); ap.add_argument("--end"); ap.add_argument("--lang", default="en"); ap.add_argument("--out")
+    ap.add_argument("--news", help="NEWS.json from whatsnew.py: a 'new this week' line under the greeting")
     a = ap.parse_args()
     days = load(a.days)
     end = a.end or days[-1]["date"]
+    nw = json.load(open(a.news, encoding="utf-8")) if a.news else {}
     if a.lang == "both":   # Chinese first, English after
-        z, e = digest(days, end, "zh"), digest(days, end, "en")
+        z, e = digest(days, end, "zh", nw.get("zh", "")), digest(days, end, "en", nw.get("en", ""))
         r = z and {"subject": z["subject"] + " | Weekly insider digest", "week_from": z["week_from"], "week_to": z["week_to"],
                    "body": "*English version below ↓*\n\n" + z["body"] + "\n\n<br>\n\n---\n\n# English\n\n" + e["body"]}
     else:
-        r = digest(days, end, a.lang)
+        r = digest(days, end, a.lang, nw.get(a.lang, ""))
     if not r: raise SystemExit("no filing dates in that week")
     if a.out:
         w = dict(r, body_md=r["body"], body=to_html(r["body"]))   # Buttondown gets styled HTML; Markdown kept for reference

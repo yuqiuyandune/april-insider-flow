@@ -1,12 +1,18 @@
 name: Weekly email
 
-# Saturdays 15:35 UTC = 08:35 PDT / 07:35 PST.
+# Saturdays 15:35 UTC = 08:35 PDT / 07:35 PST. GitHub sometimes delays or drops scheduled runs
+# (the first one, 2026-10-31, never started), so three catch-up runs follow. Every run first asks
+# Buttondown whether this week's email already exists; if it does, the run stops, so a week is
+# never sent twice.
 # Scheduled runs SEND the digest to subscribers if every safety check passes;
 # otherwise they only save a Buttondown DRAFT and open an issue.
 # Manual runs save a draft unless "send" is ticked.
 on:
   schedule:
     - cron: "35 15 * * 6"
+    - cron: "41 19 * * 6"
+    - cron: "17 23 * * 6"
+    - cron: "53 4 * * 0"
   workflow_dispatch:
     inputs:
       send:
@@ -15,7 +21,7 @@ on:
         default: false
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 concurrency:
@@ -37,11 +43,33 @@ jobs:
         continue-on-error: true
         run: python3 -I scripts/check_data.py --expect-latest
 
-      - name: Build digest (Chinese first, English after)
-        run: python3 -I scripts/weekly.py data/days --lang both --out week.json | head -3
+      - name: Build digest (Chinese first, English after) with the "new this week" line
+        run: |
+          python3 -I scripts/weekly.py data/days --lang both --out week.json > /dev/null
+          python3 -I scripts/whatsnew.py week.json --out news.json --today "$(TZ=America/Los_Angeles date +%F)"
+          python3 -I scripts/weekly.py data/days --lang both --news news.json --out week.json | head -3
+
+      - name: Stop if this week's email already exists in Buttondown
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          EVENT: ${{ github.event_name }}
+          WANT_SEND: ${{ inputs.send }}
+        run: |
+          if [ -z "$BUTTONDOWN_API_KEY" ]; then echo "BUTTONDOWN_API_KEY secret not set"; exit 1; fi
+          python3 -I scripts/bd_post.py week.json --existing | tee existing.txt
+          # scheduled runs stop on any existing email for the week (a draft means an earlier run already opened an issue);
+          # a manual "send" stops only if it was already sent; a manual draft never stops
+          skip=""
+          if [ "$EVENT" = "schedule" ] && grep -q . existing.txt; then skip=1; fi
+          if [ "$WANT_SEND" = "true" ] && grep -qv '^draft' existing.txt; then skip=1; fi
+          if [ -n "$skip" ]; then
+            echo "SKIP=1" >> "$GITHUB_ENV"
+            { echo "### Skipped: this week's email already exists in Buttondown"; echo; cat existing.txt; } >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Safety check 2, no urgent anomalies in this week's data
         id: anomaly
+        if: env.SKIP != '1'
         continue-on-error: true
         run: |
           python3 - <<'EOF' > week_files.txt
@@ -56,6 +84,7 @@ jobs:
           ! grep -q '^ *!!' anomaly.txt
 
       - name: Decide send or draft
+        if: env.SKIP != '1'
         run: |
           mode=draft
           if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.send }}" = "true" ]; then
@@ -64,6 +93,7 @@ jobs:
           echo "MODE=$mode" >> "$GITHUB_ENV"
 
       - name: Create the email in Buttondown
+        if: env.SKIP != '1'
         env:
           BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
         run: |
@@ -74,6 +104,26 @@ jobs:
             if [ "$MODE" = "about_to_send" ]; then echo "### Sent to subscribers"; else echo "### Saved as a DRAFT (not sent)"; fi
             python3 -c "import json;w=json.load(open('week.json'));print();print(w['subject']);print(w['week_from'],'to',w['week_to'])"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remember which earnings reports were announced
+        if: env.MODE == 'about_to_send'
+        run: |
+          python3 - <<'PY'
+          import json
+          seen = json.load(open("news.json", encoding="utf-8"))["seen"]
+          if seen is not None:
+              json.dump(seen, open("data/earnings_seen.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1, sort_keys=True)
+          PY
+          git diff --quiet data/earnings_seen.json && exit 0
+          git config user.name "insider-flow-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/earnings_seen.json
+          git commit -m "Weekly email sent: remember announced earnings reports"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((i * 5))
+          done
+          echo "could not push earnings_seen.json (next week's email may list these reports again)"; exit 1
 
       - name: Open an issue if the email was not sent automatically, or on failure
         if: always() && (env.MODE == 'draft' || failure())
