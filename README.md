@@ -11,6 +11,8 @@ Source, data and daily pipeline for https://april-insider-flow.com — SEC Form 
 - `scripts/check_data.py` — offline consistency check of every stored day (sector totals = company sums = filing sums).
 - `scripts/anomaly.py` — flags likely data errors (`!!` urgent, `~` review) in newly added days.
 - `scripts/build_site.py` — builds `public/`: language pages, per-company pages `s/<TICKER>.html`, RSS feeds, sitemap, share images.
+- `articles/src/<slug>.{zh,tw,en}.md` + `<slug>.sources.md` — long-form articles (Simplified, Traditional, English) and their source lists.
+- `scripts/build_articles.py` — builds `/market/` (Market watch: macro dashboard and sector table drawn in the browser from `/earnings/data/market.json`, which the earnings repo's daily prices workflow fetches; per-sector effective insider buying/selling over 30 days computed here and embedded) and each article at `/articles/<slug>/`. `/articles/` redirects to `/market/`.
 - `scripts/daily_update.py` — orchestrates fetch → verify → keep passing days.
 - `scripts/weekly.py`, `scripts/whatsnew.py`, `scripts/bd_post.py` — weekly digest email (Buttondown).
 

@@ -331,8 +331,8 @@ def main():
     open(f"{out}/_headers", "w").write("/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/data/*\n  Cache-Control: public, max-age=300\n/index.html\n  Cache-Control: public, max-age=300\n"
                                        "/feed*.xml\n  Content-Type: application/rss+xml; charset=utf-8\n  Cache-Control: public, max-age=900\n"
                                        "/stack/data.json\n  Cache-Control: public, max-age=300\n/insider/\n  Cache-Control: public, max-age=300\n"
-                                       "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n")
-    open(f"{out}/_redirects", "w").write("/stack / 301\n/stack/ / 301\n")
+                                       "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n/market/*\n  Cache-Control: public, max-age=300\n")
+    open(f"{out}/_redirects", "w").write("/stack / 301\n/stack/ / 301\n/articles /market/ 301\n/articles/ /market/ 301\n")
     print(f"built {len(dates)} days: {dates[0]} .. {dates[-1]}; {len(pages)} company pages; feeds + sitemap")
 
 

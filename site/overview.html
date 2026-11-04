@@ -58,7 +58,7 @@ html[lang^=zh] .hero h1{word-break:keep-all}
 .layers{display:grid;gap:10px}
 .layers a{display:grid;grid-template-columns:40px minmax(0,1fr);gap:4px 14px;align-items:center;text-decoration:none;color:var(--hero-ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;transition:background .15s,transform .15s}
 .layers a:hover{background:rgba(255,255,255,.11)}
-.layers a:nth-child(2){margin-left:14px}.layers a:nth-child(3){margin-left:28px}
+.layers a:nth-child(2){margin-left:14px}.layers a:nth-child(3){margin-left:28px}.layers a:nth-child(4){margin-left:42px}
 .layers .ic{grid-row:span 2;width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:grid;place-items:center}
 .layers b{font-size:15.5px}
 .layers span{font-size:13.5px;color:var(--hero-muted);line-height:1.45}
@@ -126,7 +126,7 @@ footer{padding:24px 0 48px;color:var(--faint);font-size:13px;border-top:1px soli
 @media (max-width:380px){.brand b{font-size:16.5px}}
 @media (max-width:820px){
   .hero{grid-template-columns:1fr;gap:26px}
-  .layers a:nth-child(2),.layers a:nth-child(3){margin-left:0}
+  .layers a:nth-child(2),.layers a:nth-child(3),.layers a:nth-child(4){margin-left:0}
   .chainwhy{grid-template-columns:1fr}
   .prod{grid-template-columns:1fr;gap:4px}
   .mail{grid-template-columns:1fr}
@@ -157,9 +157,10 @@ footer{padding:24px 0 48px;color:var(--faint);font-size:13px;border-top:1px soli
 const ICO={
   chain:'<svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true"><rect x="2" y="2.5" width="14" height="3" rx="1.2" fill="currentColor"/><rect x="2" y="7.5" width="14" height="3" rx="1.2" fill="currentColor" opacity=".75"/><rect x="2" y="12.5" width="14" height="3" rx="1.2" fill="currentColor" opacity=".5"/></svg>',
   ins:'<svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true"><rect x="2" y="9" width="3" height="7" rx="1.5" fill="#ff7b72"/><rect x="7.5" y="5" width="3" height="11" rx="1.5" fill="#3ddc9b"/><rect x="13" y="2" width="3" height="14" rx="1.5" fill="#3ddc9b"/></svg>',
+  mkt:'<svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 13.5l4-4.5 3 2.5 4.5-6 2.5 2.5" fill="none" stroke="#7d9bff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 16h14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".6"/></svg>',
   earn:'<svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true"><rect x="2.5" y="1.5" width="13" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 12.5v-2.5M9 12.5v-5M12.5 12.5V9" stroke="#7d9bff" stroke-width="1.8" stroke-linecap="round"/></svg>'
 };
-const HREF={chain:"/",ins:"/insider/",earn:"/earnings/"};
+const HREF={chain:"/",ins:"/insider/",earn:"/earnings/",mkt:"/market/"};
 
 const T={
 zh:{
@@ -167,7 +168,7 @@ zh:{
  h1:"AI 不是一只股票，是一条产业链",
  lead:"April's Stock Atlas 先帮你看清这条链：每一层有哪些公司、钱怎么往下流；再用每季财报追踪这些公司做得怎么样；最后看最了解公司的内部人，正在用自己的钱做什么。这里不荐股，也不给买卖建议，只帮你更快看清楚，再自己做判断。",
  ctaStart:"从 AI 产业链开始", ctaSub:"订阅每周邮件",
- layers:{chain:["AI 产业链","五层结构，每层最重要的美股公司"],earn:["财报解读","追踪链上公司每一季做得怎么样"],ins:["内部人动向","高管和董事的真实买卖，每个交易日更新"]},
+ layers:{chain:["AI 产业链","五层结构，每层最重要的美股公司"],earn:["财报解读","追踪链上公司每一季做得怎么样"],ins:["内部人动向","高管和董事的真实买卖，每个交易日更新"],mkt:["市场观察","利率、油价、板块轮动和长篇研究"]},
  chainH:"为什么先看 AI 产业链",
  chainIntro:"每个人都在聊 AI，但「投资 AI」到底是投什么？黄仁勋把 AI 产业拆成五层，每一层都建立在下一层之上。科技巨头每年几千亿美元的 AI 资本开支，就是沿着这几层一路往下流，最后变成每一层公司的收入。",
  stack:[["应用","把 AI 交到用户手上的软件和设备"],["模型","训练和运行大模型的公司"],["基础设施","服务器、网络与光通信、散热、数据中心和云"],["芯片","GPU、定制芯片、存储，以及设计和制造它们的软件与设备"],["能源","数据中心需要的电，从核电、燃气轮机到电网"]],
@@ -191,6 +192,11 @@ zh:{
    tip:"财报解读只整理事实和数据，不给目标价，也不给买卖评级。",
    cover:t=>`已有财报解读：${t}。每个财报季陆续增加，优先覆盖产业链上的核心公司。`,
    btn:"打开财报解读"},
+  mkt:{q:"跳出单个公司，整个美股市场现在是什么状态？",
+   what:"AI 只是市场里的一条线。这里每个交易日更新六个最影响整体估值的宏观指标，11 个板块的涨跌和离高点多远，并对照本站自己的数据：近 30 天各板块内部人的有效买卖。下方是对单一主题的长篇研究文章，每篇附资料来源。",
+   uses:["每周看一次利率、油价、美元和 VIX 的变化方向","看上涨是不是在扩散：等权对市值加权、小盘对大盘","找「股价在跌、内部人却在买」的板块，作为进一步研究的起点","读长篇分析，例如 AI 供应链里哪些公司真正绕不开"],
+   tip:"市场观察只汇总公开数据和研究框架，不给仓位建议，也不是买卖信号。",
+   btn:"打开市场观察"},
   ins:{q:"最了解公司的人，正在用自己的钱做什么？",
    what:"美股公司的高管、董事和大股东买卖自家股票，要在两个工作日内向 SEC 申报（Form 4）。这里每个交易日更新，覆盖所有美股，不只是 AI 公司。默认只看「有效买卖」：高管和董事在公开市场主动的买卖，已经排除预设交易计划（10b5-1）、期权行权当天的卖出、缴税卖出和 IPO 认购等噪音。",
    uses:["看资金往哪个板块走：按当日、近 1 周、近 1 月、近 3 月比较各板块的净买入","找值得研究的公司：集群买入（30 天内 2 位以上高管或董事各自买入）、CEO 或 CFO 亲自买入、单笔 100 万美元以上的买入、大幅增持和新建仓","查一家公司：谁买、谁卖、什么价格、买完以后持股变了多少","提前看到大额减持：Form 144 是内部人准备卖出时提交的预告"],
@@ -221,7 +227,7 @@ tw:{
  h1:"AI 不是一檔股票，是一條產業鏈",
  lead:"April's Stock Atlas 先幫你看清這條鏈：每一層有哪些公司、錢怎麼往下流；再用每季財報追蹤這些公司做得怎麼樣；最後看最了解公司的內部人，正在用自己的錢做什麼。這裡不薦股，也不給買賣建議，只幫你更快看清楚，再自己做判斷。",
  ctaStart:"從 AI 產業鏈開始", ctaSub:"訂閱每週郵件",
- layers:{chain:["AI 產業鏈","五層結構，每層最重要的美股公司"],earn:["財報解讀","追蹤鏈上公司每一季做得怎麼樣"],ins:["內部人動向","高管和董事的真實買賣，每個交易日更新"]},
+ layers:{chain:["AI 產業鏈","五層結構，每層最重要的美股公司"],earn:["財報解讀","追蹤鏈上公司每一季做得怎麼樣"],ins:["內部人動向","高管和董事的真實買賣，每個交易日更新"],mkt:["市場觀察","利率、油價、板塊輪動和長篇研究"]},
  chainH:"為什麼先看 AI 產業鏈",
  chainIntro:"每個人都在聊 AI，但「投資 AI」到底是投什麼？黃仁勳把 AI 產業拆成五層，每一層都建立在下一層之上。科技巨頭每年幾千億美元的 AI 資本支出，就是沿著這幾層一路往下流，最後變成每一層公司的營收。",
  stack:[["應用","把 AI 交到使用者手上的軟體和裝置"],["模型","訓練和運行大模型的公司"],["基礎設施","伺服器、網路與光通訊、散熱、資料中心和雲端"],["晶片","GPU、客製化晶片、記憶體，以及設計和製造它們的軟體與設備"],["能源","資料中心需要的電，從核電、燃氣渦輪到電網"]],
@@ -245,6 +251,11 @@ tw:{
    tip:"財報解讀只整理事實和數據，不給目標價，也不給買賣評級。",
    cover:t=>`已有財報解讀：${t}。每個財報季陸續增加，優先涵蓋產業鏈上的核心公司。財報解讀目前以簡體中文撰寫。`,
    btn:"開啟財報解讀"},
+  mkt:{q:"跳出單一公司，整個美股市場現在是什麼狀態？",
+   what:"AI 只是市場裡的一條線。這裡每個交易日更新六個最影響整體估值的總經指標，11 個板塊的漲跌和離高點多遠，並對照本站自己的資料：近 30 天各板塊內部人的有效買賣。下方是對單一主題的長篇研究文章，每篇附資料來源。",
+   uses:["每週看一次利率、油價、美元和 VIX 的變化方向","看上漲是不是在擴散：等權對市值加權、小型股對大型股","找「股價在跌、內部人卻在買」的板塊，作為進一步研究的起點","讀長篇分析，例如 AI 供應鏈裡哪些公司真正繞不開"],
+   tip:"市場觀察只彙總公開資料和研究框架，不給倉位建議，也不是買賣訊號。",
+   btn:"打開市場觀察"},
   ins:{q:"最了解公司的人，正在用自己的錢做什麼？",
    what:"美股公司的高管、董事和大股東買賣自家股票，要在兩個工作日內向 SEC 申報（Form 4）。這裡每個交易日更新，涵蓋所有美股，不只是 AI 公司。預設只看「有效買賣」：高管和董事在公開市場主動的買賣，已經排除預設交易計畫（10b5-1）、選擇權行使當天的賣出、繳稅賣出和 IPO 認購等雜訊。",
    uses:["看資金往哪個板塊走：依當日、近 1 週、近 1 月、近 3 月比較各板塊的淨買入","找值得研究的公司：集群買入（30 天內 2 位以上高管或董事各自買入）、CEO 或 CFO 親自買入、單筆 100 萬美元以上的買入、大幅增持和新建倉","查一家公司：誰買、誰賣、什麼價格、買完以後持股變了多少","提前看到大額減持：Form 144 是內部人準備賣出時提交的預告"],
@@ -275,7 +286,7 @@ en:{
  h1:"AI isn't one stock. It's a supply chain.",
  lead:"April's Stock Atlas starts by making the chain clear: which companies sit in each layer, and how the money flows down. Then it tracks how those companies do each quarter through their earnings. Finally, it shows what the people who know these companies best are doing with their own money. No stock picks and no buy or sell calls, just a faster way to see clearly so you can decide for yourself.",
  ctaStart:"Start with the supply chain", ctaSub:"Get the weekly email",
- layers:{chain:["Supply Chain","Five layers, the key US stocks in each"],earn:["Earnings Lens","How the chain's companies do each quarter"],ins:["Insider Flow","Real trades by officers and directors, every trading day"]},
+ layers:{chain:["Supply Chain","Five layers, the key US stocks in each"],earn:["Earnings Lens","How the chain's companies do each quarter"],ins:["Insider Flow","Real trades by officers and directors, every trading day"],mkt:["Market Watch","Rates, oil, sector rotation and long-form research"]},
  chainH:"Why start with the supply chain",
  chainIntro:"Everyone talks about AI, but what does investing in AI actually mean? Jensen Huang describes AI as five layers, each built on the one below. The hundreds of billions of dollars that big tech spends on AI every year flow down through these layers and end up as revenue for the companies in each one.",
  stack:[["Applications","Software and devices that put AI in people's hands"],["Models","Companies that train and run large models"],["Infrastructure","Servers, networking and optics, cooling, data centers and cloud"],["Chips","GPUs, custom chips, memory, and the software and tools that design and make them"],["Energy","Power for data centers, from nuclear and gas turbines to the grid"]],
@@ -299,6 +310,11 @@ en:{
    tip:"Earnings reads lay out facts and figures only. No price targets and no buy or sell ratings.",
    cover:t=>`Earnings reads so far: ${t}, with more added each earnings season, starting with the chain's core companies. Earnings reads are currently written in Chinese.`,
    btn:"Open Earnings Lens"},
+  mkt:{q:"Beyond single companies, what state is the whole US market in?",
+   what:"AI is one thread in the market. This page updates six macro indicators that move valuations across the market every trading day, plus each of the 11 sectors' returns and distance from their highs, next to this site's own data: effective insider buying and selling by sector over the last 30 days. Below are long-form research articles on single themes, each with its sources.",
+   uses:["Check the weekly direction of rates, oil, the dollar and VIX","See whether gains are spreading: equal weight vs cap weight, small caps vs large caps","Find sectors where prices are falling but insiders are buying, as a starting point for research","Read long-form analysis, such as which AI supply-chain companies have no substitute"],
+   tip:"Market Watch summarizes public data and research frameworks only. No position advice and no trading signals.",
+   btn:"Open Market Watch"},
   ins:{q:"What are the people who know a company best doing with their own money?",
    what:"Officers, directors and large holders of US companies must report trades in their own company's stock to the SEC within two business days (Form 4). This view updates every trading day and covers all US stocks, not only AI. By default it shows effective trades only: open-market buys and sells by officers and directors, with pre-set 10b5-1 plans, sales on option exercise days, tax sales and IPO purchases filtered out.",
    uses:["See where money is moving by sector, for the day, week, month or three months","Find companies worth a closer look: cluster buys (two or more officers or directors buying within 30 days), CEO or CFO purchases, single buys of $1M or more, large stake increases and new positions","Check one company: who bought, who sold, at what price, and how their holdings changed","See large sales coming: Form 144 is the notice insiders file when they plan to sell"],
@@ -339,7 +355,7 @@ function render(){
   const s=T[lang];
   document.documentElement.lang=LOC[lang];document.title=s.title;
   LANGS.forEach(k=>$("lang-"+k).setAttribute("aria-pressed",String(lang===k)));
-  const ORDER=["chain","earn","ins"];
+  const ORDER=["chain","earn","ins","mkt"];
   const layer=k=>`<a href="${HREF[k]}"><span class="ic">${ICO[k]}</span><b>${esc(s.layers[k][0])}</b><span>${esc(s.layers[k][1])}</span></a>`;
   const prod=(k,i)=>{const p=s.prods[k];
     return `<article class="prod" id="${k}"><div><p class="name"><span class="n">${i+1}</span><i>${ICO[k]}</i>${esc(s.layers[k][0])}</p><h3 class="q">${esc(p.q)}</h3></div>
