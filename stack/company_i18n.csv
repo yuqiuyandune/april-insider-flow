@@ -8,6 +8,8 @@ OKLO,Oklo,Small modular reactors; no commercial revenue yet; heavily discussed b
 SMR,NuScale,Small modular reactor developer,小型模組化核反應爐
 NNE,Nano Nuclear,Microreactors; early-stage and high-risk,微型反應爐，早期、高風險
 BE,Bloom Energy,Fuel cells for on-site data-center power,燃料電池，資料中心現場供電
+SNPS,新思科技,One of two EDA chip-design software leaders (about 85% together with Cadence); every AI chip and custom ASIC is designed and verified with its tools; now owns Ansys,EDA設計軟體雙寡頭之一（與Cadence合計約85%），每顆AI晶片和客製ASIC都要用它設計驗證；已併購Ansys
+CDNS,益華電腦,"One of two EDA chip-design software leaders, strongest in analog design and hardware verification; the more chips cloud providers design in-house, the more customers it has",EDA設計軟體雙寡頭之一，模擬設計與硬體驗證領先；雲廠商自研晶片越多，客戶越多
 ASML,艾司摩爾,Sole supplier of EUV lithography machines,EUV光刻機全球獨家
 AMAT,應用材料,One of the largest chip-equipment makers; deposition and etch,全球最大半導體設備商之一，沉積與蝕刻
 LRCX,科林研發,Etch leader; benefits from HBM and advanced nodes,蝕刻龍頭，HBM與先進製程受益

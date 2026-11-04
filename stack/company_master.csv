@@ -8,6 +8,8 @@ OKLO,Oklo,Oklo,1,能源,1,发电与电网,热门,小型核反应堆，尚无商�
 SMR,NuScale Power,NuScale,1,能源,1,发电与电网,热门,小型模块化核反应堆,,是
 NNE,Nano Nuclear Energy,Nano Nuclear,1,能源,1,发电与电网,热门,微型反应堆，早期、高风险,,是
 BE,Bloom Energy,Bloom Energy,1,能源,1,发电与电网,热门,燃料电池，数据中心现场供电,,是
+SNPS,Synopsys,新思科技,2,芯片,18,芯片设计软件,核心,EDA设计软件双寡头之一（与Cadence合计约85%），每颗AI芯片和定制ASIC都要用它设计验证；已并购Ansys,,是
+CDNS,Cadence Design Systems,楷登电子,2,芯片,18,芯片设计软件,核心,EDA设计软件双寡头之一，模拟设计与硬件验证领先；云厂商自研芯片越多，客户越多,,是
 ASML,ASML Holding,阿斯麦,2,芯片,2,半导体设备,核心,EUV光刻机全球独家,,否
 AMAT,Applied Materials,应用材料,2,芯片,2,半导体设备,核心,全球最大半导体设备商之一，沉积与刻蚀,,是
 LRCX,Lam Research,泛林集团,2,芯片,2,半导体设备,核心,刻蚀龙头，HBM与先进制程受益,,是
