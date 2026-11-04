@@ -306,7 +306,9 @@ MK = {
            "insLink": "查看内部人动向明细 →",
            "cards": {"TNX": ["10年期美债收益率", "所有资产定价的锚；高于5%会压低股票估值"],
                      "WTI": ["WTI原油", "通胀预期的主要来源，影响美联储是否继续加息"],
+                     "WTI_f": ["原油（USO原油基金）", "跟踪WTI原油期货的基金，看涨跌方向；通胀预期的主要来源"],
                      "DXY": ["美元指数", "美元走强会压低海外收入和大宗商品价格"],
+                     "DXY_f": ["美元（UUP美元指数基金）", "跟踪美元指数的基金，看涨跌方向；美元走强会压低海外收入"],
                      "VIX": ["VIX恐慌指数", "市场恐慌程度；急升后回落常伴随阶段性低点"],
                      "BRD": ["等权 vs 市值加权", "等权跑赢，说明上涨在向更多股票扩散"],
                      "SML": ["小盘 vs 大盘", "小盘领涨，说明市场开始相信利率见顶"]}},
@@ -322,7 +324,9 @@ MK = {
            "insLink": "查看內部人動向明細 →",
            "cards": {"TNX": ["10年期美債殖利率", "所有資產定價的錨；高於5%會壓低股票估值"],
                      "WTI": ["WTI原油", "通膨預期的主要來源，影響聯準會是否繼續升息"],
+                     "WTI_f": ["原油（USO原油基金）", "追蹤WTI原油期貨的基金，看漲跌方向；通膨預期的主要來源"],
                      "DXY": ["美元指數", "美元走強會壓低海外收入和大宗商品價格"],
+                     "DXY_f": ["美元（UUP美元指數基金）", "追蹤美元指數的基金，看漲跌方向；美元走強會壓低海外收入"],
                      "VIX": ["VIX恐慌指數", "市場恐慌程度；急升後回落常伴隨階段性低點"],
                      "BRD": ["等權 vs 市值加權", "等權跑贏，說明上漲在向更多股票擴散"],
                      "SML": ["小型股 vs 大型股", "小型股領漲，說明市場開始相信利率見頂"]}},
@@ -338,7 +342,9 @@ MK = {
            "insLink": "See insider trade details →",
            "cards": {"TNX": ["US 10-year Treasury yield", "The anchor for pricing every asset; above 5% it weighs on stock valuations"],
                      "WTI": ["WTI crude oil", "The main driver of inflation expectations and of whether the Fed keeps hiking"],
+                     "WTI_f": ["Oil (USO fund)", "A fund tracking WTI crude futures; read its direction. The main driver of inflation expectations"],
                      "DXY": ["US dollar index", "A stronger dollar weighs on overseas revenue and commodity prices"],
+                     "DXY_f": ["US dollar (UUP fund)", "A fund tracking the dollar index; read its direction. A stronger dollar weighs on overseas revenue"],
                      "VIX": ["VIX", "How fearful the market is; a spike that fades often comes with a short-term low"],
                      "BRD": ["Equal vs cap weight", "Equal weight leading means gains are spreading to more stocks"],
                      "SML": ["Small vs large caps", "Small caps leading suggests the market believes rates have peaked"]}},
@@ -393,12 +399,13 @@ function spark(vals){if(!vals||vals.length<2)return "";var mn=Math.min.apply(nul
 function tail(r,n){return r.slice(-n).map(function(x){return x[1]})}
 function ratio(a,b,n){var m={};b.forEach(function(x){m[x[0]]=x[1]});var o=[];a.forEach(function(x){if(m[x[0]])o.push(x[1]/m[x[0]])});return o.slice(-n)}
 function money(v){if(!v)return "–";var a=Math.abs(v);return "$"+(a>=1e9?(a/1e9).toFixed(1)+"B":a>=1e6?(a/1e6).toFixed(1)+"M":a>=1e3?Math.round(a/1e3)+"K":Math.round(a))}
-function card(l,k,val,chg,sp){var c=MK[l].cards[k];
+function fund(k){return DATA&&DATA.src&&String(DATA.src[k]||"").indexOf("etf:")===0}
+function card(l,k,val,chg,sp){var c=MK[l].cards[fund(k)?k+"_f":k]||MK[l].cards[k];
  return '<div class="kpi"><div class="lab">'+esc(c[0])+'</div><div class="row"><div><div class="val">'+val+'</div><div class="chg">'+chg+'</div></div>'+sp+'</div><div class="why">'+esc(c[1])+'</div></div>'}
 function dash(l){var u=MK[l],h=[],r;
  if((r=ser("TNX"))){var v=at(r,0),w=at(r,5);h.push(card(l,"TNX",v.toFixed(2)+"%",u.wk+' <b class="'+cls(v-w)+'">'+sgn((v-w)*100,0,"bp")+'</b>',spark(tail(r,126))))}
  if((r=ser("WTI"))){var v2=at(r,0);h.push(card(l,"WTI","$"+v2.toFixed(2),u.wk+' <b class="'+cls(pct(v2,at(r,5)))+'">'+sgn(pct(v2,at(r,5)),1,"%")+'</b>',spark(tail(r,126))))}
- if((r=ser("DXY"))){var v3=at(r,0);h.push(card(l,"DXY",v3.toFixed(2),u.wk+' <b class="'+cls(pct(v3,at(r,5)))+'">'+sgn(pct(v3,at(r,5)),1,"%")+'</b>',spark(tail(r,126))))}
+ if((r=ser("DXY"))){var v3=at(r,0);h.push(card(l,"DXY",(fund("DXY")?"$":"")+v3.toFixed(2),u.wk+' <b class="'+cls(pct(v3,at(r,5)))+'">'+sgn(pct(v3,at(r,5)),1,"%")+'</b>',spark(tail(r,126))))}
  if((r=ser("VIX"))){var v4=at(r,0),w4=at(r,5);h.push(card(l,"VIX",v4.toFixed(1),u.wk+' <b>'+sgn(v4-w4,1)+'</b>',spark(tail(r,126))))}
  [["BRD","RSP","SPY",u.eqw,u.cap],["SML","IWM","SPY",u.small,u.large]].forEach(function(x){var a=ser(x[1]),b=ser(x[2]);if(!a||!b)return;
   var ra=pct(at(a,0),at(a,21)),rb=pct(at(b,0),at(b,21)),d=ra-rb;
@@ -421,7 +428,7 @@ function render(l){var u=MK[l];
  var d=$("mk-dash"),t=$("mk-sect"),n=$("mk-note");if(!d)return;
  if(!DATA){d.innerHTML='<p class="mk-msg">'+esc(FAIL?u.err:u.loading)+'</p>';t.innerHTML="";n.innerHTML="";return}
  d.innerHTML=dash(l);t.innerHTML=table(l);
- n.innerHTML=esc(u.note.replace("{p}",DATA.last||"").replace("{f}",INS?INS.from:"").replace("{t}",INS?INS.to:""))+' <a href="/insider/">'+esc(u.insLink)+'</a>';
+ n.innerHTML=esc(u.note.replace("{p}",(ser("SPY")?ser("SPY")[ser("SPY").length-1][0]:DATA.last)||"").replace("{f}",INS?INS.from:"").replace("{t}",INS?INS.to:""))+' <a href="/insider/">'+esc(u.insLink)+'</a>';
  t.querySelectorAll("th").forEach(function(h){h.addEventListener("click",function(){var k=h.getAttribute("data-k");if(k===sortKey)sortDir=-sortDir;else{sortKey=k;sortDir=k==="s"||k==="etf"?1:-1}render(window.PAGE_LANG||"zh")})})}
 window.onPageLang=function(l){render(l)};
 fetch("/earnings/data/market.json",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){DATA=j;render(window.PAGE_LANG||"zh")}).catch(function(){FAIL=true;render(window.PAGE_LANG||"zh")});
