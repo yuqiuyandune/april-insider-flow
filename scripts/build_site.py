@@ -309,9 +309,16 @@ def main():
     open(f"{out}/sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(sm) + "</urlset>")
     open(f"{out}/robots.txt", "w").write(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
     has_home = stack_page(out)
+    # Articles (/articles/): built by scripts/build_articles.py from articles/src (loaded by path: python3 -I drops the script dir from sys.path)
+    import importlib.util
+    _spec = importlib.util.spec_from_file_location("build_articles", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_articles.py"))
+    _ba = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_ba)
+    art_paths = _ba.build(out)
     os.makedirs(f"{out}/overview", exist_ok=True)
     shutil.copyfile(os.path.join(os.path.dirname(index_html), "overview.html"), f"{out}/overview/index.html")
     if not has_home: shutil.copyfile(f"{out}/insider/index.html", f"{out}/index.html")
+    sm += [f"<url><loc>{SITE}/{p}</loc><lastmod>{dates[-1]}</lastmod></url>" for p in art_paths]
+    open(f"{out}/sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(sm) + "</urlset>")
     open(f"{out}/favicon.svg", "w").write(ICON_SVG)
     for n, b64 in ICONS.items():
         open(f"{out}/{n}.png", "wb").write(base64.b64decode(b64))
@@ -324,7 +331,7 @@ def main():
     open(f"{out}/_headers", "w").write("/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/data/*\n  Cache-Control: public, max-age=300\n/index.html\n  Cache-Control: public, max-age=300\n"
                                        "/feed*.xml\n  Content-Type: application/rss+xml; charset=utf-8\n  Cache-Control: public, max-age=900\n"
                                        "/stack/data.json\n  Cache-Control: public, max-age=300\n/insider/\n  Cache-Control: public, max-age=300\n"
-                                       "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n")
+                                       "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n")
     open(f"{out}/_redirects", "w").write("/stack / 301\n/stack/ / 301\n")
     print(f"built {len(dates)} days: {dates[0]} .. {dates[-1]}; {len(pages)} company pages; feeds + sitemap")
 
