@@ -421,7 +421,7 @@ const T={
   lNone:"这段时间没有符合条件的交易。",fRole:"职位",roleAll:"全部",roleCx:"CEO/CFO",roleDir:"董事",fAmt:"最低金额",amtAny:"不限",amt100k:"$10万+",amt500k:"$50万+",amt1m:"$100万+",
   pNone:"所选数据中没有这个人的申报。",pSum:(nc,nf,a,b)=>`${a} 至 ${b}，在 ${nc} 家公司有 ${nf} 份申报。`,pByCo:"按公司",pMatches:n=>`找到 ${n} 位内部人：`,
   updAt:u=>`更新于 ${u}`,tipAria:"说明",
-  GL:{scope:"<b>有效买卖</b>：只看高管和董事在公开市场的主动买卖，排除 10b5-1 预定计划、期权行权当天的卖出、缴税卖出、IPO/认购、基金申购等。<br><b>高管与董事</b>：高管和董事的全部公开市场买卖，包含计划内交易。<br><b>全部内部人</b>：再加上 10% 以上大股东和基金。",
+  GL:{scope:"<b>有效买卖</b>：只看高管和董事在公开市场的主动买卖，排除 10b5-1 预定计划、期权行权当天的卖出、缴税卖出、IPO/认购、基金申购，以及优先股、债券等非普通股的交易。<br><b>高管与董事</b>：高管和董事的全部公开市场买卖，包含计划内交易。<br><b>全部内部人</b>：再加上 10% 以上大股东和基金。",
     cluster:"<b>集群买入</b>：近 30 天内，至少 2 位不同的高管或董事各自有效买入同一家公司。多人同时用自己的钱买，通常比一个人买更值得关注。<br>标「同日同价」的，是多人在同一天以完全相同的价格买入，可能是公司统一安排的购股计划，信号较弱。",
     hold:"<b>持股变化</b> = 这次买入的股数 ÷ 买入前持有的同类股份（直接和间接持股合计，取自 Form 4）。<br>买入前持股为 0 时显示「新建仓」。比例越高，说明这笔买入相对他原有的持股越重。",
     flags:"<b>有效</b>：计入「有效买卖」的交易。<br><b>10b5-1 计划</b>：事先设定好的自动交易计划，不代表当下的判断。<br><b>行权后卖出</b>：行使期权当天卖出，多为把报酬变现。<br><b>缴税卖出</b>：为缴纳股票报酬的税款而卖出。<br><b>IPO/认购</b>：参与发行或私募，不是在公开市场买入。<br><b>迟报 >30 天</b>：交易日和申报日相隔 30 天以上。",
@@ -453,7 +453,7 @@ const T={
   r7:"7 天",r30:"30 天",r90:"90 天",rAll:"全部",tNet:"净额",tEb:"有效买入",tEs:"有效卖出",tEnet:"有效净额",
   tFilings:(n,i)=>`${n} 份申报 · ${i} 位内部人`,byInsider:"按内部人",filingsTitle:"逐笔申报",
   filed:"提交",traded:"交易",open:"查看原文 ↗",buyB:"买入",sellB:"卖出",ownerB:"10% 股东/其他",effB:"有效",
-  FL:{plan:"10b5-1 计划",exercise:"行权后卖出",tax:"缴税卖出",offering:"IPO/认购",spac:"SPAC",drip:"再投资/申购",fund:"基金/信托",nontraded:"非上市",late:"迟报 >30 天",fx:"外币已换算为美元"},
+  FL:{plan:"10b5-1 计划",exercise:"行权后卖出",tax:"缴税卖出",offering:"IPO/认购",spac:"SPAC",drip:"再投资/申购",fund:"基金/信托",nontraded:"非上市",nonequity:"优先股/债券",affiliate:"经关联公司",late:"迟报 >30 天",fx:"外币已换算为美元"},
   noLinks:"部分日期没有逐笔明细，只计入合计。",loading:"正在加载数据…",loadErr:e=>`数据加载失败（${e}），请刷新重试。`,noData:"还没有数据。",
   notesTitle:"数据口径与核验",foot:"数据来源：SEC EDGAR Form 4。仅供参考，不构成投资建议。",
   notes:[["怎么读","日期指申报提交到 SEC 的日期，交易本身通常早几天。默认只看信号最强的交易（有效买卖）：高管、董事的公开市场买卖，已排除计划内交易、IPO/认购、行权卖出等；可在“统计口径”里切换为全部高管董事或所有内部人。"],["图表","柱子比例按所选时间设定，特别高的柱子会被截断，白线为截断标记。"],["本期要点","根据数据自动生成，不是人工评论，也不构成投资建议。"],["数据来源","SEC EDGAR 每日 Form 4 索引，按提交日归档。只计原始 Form 4（不含 4/A 修正）中非衍生品表的公开市场买入 (P) 和卖出 (S)，金额 = 股数 × 每股价格。期权授予、行权、RSU 归属、赠与、税务代扣不计入。Form 144（拟出售）不在 Form 4 中，也不计入。"],["外币价格","少数外国发行人（如 ASE/ASX 用新台币）在 Form 4 里以本地货币填写每股价格，只在脚注说明。凡价格脚注表明是外币的交易，按交易日汇率换算为美元后再计入，并标注“外币已换算为美元”；无法取得汇率的交易不计入合计。"],
@@ -472,7 +472,7 @@ const T={
   lNone:"這段時間沒有符合條件的交易。",fRole:"職位",roleAll:"全部",roleCx:"CEO/CFO",roleDir:"董事",fAmt:"最低金額",amtAny:"不限",amt100k:"$10萬+",amt500k:"$50萬+",amt1m:"$100萬+",
   pNone:"所選資料中沒有這個人的申報。",pSum:(nc,nf,a,b)=>`${a} 至 ${b}，在 ${nc} 家公司有 ${nf} 份申報。`,pByCo:"按公司",pMatches:n=>`找到 ${n} 位內部人：`,
   updAt:u=>`更新於 ${u}`,tipAria:"說明",
-  GL:{scope:"<b>有效買賣</b>：只看高管和董事在公開市場的主動買賣，排除 10b5-1 預定計劃、期權行權當天的賣出、繳稅賣出、IPO/認購、基金申購等。<br><b>高管與董事</b>：高管和董事的全部公開市場買賣，包含計劃內交易。<br><b>全部內部人</b>：再加上 10% 以上大股東和基金。",
+  GL:{scope:"<b>有效買賣</b>：只看高管和董事在公開市場的主動買賣，排除 10b5-1 預定計劃、期權行權當天的賣出、繳稅賣出、IPO/認購、基金申購，以及優先股、債券等非普通股的交易。<br><b>高管與董事</b>：高管和董事的全部公開市場買賣，包含計劃內交易。<br><b>全部內部人</b>：再加上 10% 以上大股東和基金。",
     cluster:"<b>集群買入</b>：近 30 天內，至少 2 位不同的高管或董事各自有效買入同一家公司。多人同時用自己的錢買，通常比一個人買更值得關注。<br>標「同日同價」的，是多人在同一天以完全相同的價格買入，可能是公司統一安排的購股計劃，訊號較弱。",
     hold:"<b>持股變化</b> = 這次買入的股數 ÷ 買入前持有的同類股份（直接和間接持股合計，取自 Form 4）。<br>買入前持股為 0 時顯示「新建倉」。比例越高，說明這筆買入相對他原有的持股越重。",
     flags:"<b>有效</b>：計入「有效買賣」的交易。<br><b>10b5-1 計劃</b>：事先設定好的自動交易計劃，不代表當下的判斷。<br><b>行權後賣出</b>：行使期權當天賣出，多為把報酬變現。<br><b>繳稅賣出</b>：為繳納股票報酬的稅款而賣出。<br><b>IPO/認購</b>：參與發行或私募，不是在公開市場買入。<br><b>遲報 >30 天</b>：交易日和申報日相隔 30 天以上。",
@@ -504,7 +504,7 @@ const T={
   r7:"7 天",r30:"30 天",r90:"90 天",rAll:"全部",tNet:"淨額",tEb:"有效買入",tEs:"有效賣出",tEnet:"有效淨額",
   tFilings:(n,i)=>`${n} 份申報 · ${i} 位內部人`,byInsider:"按內部人",filingsTitle:"逐筆申報",
   filed:"提交",traded:"交易",open:"檢視原文 ↗",buyB:"買入",sellB:"賣出",ownerB:"10% 股東/其他",effB:"有效",
-  FL:{plan:"10b5-1 計劃",exercise:"行權後賣出",tax:"繳稅賣出",offering:"IPO/認購",spac:"SPAC",drip:"再投資/申購",fund:"基金/信託",nontraded:"非上市",late:"遲報 >30 天",fx:"外幣已換算為美元"},
+  FL:{plan:"10b5-1 計劃",exercise:"行權後賣出",tax:"繳稅賣出",offering:"IPO/認購",spac:"SPAC",drip:"再投資/申購",fund:"基金/信託",nontraded:"非上市",nonequity:"優先股/債券",affiliate:"經關聯公司",late:"遲報 >30 天",fx:"外幣已換算為美元"},
   noLinks:"部分日期沒有逐筆明細，只計入合計。",loading:"正在載入資料…",loadErr:e=>`資料載入失敗（${e}），請重新整理重試。`,noData:"還沒有資料。",
   notesTitle:"資料口徑與核驗",foot:"資料來源：SEC EDGAR Form 4。僅供參考，不構成投資建議。",
   notes:[["怎麼讀","日期指申報提交到 SEC 的日期，交易本身通常早幾天。預設只看訊號最強的交易（有效買賣）：高管、董事的公開市場買賣，已排除計劃內交易、IPO/認購、行權賣出等；可在“統計口徑”裡切換為全部高管董事或所有內部人。"],["圖表","柱子比例按所選時間設定，特別高的柱子會被截斷，白線為截斷標記。"],["本期要點","根據資料自動生成，不是人工評論，也不構成投資建議。"],["資料來源","SEC EDGAR 每日 Form 4 索引，按提交日歸檔。只計原始 Form 4（不含 4/A 修正）中非衍生品表的公開市場買入 (P) 和賣出 (S)，金額 = 股數 × 每股價格。期權授予、行權、RSU 歸屬、贈與、稅務代扣不計入。Form 144（擬出售）不在 Form 4 中，也不計入。"],["外幣價格","少數外國發行人（如 ASE/ASX 用新臺幣）在 Form 4 裡以本地貨幣填寫每股價格，只在腳註說明。凡價格腳註表明是外幣的交易，按交易日匯率換算為美元后再計入，並標註“外幣已換算為美元”；無法取得匯率的交易不計入合計。"],
@@ -523,7 +523,7 @@ const T={
   lNone:"No qualifying trades in this period.",fRole:"Role",roleAll:"All",roleCx:"CEO/CFO",roleDir:"Director",fAmt:"Min amount",amtAny:"Any",amt100k:"$100K+",amt500k:"$500K+",amt1m:"$1M+",
   pNone:"No filings by this person in the data.",pSum:(nc,nf,a,b)=>`${nf} filing${nf===1?"":"s"} at ${nc} compan${nc===1?"y":"ies"}, ${a} to ${b}.`,pByCo:"By company",pMatches:n=>`${n} matching insider${n===1?"":"s"}:`,
   updAt:u=>`Updated ${u}`,tipAria:"What is this?",
-  GL:{scope:"<b>Effective</b>: only officers' and directors' own open-market trades, excluding 10b5-1 plan trades, sales on the day of an option exercise, tax sales, IPO/offering buys and fund subscriptions.<br><b>Officers & directors</b>: all their open-market trades, planned ones included.<br><b>All insiders</b>: adds 10%+ owners and funds.",
+  GL:{scope:"<b>Effective</b>: only officers' and directors' own open-market trades, excluding 10b5-1 plan trades, sales on the day of an option exercise, tax sales, IPO/offering buys, fund subscriptions, and trades in preferred stock, notes and other non-common securities.<br><b>Officers & directors</b>: all their open-market trades, planned ones included.<br><b>All insiders</b>: adds 10%+ owners and funds.",
     cluster:"<b>Cluster buying</b>: at least 2 different officers or directors each made effective purchases of the same company within 30 days. Several insiders buying with their own money is usually more telling than one.<br>\"Same day & price\" marks several insiders buying on one day at exactly the same price, which may be a company-arranged program and a weaker signal.",
     hold:"<b>Holding change</b> = shares bought ÷ shares of that class held before the purchase (direct and indirect, from the Form 4).<br>\"New position\" means the insider held none before. The higher it is, the bigger the bet relative to what they already owned.",
     flags:"<b>Effective</b>: counted in effective trades.<br><b>10b5-1 plan</b>: a pre-set automatic trading plan, not a decision made at the time.<br><b>Option-exercise sale</b>: sold the day options were exercised, usually cashing in pay.<br><b>Tax sale</b>: sold to cover taxes on stock pay.<br><b>IPO / offering</b>: bought in an offering or private placement, not on the open market.<br><b>Filed >30d late</b>: filed more than 30 days after the trade.",
@@ -555,7 +555,7 @@ const T={
   r7:"7d",r30:"30d",r90:"90d",rAll:"All",tNet:"Net",tEb:"Effective bought",tEs:"Effective sold",tEnet:"Effective net",
   tFilings:(n,i)=>`${n} filing${n===1?"":"s"} · ${i} insider${i===1?"":"s"}`,byInsider:"By insider",filingsTitle:"Filings",
   filed:"Filed",traded:"Traded",open:"View filing ↗",buyB:"Buy",sellB:"Sell",ownerB:"10% owner / other",effB:"Effective",
-  FL:{plan:"10b5-1 plan",exercise:"Option-exercise sale",tax:"Tax sale",offering:"IPO / offering",spac:"SPAC",drip:"Reinvestment / subscription",fund:"Fund / trust",nontraded:"Not traded",late:"Filed >30d late",fx:"Converted to USD"},
+  FL:{plan:"10b5-1 plan",exercise:"Option-exercise sale",tax:"Tax sale",offering:"IPO / offering",spac:"SPAC",drip:"Reinvestment / subscription",fund:"Fund / trust",nontraded:"Not traded",nonequity:"Preferred / debt",affiliate:"Via affiliated company",late:"Filed >30d late",fx:"Converted to USD"},
   noLinks:"Some days have no per-filing detail and appear in totals only.",loading:"Loading data…",loadErr:e=>`Couldn't load the data (${e}). Refresh to try again.`,noData:"No data yet.",
   notesTitle:"Method and verification",foot:"Source: SEC EDGAR Form 4. For information only, not investment advice.",
   notes:[["How to read","Dates are the day a filing reached the SEC; the trade itself is usually a few days earlier. By default only the strongest signals are shown (effective trades): officers' and directors' open-market buys and sells, excluding planned trades, IPO/offering buys and exercise-day sales. Switch the scope to see all officers and directors or all insiders."],["Chart","Bars are scaled to the selected period; very tall bars are clipped, and a white line marks the cut."],["Key points","Written automatically from the data, not editorial commentary and not investment advice."],["Source","SEC EDGAR daily Form 4 index, grouped by filing date. Only original Form 4s (no 4/A) and only open-market purchases (P) and sales (S) in the non-derivative table count; value = shares × price. Grants, exercises, RSU vesting, gifts and tax withholding are excluded. Form 144 proposed sales are a different form and are not included."],["Foreign-currency prices","A few foreign issuers (e.g. ASE/ASX in New Taiwan dollars) report the per-share price in local currency and say so only in a footnote. Trades whose price footnote names a foreign currency are converted to USD at the trade-date rate and tagged \"Converted to USD\"; trades with no available rate are left out of totals."],
@@ -925,7 +925,7 @@ function renderSearch(){const t=L();PLOT=[];
     const fmtN=v=>v?Number(v).toLocaleString(LOC[lang]):"—";
     const px=(usd,sh)=>sh?"$"+(usd/sh).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"—";
     const badges=(f,k)=>{if(!f.flags)return f.od?"":`<span class="badge b-mute">${t.ownerB}</span>`;
-      const rel=k==="P"?["plan","offering","spac","drip","fund","nontraded","late","fx"]:["plan","exercise","tax","spac","drip","fund","nontraded","late","fx"];
+      const rel=k==="P"?["plan","offering","spac","drip","fund","nontraded","nonequity","affiliate","late","fx"]:["plan","exercise","tax","spac","drip","fund","nontraded","nonequity","affiliate","late","fx"];
       return ((k==="P"?f.eff_buy>0:f.eff_sell>0)?`<span class="badge b-eff">${t.effB}</span>`:"")+f.flags.filter(x=>rel.includes(x)).map(x=>`<span class="badge b-mute">${esc((t.FL[x]||x)+(x==="fx"&&f.fx&&f.fx.length?" ("+[...new Set(f.fx.map(e=>e.ccy))].join("/")+")":""))}</span>`).join("")+(f.od?"":`<span class="badge b-mute">${t.ownerB}</span>`)};
     const items=[];for(const f of rows){const u=filingUrl(f.path);
       const one=(k,usd,sh)=>`<div class="item"><div class="l1"><b>${pBtn(firstOwner(f).name)}</b><span class="num ${k==="P"?"pos":"neg"}" style="font-weight:700">${k==="P"?"+":"−"}${money(usd)}</span></div>

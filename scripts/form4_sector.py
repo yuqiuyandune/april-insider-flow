@@ -299,10 +299,40 @@ RX = {
                            r"cashless exercise", re.I),
     "ipo_any": re.compile(r"initial public offering|\bIPO\b", re.I),
 }
+# Securities that are not common equity (preferred stock or units, notes, warrants...): a trade in them
+# says little about how an insider values the common stock, so it stays out of "effective" totals.
+NONEQUITY_RX = re.compile(r"preferred|\bpref\b|debenture|\bnotes?\b|\bbonds?\b|warrants?|\brights?\b|"
+                          r"subordinated|senior secured", re.I)
+# Indirect holdings through a company (a sponsor, holding company or fund vehicle) rather than a
+# person, trust or retirement account: shown as a label, still counted.
+ENTITY_RX = re.compile(r"\b(AS|ASA|AB|LLC|L\.L\.C\.?|LP|L\.P\.?|LLP|Inc\.?|Incorporated|Corp\.?|Corporation|Ltd\.?|"
+                       r"Limited|Holdings?|GmbH|AG|S\.A\.?|B\.V\.?|N\.V\.?|plc|Pte|Partners|Capital|Ventures)\b", re.I)
+PERSONAL_RX = re.compile(r"trust|\bIRA\b|spouse|wife|husband|child|son\b|daughter|famil|401\(k\)|custodian|UTMA|UGMA|"
+                         r"retirement|pension|estate", re.I)
+
+
+def security_kind(tx, ticker=""):
+    title = (_t(tx, "securityTitle/value") or "").strip()
+    if not NONEQUITY_RX.search(title) or re.search(r"common|ordinary", title, re.I):
+        return None
+    # the listed class itself can be preferred (Brazilian PN shares such as "Preferred shares (ITUB4)")
+    if ticker and re.search(r"\b" + re.escape(ticker) + r"\d*\b", title, re.I):
+        return None
+    return "nonequity"
+
+
+def via_entity(tx):
+    if (_t(tx, "ownershipNature/directOrIndirectOwnership/value") or "") != "I":
+        return False
+    nat = (_t(tx, "ownershipNature/natureOfOwnership/value") or "").strip()
+    return bool(nat) and bool(ENTITY_RX.search(nat)) and not PERSONAL_RX.search(nat)
+
+
 # Flags that keep a trade out of "effective" purchases / sales
-EFF_BUY_EXCL = {"plan", "offering", "spac", "drip", "fund", "nontraded"}
-EFF_SELL_EXCL = {"plan", "exercise", "tax", "spac", "drip", "fund", "nontraded"}
-FLAG_ORDER = ["plan", "exercise", "tax", "offering", "spac", "drip", "fund", "nontraded", "late", "fx", "fx_unknown", "ccy_note", "price_error"]
+EFF_BUY_EXCL = {"plan", "offering", "spac", "drip", "fund", "nontraded", "nonequity"}
+EFF_SELL_EXCL = {"plan", "exercise", "tax", "spac", "drip", "fund", "nontraded", "nonequity"}
+FLAG_ORDER = ["plan", "exercise", "tax", "offering", "spac", "drip", "fund", "nontraded", "nonequity", "affiliate",
+              "late", "fx", "fx_unknown", "ccy_note", "price_error"]
 
 
 def holdings(root):
@@ -439,6 +469,10 @@ def parse_filing(txt, filed=None):
             px = px_local * fxr
         if plan or RX["plan"].search(ft):
             fl.add("plan")
+        if security_kind(tx, ticker):
+            fl.add("nonequity")
+        if via_entity(tx):
+            fl.add("affiliate")
         if code == "P":
             if (RX["offering"].search(ft) or (dte in conv_dates and RX["ipo_any"].search(all_text))
                     or (dte, None) in deriv_buy_dates or (dte, round(px, 4)) in deriv_buy_dates):
