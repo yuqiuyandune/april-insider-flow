@@ -3,3 +3,4 @@ public/
 work/
 __pycache__/
 *.zip
+scripts/fx_cache/
