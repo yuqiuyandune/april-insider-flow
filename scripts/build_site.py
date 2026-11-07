@@ -260,12 +260,14 @@ def sector_weeks(days):
         i = ix[wk(d["date"])]
         for s in d.get("sectors") or []:
             for who, b, sl in (("eff", s.get("buy_eff_usd", s.get("buy_od_usd")) or 0, s.get("sell_eff_usd") or 0),
+                               ("inst", s.get("buy_inst_usd") or 0, s.get("sell_inst_usd") or 0),
                                ("od", s.get("buy_od_usd") or 0, s.get("sell_od_usd") or 0),
                                ("all", s.get("buy_usd") or 0, s.get("sell_usd") or 0)):
                 c = cell(s["sector"], who)[i]; c[0] += b; c[1] += sl
         for co in d.get("companies") or []:
             k = co.get("ticker") or co.get("name") or ""
             for who, net in (("eff", (co.get("eff_buy_usd") or 0) - (co.get("eff_sell_usd") or 0)),
+                             ("inst", (co.get("inst_buy_usd") or 0) - (co.get("inst_sell_usd") or 0)),
                              ("od", (co.get("eff_buy_usd") or 0) - (co.get("eff_sell_usd") or 0)),
                              ("all", (co.get("buy_usd") or 0) - (co.get("sell_usd") or 0))):
                 if net:

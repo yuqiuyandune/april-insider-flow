@@ -386,6 +386,7 @@ details.card[open] summary::after{content:"−"}
   <div class="scope" id="scope">
     <div class="seg" role="group" id="who-group">
       <button type="button" id="who-eff" aria-pressed="true"></button>
+      <button type="button" id="who-inst" aria-pressed="false"></button>
       <button type="button" id="who-od" aria-pressed="false"></button>
       <button type="button" id="who-all" aria-pressed="false"></button>
     </div>
@@ -411,9 +412,9 @@ const SEC_ZH={"Basic Materials":"基础材料","Communication Services":"通信�
 const SEC_TW={"Basic Materials":"基礎材料","Communication Services":"通訊服務","Consumer Cyclical":"週期性消費","Consumer Defensive":"防禦性消費","Energy":"能源","Financial Services":"金融服務","Healthcare":"醫療保健","Industrials":"工業","Real Estate":"房地產","Technology":"科技","Utilities":"公用事業","Unclassified":"未分類"};
 const WK={en:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],zh:["周日","周一","周二","周三","周四","周五","周六"],tw:["週日","週一","週二","週三","週四","週五","週六"]};
 const T={
- zh:{vSectors:"市场动向",vSearch:"个股查询",whoEff:"有效买卖",whoOd:"高管与董事",whoAll:"全部内部人",
-  hint:{eff:"只看信号最强的交易：高管、董事的公开市场买卖，已排除计划内交易、IPO/认购、行权卖出等。",od:"高管与董事的全部公开市场买卖，含计划内交易。",all:"所有内部人（含 10% 大股东、基金）的公开市场买卖。"},
-  heroLabel:{eff:"近 7 天有效净买入",od:"近 7 天高管董事净买入",all:"近 7 天内部人净买入"},
+ zh:{vSectors:"市场动向",vSearch:"个股查询",whoEff:"有效买卖",whoInst:"机构股东",whoOd:"高管与董事",whoAll:"全部内部人",
+  hint:{eff:"只看信号最强的交易：高管、董事本人的公开市场买卖，已排除计划内交易、IPO/认购、行权卖出、内部转让等；基金、公司类持有人单独放在「机构股东」。",inst:"有董事席位的基金、公司（或董事经其管理的基金）的有效买卖，与个人内部人分开统计。",od:"高管与董事的全部公开市场买卖，含计划内交易。",all:"所有内部人（含 10% 大股东、基金）的公开市场买卖。"},
+  heroLabel:{eff:"近 7 天有效净买入",inst:"近 7 天机构股东净买入",od:"近 7 天高管董事净买入",all:"近 7 天内部人净买入"},
   bought:"买入",sold:"卖出",ratio:"买卖比",vsPrev:(b,s)=>`较前 7 天：买入 ${b}，卖出 ${s}`,
   asOf:(d,w)=>`截至 ${d}（${w}）提交的申报`,verified:"每日与 SEC 原件核对 · 数据口径",days:n=>`${n} 个交易日`,
   flowTitle:"板块资金流",pDay:"当日",p7:"近 7 天",pickDay:"选择提交日",lTitle:"个股信号",LS:{net:"净买入排名",sell:"净卖出排名",cx:"CEO/CFO 买入",big:"大额买入 $100万+",hold:"大幅增持 10%+",new:"新建仓",f144:"拟出售 Form 144"},f144Title:"拟出售（Form 144）",f144B:"拟出售",f144When:d=>`预计 ${d} 出售`,shUnit:"股",shareImg:"生成分享图",shareSave:"保存图片",shareClose:"关闭",shareHint:"长按或右键保存图片，或点「保存图片」。",rss:"RSS 订阅",
@@ -421,10 +422,10 @@ const T={
   lNone:"这段时间没有符合条件的交易。",fRole:"职位",roleAll:"全部",roleCx:"CEO/CFO",roleDir:"董事",fAmt:"最低金额",amtAny:"不限",amt100k:"$10万+",amt500k:"$50万+",amt1m:"$100万+",
   pNone:"所选数据中没有这个人的申报。",pSum:(nc,nf,a,b)=>`${a} 至 ${b}，在 ${nc} 家公司有 ${nf} 份申报。`,pByCo:"按公司",pMatches:n=>`找到 ${n} 位内部人：`,
   updAt:u=>`更新于 ${u}`,tipAria:"说明",
-  GL:{scope:"<b>有效买卖</b>：只看高管和董事在公开市场的主动买卖，排除 10b5-1 预定计划、期权行权当天的卖出、缴税卖出、IPO/认购、基金申购，以及优先股、债券等非普通股的交易。<br><b>高管与董事</b>：高管和董事的全部公开市场买卖，包含计划内交易。<br><b>全部内部人</b>：再加上 10% 以上大股东和基金。",
+  GL:{scope:"<b>有效买卖</b>：只看高管和董事在公开市场的主动买卖，排除 10b5-1 预定计划、期权行权当天的卖出、缴税卖出、IPO/认购和承销发行中的卖出、内部转让、迟报超过 90 天的交易、基金申购，以及优先股、债券等非普通股的交易。<br><b>机构股东</b>：有董事席位的基金或公司（以及董事经其管理的基金）的有效买卖，单独统计，不混入个人。<br><b>高管与董事</b>：高管和董事的全部公开市场买卖，包含计划内交易。<br><b>全部内部人</b>：再加上 10% 以上大股东和基金。",
     cluster:"<b>集群买入</b>：近 30 天内，至少 2 位不同的高管或董事各自有效买入同一家公司。多人同时用自己的钱买，通常比一个人买更值得关注。<br>标「同日同价」的，是多人在同一天以完全相同的价格买入，可能是公司统一安排的购股计划，信号较弱。",
     hold:"<b>持股变化</b> = 这次买入的股数 ÷ 买入前持有的同类股份（直接和间接持股合计，取自 Form 4）。<br>买入前持股为 0 时显示「新建仓」。比例越高，说明这笔买入相对他原有的持股越重。",
-    flags:"<b>有效</b>：计入「有效买卖」的交易。<br><b>10b5-1 计划</b>：事先设定好的自动交易计划，不代表当下的判断。<br><b>行权后卖出</b>：行使期权当天卖出，多为把报酬变现。<br><b>缴税卖出</b>：为缴纳股票报酬的税款而卖出。<br><b>IPO/认购</b>：参与发行或私募，不是在公开市场买入。<br><b>迟报 >30 天</b>：交易日和申报日相隔 30 天以上。",
+    flags:"<b>有效</b>：计入「有效买卖」的交易。<br><b>10b5-1 计划</b>：事先设定好的自动交易计划，不代表当下的判断。<br><b>行权后卖出</b>：行使期权当天卖出，多为把报酬变现。<br><b>缴税卖出</b>：为缴纳股票报酬的税款而卖出。<br><b>IPO/认购</b>：参与发行、私募或公司统一安排的认购（多人同日同价），或在承销发行中卖出，不是在公开市场交易。<br><b>内部转让</b>：在本人账户、信托、家人或公司之间转手（私下协议、资产置换、一买一卖对冲），持仓实质没变。<br><b>机构股东</b>：申报人是基金或公司，或董事通过其管理的基金交易，单独统计。<br><b>小额 <$1万</b>：金额计入，但不计入人数和申报数。<br><b>迟报 >30 天</b>：交易日和申报日相隔 30 天以上；超过 90 天的不计入有效买卖。",
     f144:"<b>Form 144（拟出售）</b>：内部人打算卖出受限股或控制性股份时，要在下单前后向 SEC 提交的预告。实际卖出后还会再报 Form 4。金额是申报时的大约市值；标「10b5-1」的属于预先设定的交易计划。",
     filed:"<b>按申报提交日</b>：数字按内部人向 SEC 提交 Form 4 的日期归档。实际交易通常早 0–2 个工作日，逐笔申报里会写明交易日。"},fPeriod:"时间范围",fScope:"统计口径",dPrev:"前一个交易日",dNext:"后一个交易日",dLatest:"最新",
   daySum:(d,b,s,n,m)=>`<b>${d}</b> 提交的申报中，买入 <b class="pos">${b}</b>，卖出 <b class="neg">${s}</b>。共 ${n} 份 Form 4，其中 ${m} 份含公开市场买卖。`,
@@ -437,23 +438,23 @@ const T={
   flaggedTitle:"疑似填写错误、已剔除的申报",flagged:(d,t,c,sh,px,v)=>`${d} ${t} ${c==="P"?"买入":"卖出"} ${sh} 股 @ $${px}（${v}）`,
   qPh:"输入代码或公司名",qClear:"清除",histT:"最近查询",histClr:"清除记录",tabs:{overview:"概览",signals:"个股信号",sectors:"板块",trend:"趋势"},winAria:"时间范围",winLbl:{"1d":"单日","1w":"近 1 周","1m":"近 1 月","3m":"近 3 月"},
   rangeLine:(a,b,n)=>`${a} – ${b} · ${n} 个交易日`,dayLine:(d,w)=>`${d}（${w}）`,rangeShort:(a,b,n)=>`${a} – ${b}（${n} 个交易日）`,
-  heroNet:{eff:"有效净买入",od:"高管董事净买入",all:"内部人净买入"},vsPrevW:(u,b,s)=>`较上一${u}：买入 ${b}，卖出 ${s}`,prevUnit:{"1d":"个交易日","1w":"周","1m":"个月","3m":"季度"},noPrev:"更早的数据不足，暂无对比",
+  heroNet:{eff:"有效净买入",inst:"机构股东净买入",od:"高管董事净买入",all:"内部人净买入"},vsPrevW:(u,b,s)=>`较上一${u}：买入 ${b}，卖出 ${s}`,prevUnit:{"1d":"个交易日","1w":"周","1m":"个月","3m":"季度"},noPrev:"更早的数据不足，暂无对比",
   sumTitle:"本期要点",hBuy:x=>`买入是卖出的 ${x} 倍`,hSell:x=>`卖出是买入的 ${x} 倍`,hOnlyBuy:"只有买入，没有卖出",hOnlySell:"只有卖出，没有买入",hNone:"这段时间没有符合条件的交易",lAll:"整体",lSec:"板块",lBuy:"最大买入",lSell:"最大卖出",lCl:"集群",vsPrevShort:u=>`箭头为较上一${u}`,next:"其次",clCount:(n,ext)=>`<b>${n}</b> 家公司${ext?"有新买入":""}`,clMost:"最多",sumAuto:"根据数据自动生成",scopeName:{eff:"高管和董事的有效交易",od:"高管和董事",all:"所有内部人"},
   sum1:(rg,sc,b,s,net,n,c)=>`${rg}，${sc}买入 <b class="pos">${b}</b>、卖出 <b class="neg">${s}</b>，${net>=0?"净买入":"净卖出"} <b class="${net>=0?"pos":"neg"}">${n}</b>${c&&c[1]!=null&&c[2]!=null?`；与上一${c[0]}相比，买入${c[1]>=0?"增加":"减少"} ${Math.abs(c[1])}%，卖出${c[2]>=0?"增加":"减少"} ${Math.abs(c[2])}%`:""}。`,
   sum2:(a,b)=>`板块上，${a?`<b>${a[0]}</b> 净买入最多（${a[1]}）`:""}${a&&b?"，":""}${b?`<b>${b[0]}</b> 净卖出最多（${b[1]}）`:""}。`,
   sum3:(tk,nm,amt,who,hold,o)=>`个股方面，有效净买入最多的是 ${tk}（${nm}，${amt}）${who?`，主要来自 ${who}${hold?`（${hold}）`:""}`:""}${o.length?`；其次是 ${o.join("、")}`:""}。`,
   sumNoBuy:"这段时间没有高管或董事的有效买入。",sum4:(tk,nm,amt)=>`有效净卖出最多的是 ${tk}（${nm}，${amt}）。`,
   sum5:(n,tk,p,ext)=>`${ext?"近 1 月":"同期"}有 ${n} 家公司出现集群买入（2 位以上高管或董事各自买入），人数最多的是 ${tk}（${p} 人）。`,
-  topBuyT:"有效净买入前 5 名",seeAll:"查看全部 →",clNoneW:"这段时间没有集群买入。",clLast:d=>`最近 ${d}`,clWinExt:"近 1 月",clNewIn:w=>`${w}有新买入`,clExtNote:"列出所选时间内又有内部人买入的集群；人数按近 30 天计算。",clNoneExt:"所选时间内没有集群出现新的买入。",
+  topBuyT:"有效净买入前 5 名",topBuyTInst:"机构股东净买入前 5 名",seeAll:"查看全部 →",clNoneW:"这段时间没有集群买入。",clLast:d=>`最近 ${d}`,clWinExt:"近 1 月",clNewIn:w=>`${w}有新买入`,clExtNote:"列出所选时间内又有内部人买入的集群；人数按近 30 天计算。",clNoneExt:"所选时间内没有集群出现新的买入。",
   clSub2:"2 位以上高管或董事各自在公开市场买入同一家公司（有效买入）。多人同时自掏腰包买入，是最受重视的内部人信号之一。",
   flowSum:(b,s,top,bot)=>`买入 <b class="pos">${b}</b>，卖出 <b class="neg">${s}</b>。${top?`净买入最多：<b>${top}</b>。`:""}${bot?`净卖出最多：<b>${bot}</b>。`:""}`,
   trendSub:(a,b,n)=>`${a} – ${b}，${n} 个交易日`,hcTitle:n=>`每日净额 · ${n} 个交易日`,hcBuy:"净买入",hcSell:"净卖出",hcSel:"所选时间",netWord:"净额",hcDay:(d,v)=>`所选 ${d}：<b style="color:var(--hero-ink)">${v}</b>`,hcClip:"比例按所选时间设定，更大的柱子已截断（白线为截断标记）",trendDim:"淡色为所选时间以外的日子",clTitle:"集群买入",clSub:"近 30 天内，2 位以上高管或董事各自在公开市场买入同一家公司（有效买入）。多人同时自掏腰包买入，是最受重视的内部人信号之一。",clPeople:n=>`${n} 位内部人`,clNone:"近 30 天没有集群买入。",clBadge:n=>`集群 ${n} 人`,clCo:(n,names)=>`近 30 天 <b>${n} 位</b>高管/董事有效买入：${names}`,clProg:"同日同价",clProgLong:"多人在同一天以完全相同的价格买入，可能是公司统一安排的购股计划，信号意义较弱。",holdUp:p=>`持股 +${p}`,holdNew:"新建仓",holdLine:(a,b)=>`持股 ${a} → ${b} 股`,maxHold:p=>`最高增持 ${p}`,copyLink:"复制链接",copied:"已复制 ✓",flagReason:"价格与脚注或该股正常价格严重不符",fxNoRate:"外币无汇率",chartT:"日线图",chartHide:"收起",chartShow:"展开",chartNote:"图表由 TradingView 提供，显示交易所行情；新上市的公司只有上市后的数据。",chartNone:"这家公司没有可用的交易代码，无法显示图表。",plotT:"内部人成交价",plotSub:"每个点是一笔申报的平均成交价，对照上方 K 线看内部人在什么价位买卖。点越大，金额越大。",plotEffB:"有效买入",plotEffS:"有效卖出",plotOther:"空心：计划内或其他",plotNone:"所选时间内没有可画的成交。",go:"查询",sHint:(a,b,n)=>`可查询 ${a} 至 ${b} 有公开市场买卖的 ${n} 家公司。`,
   sLoading:"正在加载全部历史…",sLoadErr:"历史数据加载失败，只能查询最近 30 天。",sMatches:n=>`找到 ${n} 家公司：`,
   sNone:(q,a,b)=>`${a} 至 ${b} 没有 <b>${q}</b> 的公开市场内部人买卖。`,edgarAll:"EDGAR 全部 Form 4 ↗",secf4:"secform4 ↗",
-  r7:"7 天",r30:"30 天",r90:"90 天",rAll:"全部",tNet:"净额",tEb:"有效买入",tEs:"有效卖出",tEnet:"有效净额",
+  r7:"7 天",r30:"30 天",r90:"90 天",rAll:"全部",tNet:"净额",tEb:"有效买入",tEs:"有效卖出",tIb:"机构股东买入",tIs:"机构股东卖出",tEnet:"有效净额",
   tFilings:(n,i)=>`${n} 份申报 · ${i} 位内部人`,byInsider:"按内部人",filingsTitle:"逐笔申报",
   filed:"提交",traded:"交易",open:"查看原文 ↗",buyB:"买入",sellB:"卖出",ownerB:"10% 股东/其他",effB:"有效",
-  FL:{plan:"10b5-1 计划",exercise:"行权后卖出",tax:"缴税卖出",offering:"IPO/认购",spac:"SPAC",drip:"再投资/申购",fund:"基金/信托",nontraded:"非上市",nonequity:"优先股/债券",affiliate:"经关联公司",late:"迟报 >30 天",fx:"外币已换算为美元"},
+  FL:{plan:"10b5-1 计划",exercise:"行权后卖出",tax:"缴税卖出",offering:"IPO/认购",spac:"SPAC",drip:"再投资/申购",fund:"基金/信托",nontraded:"非上市",nonequity:"优先股/债券",internal:"内部转让",stale:"迟报 >90 天",inst:"机构股东",small:"小额 <$1万",affiliate:"经关联公司",late:"迟报 >30 天",fx:"外币已换算为美元"},
   noLinks:"部分日期没有逐笔明细，只计入合计。",loading:"正在加载数据…",loadErr:e=>`数据加载失败（${e}），请刷新重试。`,noData:"还没有数据。",
   notesTitle:"数据口径与核验",foot:"数据来源：SEC EDGAR Form 4。仅供参考，不构成投资建议。",
   notes:[["怎么读","日期指申报提交到 SEC 的日期，交易本身通常早几天。默认只看信号最强的交易（有效买卖）：高管、董事的公开市场买卖，已排除计划内交易、IPO/认购、行权卖出等；可在“统计口径”里切换为全部高管董事或所有内部人。"],["图表","柱子比例按所选时间设定，特别高的柱子会被截断，白线为截断标记。"],["本期要点","根据数据自动生成，不是人工评论，也不构成投资建议。"],["数据来源","SEC EDGAR 每日 Form 4 索引，按提交日归档。只计原始 Form 4（不含 4/A 修正）中非衍生品表的公开市场买入 (P) 和卖出 (S)，金额 = 股数 × 每股价格。期权授予、行权、RSU 归属、赠与、税务代扣不计入。Form 144（拟出售）不在 Form 4 中，也不计入。"],["外币价格","少数外国发行人（如 ASE/ASX 用新台币）在 Form 4 里以本地货币填写每股价格，只在脚注说明。凡价格脚注表明是外币的交易，按交易日汇率换算为美元后再计入，并标注“外币已换算为美元”；无法取得汇率的交易不计入合计。"],
@@ -462,9 +463,9 @@ const T={
    ["板块","按发行人 SIC 行业代码映射到 11 个板块，与 secform4 的分类相近但不完全相同。没有 SIC 代码的基金、信托归入“未分类”。"],
    ["数据核验","每天对有效买卖前 10 名背后的每份申报，加上随机抽取的申报，用另一套程序从 SEC 官方 Form 4 页面重新读取，逐股逐美元核对，并核对申报→公司→板块的合计。全部通过才发布；未通过的日期暂不发布并自动重试。"],
    ["集群买入与持股变化","集群买入：近 30 天内至少 2 位不同的高管或董事有效买入同一家公司（同一人多次买入只算一位；关联方联合申报按第一申报人计）。持股变化 = 本次买入股数 ÷ 买入前持有的同类股份（直接与间接持股合计，取自 Form 4 的“交易后持有数量”）；买入前为 0 显示为“新建仓”。选了时间范围时，只列出这段时间内又有新买入的集群，人数仍按近 30 天计算。"],["异常值","单笔超过 10 亿美元或每股超过 1 万美元的交易，申报价格明显超出其脚注所写成交价区间的交易，以及经人工核实为填写错误的个别申报，都不计入合计，单独列出。每天另有自动检查，发现可疑数字（如价格与该股以往价格相差数倍、脚注提到外币但未换算）会提醒人工复核。"]]},
- tw:{vSectors:"市場動向",vSearch:"個股查詢",whoEff:"有效買賣",whoOd:"高管與董事",whoAll:"全部內部人",
-  hint:{eff:"只看訊號最強的交易：高管、董事的公開市場買賣，已排除計劃內交易、IPO/認購、行權賣出等。",od:"高管與董事的全部公開市場買賣，含計劃內交易。",all:"所有內部人（含 10% 大股東、基金）的公開市場買賣。"},
-  heroLabel:{eff:"近 7 天有效淨買入",od:"近 7 天高管董事淨買入",all:"近 7 天內部人淨買入"},
+ tw:{vSectors:"市場動向",vSearch:"個股查詢",whoEff:"有效買賣",whoInst:"機構股東",whoOd:"高管與董事",whoAll:"全部內部人",
+  hint:{eff:"只看訊號最強的交易：高管、董事本人的公開市場買賣，已排除計劃內交易、IPO/認購、行權賣出、內部轉讓等；基金、公司類持有人單獨放在「機構股東」。",inst:"有董事席位的基金、公司（或董事經其管理的基金）的有效買賣，與個人內部人分開統計。",od:"高管與董事的全部公開市場買賣，含計劃內交易。",all:"所有內部人（含 10% 大股東、基金）的公開市場買賣。"},
+  heroLabel:{eff:"近 7 天有效淨買入",inst:"近 7 天機構股東淨買入",od:"近 7 天高管董事淨買入",all:"近 7 天內部人淨買入"},
   bought:"買入",sold:"賣出",ratio:"買賣比",vsPrev:(b,s)=>`較前 7 天：買入 ${b}，賣出 ${s}`,
   asOf:(d,w)=>`截至 ${d}（${w}）提交的申報`,verified:"每日與 SEC 原件核對 · 資料口徑",days:n=>`${n} 個交易日`,
   flowTitle:"板塊資金流",pDay:"當日",p7:"近 7 天",pickDay:"選擇提交日",lTitle:"個股訊號",LS:{net:"淨買入排名",sell:"淨賣出排名",cx:"CEO/CFO 買入",big:"大額買入 $100萬+",hold:"大幅增持 10%+",new:"新建倉",f144:"擬出售 Form 144"},f144Title:"擬出售（Form 144）",f144B:"擬出售",f144When:d=>`預計 ${d} 出售`,shUnit:"股",shareImg:"生成分享圖",shareSave:"儲存圖片",shareClose:"關閉",shareHint:"長按或右鍵儲存圖片，或點「儲存圖片」。",rss:"RSS 訂閱",
@@ -472,10 +473,10 @@ const T={
   lNone:"這段時間沒有符合條件的交易。",fRole:"職位",roleAll:"全部",roleCx:"CEO/CFO",roleDir:"董事",fAmt:"最低金額",amtAny:"不限",amt100k:"$10萬+",amt500k:"$50萬+",amt1m:"$100萬+",
   pNone:"所選資料中沒有這個人的申報。",pSum:(nc,nf,a,b)=>`${a} 至 ${b}，在 ${nc} 家公司有 ${nf} 份申報。`,pByCo:"按公司",pMatches:n=>`找到 ${n} 位內部人：`,
   updAt:u=>`更新於 ${u}`,tipAria:"說明",
-  GL:{scope:"<b>有效買賣</b>：只看高管和董事在公開市場的主動買賣，排除 10b5-1 預定計劃、期權行權當天的賣出、繳稅賣出、IPO/認購、基金申購，以及優先股、債券等非普通股的交易。<br><b>高管與董事</b>：高管和董事的全部公開市場買賣，包含計劃內交易。<br><b>全部內部人</b>：再加上 10% 以上大股東和基金。",
+  GL:{scope:"<b>有效買賣</b>：只看高管和董事在公開市場的主動買賣，排除 10b5-1 預定計劃、期權行權當天的賣出、繳稅賣出、IPO/認購和承銷發行中的賣出、內部轉讓、遲報超過 90 天的交易、基金申購，以及優先股、債券等非普通股的交易。<br><b>機構股東</b>：有董事席位的基金或公司（以及董事經其管理的基金）的有效買賣，單獨統計，不混入個人。<br><b>高管與董事</b>：高管和董事的全部公開市場買賣，包含計劃內交易。<br><b>全部內部人</b>：再加上 10% 以上大股東和基金。",
     cluster:"<b>集群買入</b>：近 30 天內，至少 2 位不同的高管或董事各自有效買入同一家公司。多人同時用自己的錢買，通常比一個人買更值得關注。<br>標「同日同價」的，是多人在同一天以完全相同的價格買入，可能是公司統一安排的購股計劃，訊號較弱。",
     hold:"<b>持股變化</b> = 這次買入的股數 ÷ 買入前持有的同類股份（直接和間接持股合計，取自 Form 4）。<br>買入前持股為 0 時顯示「新建倉」。比例越高，說明這筆買入相對他原有的持股越重。",
-    flags:"<b>有效</b>：計入「有效買賣」的交易。<br><b>10b5-1 計劃</b>：事先設定好的自動交易計劃，不代表當下的判斷。<br><b>行權後賣出</b>：行使期權當天賣出，多為把報酬變現。<br><b>繳稅賣出</b>：為繳納股票報酬的稅款而賣出。<br><b>IPO/認購</b>：參與發行或私募，不是在公開市場買入。<br><b>遲報 >30 天</b>：交易日和申報日相隔 30 天以上。",
+    flags:"<b>有效</b>：計入「有效買賣」的交易。<br><b>10b5-1 計劃</b>：事先設定好的自動交易計劃，不代表當下的判斷。<br><b>行權後賣出</b>：行使期權當天賣出，多為把報酬變現。<br><b>繳稅賣出</b>：為繳納股票報酬的稅款而賣出。<br><b>IPO/認購</b>：參與發行、私募或公司統一安排的認購（多人同日同價），或在承銷發行中賣出，不是在公開市場交易。<br><b>內部轉讓</b>：在本人帳戶、信託、家人或公司之間轉手（私下協議、資產置換、一買一賣對沖），持倉實質沒變。<br><b>機構股東</b>：申報人是基金或公司，或董事透過其管理的基金交易，單獨統計。<br><b>小額 <$1萬</b>：金額計入，但不計入人數和申報數。<br><b>遲報 >30 天</b>：交易日和申報日相隔 30 天以上；超過 90 天的不計入有效買賣。",
     f144:"<b>Form 144（擬出售）</b>：內部人打算賣出受限股或控制性股份時，要在下單前後向 SEC 提交的預告。實際賣出後還會再報 Form 4。金額是申報時的大約市值；標「10b5-1」的屬於預先設定的交易計劃。",
     filed:"<b>按申報提交日</b>：數字按內部人向 SEC 提交 Form 4 的日期歸檔。實際交易通常早 0–2 個工作日，逐筆申報裡會寫明交易日。"},fPeriod:"時間範圍",fScope:"統計口徑",dPrev:"前一個交易日",dNext:"後一個交易日",dLatest:"最新",
   daySum:(d,b,s,n,m)=>`<b>${d}</b> 提交的申報中，買入 <b class="pos">${b}</b>，賣出 <b class="neg">${s}</b>。共 ${n} 份 Form 4，其中 ${m} 份含公開市場買賣。`,
@@ -488,23 +489,23 @@ const T={
   flaggedTitle:"疑似填寫錯誤、已剔除的申報",flagged:(d,t,c,sh,px,v)=>`${d} ${t} ${c==="P"?"買入":"賣出"} ${sh} 股 @ $${px}（${v}）`,
   qPh:"輸入程式碼或公司名",qClear:"清除",histT:"最近查詢",histClr:"清除記錄",tabs:{overview:"概覽",signals:"個股訊號",sectors:"板塊",trend:"趨勢"},winAria:"時間範圍",winLbl:{"1d":"單日","1w":"近 1 週","1m":"近 1 月","3m":"近 3 月"},
   rangeLine:(a,b,n)=>`${a} – ${b} · ${n} 個交易日`,dayLine:(d,w)=>`${d}（${w}）`,rangeShort:(a,b,n)=>`${a} – ${b}（${n} 個交易日）`,
-  heroNet:{eff:"有效淨買入",od:"高管董事淨買入",all:"內部人淨買入"},vsPrevW:(u,b,s)=>`較上一${u}：買入 ${b}，賣出 ${s}`,prevUnit:{"1d":"個交易日","1w":"週","1m":"個月","3m":"季度"},noPrev:"更早的資料不足，暫無對比",
+  heroNet:{eff:"有效淨買入",inst:"機構股東淨買入",od:"高管董事淨買入",all:"內部人淨買入"},vsPrevW:(u,b,s)=>`較上一${u}：買入 ${b}，賣出 ${s}`,prevUnit:{"1d":"個交易日","1w":"週","1m":"個月","3m":"季度"},noPrev:"更早的資料不足，暫無對比",
   sumTitle:"本期要點",hBuy:x=>`買入是賣出的 ${x} 倍`,hSell:x=>`賣出是買入的 ${x} 倍`,hOnlyBuy:"只有買入，沒有賣出",hOnlySell:"只有賣出，沒有買入",hNone:"這段時間沒有符合條件的交易",lAll:"整體",lSec:"板塊",lBuy:"最大買入",lSell:"最大賣出",lCl:"集群",vsPrevShort:u=>`箭頭為較上一${u}`,next:"其次",clCount:(n,ext)=>`<b>${n}</b> 家公司${ext?"有新買入":""}`,clMost:"最多",sumAuto:"根據資料自動生成",scopeName:{eff:"高管和董事的有效交易",od:"高管和董事",all:"所有內部人"},
   sum1:(rg,sc,b,s,net,n,c)=>`${rg}，${sc}買入 <b class="pos">${b}</b>、賣出 <b class="neg">${s}</b>，${net>=0?"淨買入":"淨賣出"} <b class="${net>=0?"pos":"neg"}">${n}</b>${c&&c[1]!=null&&c[2]!=null?`；與上一${c[0]}相比，買入${c[1]>=0?"增加":"減少"} ${Math.abs(c[1])}%，賣出${c[2]>=0?"增加":"減少"} ${Math.abs(c[2])}%`:""}。`,
   sum2:(a,b)=>`板塊上，${a?`<b>${a[0]}</b> 淨買入最多（${a[1]}）`:""}${a&&b?"，":""}${b?`<b>${b[0]}</b> 淨賣出最多（${b[1]}）`:""}。`,
   sum3:(tk,nm,amt,who,hold,o)=>`個股方面，有效淨買入最多的是 ${tk}（${nm}，${amt}）${who?`，主要來自 ${who}${hold?`（${hold}）`:""}`:""}${o.length?`；其次是 ${o.join("、")}`:""}。`,
   sumNoBuy:"這段時間沒有高管或董事的有效買入。",sum4:(tk,nm,amt)=>`有效淨賣出最多的是 ${tk}（${nm}，${amt}）。`,
   sum5:(n,tk,p,ext)=>`${ext?"近 1 月":"同期"}有 ${n} 家公司出現集群買入（2 位以上高管或董事各自買入），人數最多的是 ${tk}（${p} 人）。`,
-  topBuyT:"有效淨買入前 5 名",seeAll:"檢視全部 →",clNoneW:"這段時間沒有集群買入。",clLast:d=>`最近 ${d}`,clWinExt:"近 1 月",clNewIn:w=>`${w}有新買入`,clExtNote:"列出所選時間內又有內部人買入的集群；人數按近 30 天計算。",clNoneExt:"所選時間內沒有集群出現新的買入。",
+  topBuyT:"有效淨買入前 5 名",topBuyTInst:"機構股東淨買入前 5 名",seeAll:"檢視全部 →",clNoneW:"這段時間沒有集群買入。",clLast:d=>`最近 ${d}`,clWinExt:"近 1 月",clNewIn:w=>`${w}有新買入`,clExtNote:"列出所選時間內又有內部人買入的集群；人數按近 30 天計算。",clNoneExt:"所選時間內沒有集群出現新的買入。",
   clSub2:"2 位以上高管或董事各自在公開市場買入同一家公司（有效買入）。多人同時自掏腰包買入，是最受重視的內部人訊號之一。",
   flowSum:(b,s,top,bot)=>`買入 <b class="pos">${b}</b>，賣出 <b class="neg">${s}</b>。${top?`淨買入最多：<b>${top}</b>。`:""}${bot?`淨賣出最多：<b>${bot}</b>。`:""}`,
   trendSub:(a,b,n)=>`${a} – ${b}，${n} 個交易日`,hcTitle:n=>`每日淨額 · ${n} 個交易日`,hcBuy:"淨買入",hcSell:"淨賣出",hcSel:"所選時間",netWord:"淨額",hcDay:(d,v)=>`所選 ${d}：<b style="color:var(--hero-ink)">${v}</b>`,hcClip:"比例按所選時間設定，更大的柱子已截斷（白線為截斷標記）",trendDim:"淡色為所選時間以外的日子",clTitle:"集群買入",clSub:"近 30 天內，2 位以上高管或董事各自在公開市場買入同一家公司（有效買入）。多人同時自掏腰包買入，是最受重視的內部人訊號之一。",clPeople:n=>`${n} 位內部人`,clNone:"近 30 天沒有集群買入。",clBadge:n=>`集群 ${n} 人`,clCo:(n,names)=>`近 30 天 <b>${n} 位</b>高管/董事有效買入：${names}`,clProg:"同日同價",clProgLong:"多人在同一天以完全相同的價格買入，可能是公司統一安排的購股計劃，訊號意義較弱。",holdUp:p=>`持股 +${p}`,holdNew:"新建倉",holdLine:(a,b)=>`持股 ${a} → ${b} 股`,maxHold:p=>`最高增持 ${p}`,copyLink:"複製連結",copied:"已複製 ✓",flagReason:"價格與腳註或該股正常價格嚴重不符",fxNoRate:"外幣無匯率",chartT:"日線圖",chartHide:"收起",chartShow:"展開",chartNote:"圖表由 TradingView 提供，顯示交易所行情；新上市的公司只有上市後的資料。",chartNone:"這家公司沒有可用的交易程式碼，無法顯示圖表。",plotT:"內部人成交價",plotSub:"每個點是一筆申報的平均成交價，對照上方 K 線看內部人在什麼價位買賣。點越大，金額越大。",plotEffB:"有效買入",plotEffS:"有效賣出",plotOther:"空心：計劃內或其他",plotNone:"所選時間內沒有可畫的成交。",go:"查詢",sHint:(a,b,n)=>`可查詢 ${a} 至 ${b} 有公開市場買賣的 ${n} 家公司。`,
   sLoading:"正在載入全部歷史…",sLoadErr:"歷史資料載入失敗，只能查詢最近 30 天。",sMatches:n=>`找到 ${n} 家公司：`,
   sNone:(q,a,b)=>`${a} 至 ${b} 沒有 <b>${q}</b> 的公開市場內部人買賣。`,edgarAll:"EDGAR 全部 Form 4 ↗",secf4:"secform4 ↗",
-  r7:"7 天",r30:"30 天",r90:"90 天",rAll:"全部",tNet:"淨額",tEb:"有效買入",tEs:"有效賣出",tEnet:"有效淨額",
+  r7:"7 天",r30:"30 天",r90:"90 天",rAll:"全部",tNet:"淨額",tEb:"有效買入",tEs:"有效賣出",tIb:"機構股東買入",tIs:"機構股東賣出",tEnet:"有效淨額",
   tFilings:(n,i)=>`${n} 份申報 · ${i} 位內部人`,byInsider:"按內部人",filingsTitle:"逐筆申報",
   filed:"提交",traded:"交易",open:"檢視原文 ↗",buyB:"買入",sellB:"賣出",ownerB:"10% 股東/其他",effB:"有效",
-  FL:{plan:"10b5-1 計劃",exercise:"行權後賣出",tax:"繳稅賣出",offering:"IPO/認購",spac:"SPAC",drip:"再投資/申購",fund:"基金/信託",nontraded:"非上市",nonequity:"優先股/債券",affiliate:"經關聯公司",late:"遲報 >30 天",fx:"外幣已換算為美元"},
+  FL:{plan:"10b5-1 計劃",exercise:"行權後賣出",tax:"繳稅賣出",offering:"IPO/認購",spac:"SPAC",drip:"再投資/申購",fund:"基金/信託",nontraded:"非上市",nonequity:"優先股/債券",internal:"內部轉讓",stale:"遲報 >90 天",inst:"機構股東",small:"小額 <$1萬",affiliate:"經關聯公司",late:"遲報 >30 天",fx:"外幣已換算為美元"},
   noLinks:"部分日期沒有逐筆明細，只計入合計。",loading:"正在載入資料…",loadErr:e=>`資料載入失敗（${e}），請重新整理重試。`,noData:"還沒有資料。",
   notesTitle:"資料口徑與核驗",foot:"資料來源：SEC EDGAR Form 4。僅供參考，不構成投資建議。",
   notes:[["怎麼讀","日期指申報提交到 SEC 的日期，交易本身通常早幾天。預設只看訊號最強的交易（有效買賣）：高管、董事的公開市場買賣，已排除計劃內交易、IPO/認購、行權賣出等；可在“統計口徑”裡切換為全部高管董事或所有內部人。"],["圖表","柱子比例按所選時間設定，特別高的柱子會被截斷，白線為截斷標記。"],["本期要點","根據資料自動生成，不是人工評論，也不構成投資建議。"],["資料來源","SEC EDGAR 每日 Form 4 索引，按提交日歸檔。只計原始 Form 4（不含 4/A 修正）中非衍生品表的公開市場買入 (P) 和賣出 (S)，金額 = 股數 × 每股價格。期權授予、行權、RSU 歸屬、贈與、稅務代扣不計入。Form 144（擬出售）不在 Form 4 中，也不計入。"],["外幣價格","少數外國發行人（如 ASE/ASX 用新臺幣）在 Form 4 裡以本地貨幣填寫每股價格，只在腳註說明。凡價格腳註表明是外幣的交易，按交易日匯率換算為美元后再計入，並標註“外幣已換算為美元”；無法取得匯率的交易不計入合計。"],
@@ -513,9 +514,9 @@ const T={
    ["板塊","按發行人 SIC 行業程式碼對映到 11 個板塊，與 secform4 的分類相近但不完全相同。沒有 SIC 程式碼的基金、信託歸入“未分類”。"],
    ["資料核驗","每天對有效買賣前 10 名背後的每份申報，加上隨機抽取的申報，用另一套程式從 SEC 官方 Form 4 頁面重新讀取，逐股逐美元核對，並核對申報→公司→板塊的合計。全部通過才釋出；未通過的日期暫不釋出並自動重試。"],
    ["集群買入與持股變化","集群買入：近 30 天內至少 2 位不同的高管或董事有效買入同一家公司（同一人多次買入只算一位；關聯方聯合申報按第一申報人計）。持股變化 = 本次買入股數 ÷ 買入前持有的同類股份（直接與間接持股合計，取自 Form 4 的“交易後持有數量”）；買入前為 0 顯示為“新建倉”。選了時間範圍時，只列出這段時間內又有新買入的集群，人數仍按近 30 天計算。"],["異常值","單筆超過 10 億美元或每股超過 1 萬美元的交易，申報價格明顯超出其腳註所寫成交價區間的交易，以及經人工核實為填寫錯誤的個別申報，都不計入合計，單獨列出。每天另有自動檢查，發現可疑數字（如價格與該股以往價格相差數倍、腳註提到外幣但未換算）會提醒人工複核。"]]},
- en:{vSectors:"Market",vSearch:"Ticker search",whoEff:"Effective",whoOd:"Officers & directors",whoAll:"All insiders",
-  hint:{eff:"The strongest signal only: officer and director open-market trades, excluding planned trades, IPO/offering buys, option-exercise sales and more.",od:"All open-market trades by officers and directors, including planned trades.",all:"Open-market trades by every insider, including 10% owners and funds."},
-  heroLabel:{eff:"Effective net buying, last 7 days",od:"Officer & director net buying, last 7 days",all:"Insider net buying, last 7 days"},
+ en:{vSectors:"Market",vSearch:"Ticker search",whoEff:"Effective",whoInst:"Institutions",whoOd:"Officers & directors",whoAll:"All insiders",
+  hint:{eff:"The strongest signal only: officers' and directors' own open-market trades, excluding planned trades, IPO/offering trades, option-exercise sales, internal transfers and more. Funds and companies are shown under Institutional holders.",inst:"Effective trades by funds or companies with a board seat (or a director trading through a fund they run), counted apart from individual insiders.",od:"All open-market trades by officers and directors, including planned trades.",all:"Open-market trades by every insider, including 10% owners and funds."},
+  heroLabel:{eff:"Effective net buying, last 7 days",inst:"Institutional net buying, last 7 days",od:"Officer & director net buying, last 7 days",all:"Insider net buying, last 7 days"},
   bought:"Bought",sold:"Sold",ratio:"Buy/sell",vsPrev:(b,s)=>`vs prior 7 days: buys ${b}, sales ${s}`,
   asOf:(d,w)=>`Filings through ${d} (${w})`,verified:"Checked daily against SEC originals · method",days:n=>`${n} trading day${n===1?"":"s"}`,
   flowTitle:"Sector flow",pDay:"Day",p7:"7 days",pickDay:"Choose filing date",lTitle:"Stock signals",LS:{net:"Net buyers",sell:"Net sellers",cx:"CEO/CFO buys",big:"Buys $1M+",hold:"Holding up 10%+",new:"New positions",f144:"Proposed sales (Form 144)"},f144Title:"Proposed sales (Form 144)",f144B:"Proposed sale",f144When:d=>`planned for ${d}`,shUnit:"sh",shareImg:"Share image",shareSave:"Save image",shareClose:"Close",shareHint:"Long-press or right-click to save, or tap Save image.",rss:"RSS feed",
@@ -523,10 +524,10 @@ const T={
   lNone:"No qualifying trades in this period.",fRole:"Role",roleAll:"All",roleCx:"CEO/CFO",roleDir:"Director",fAmt:"Min amount",amtAny:"Any",amt100k:"$100K+",amt500k:"$500K+",amt1m:"$1M+",
   pNone:"No filings by this person in the data.",pSum:(nc,nf,a,b)=>`${nf} filing${nf===1?"":"s"} at ${nc} compan${nc===1?"y":"ies"}, ${a} to ${b}.`,pByCo:"By company",pMatches:n=>`${n} matching insider${n===1?"":"s"}:`,
   updAt:u=>`Updated ${u}`,tipAria:"What is this?",
-  GL:{scope:"<b>Effective</b>: only officers' and directors' own open-market trades, excluding 10b5-1 plan trades, sales on the day of an option exercise, tax sales, IPO/offering buys, fund subscriptions, and trades in preferred stock, notes and other non-common securities.<br><b>Officers & directors</b>: all their open-market trades, planned ones included.<br><b>All insiders</b>: adds 10%+ owners and funds.",
+  GL:{scope:"<b>Effective</b>: only officers' and directors' own open-market trades, excluding 10b5-1 plan trades, sales on the day of an option exercise, tax sales, IPO/offering buys and sales into underwritten offerings, internal transfers, trades filed more than 90 days late, fund subscriptions, and trades in preferred stock, notes and other non-common securities.<br><b>Institutional holders</b>: effective trades by funds or companies with a board seat (or directors trading through a fund they run), kept apart from individuals.<br><b>Officers & directors</b>: all their open-market trades, planned ones included.<br><b>All insiders</b>: adds 10%+ owners and funds.",
     cluster:"<b>Cluster buying</b>: at least 2 different officers or directors each made effective purchases of the same company within 30 days. Several insiders buying with their own money is usually more telling than one.<br>\"Same day & price\" marks several insiders buying on one day at exactly the same price, which may be a company-arranged program and a weaker signal.",
     hold:"<b>Holding change</b> = shares bought ÷ shares of that class held before the purchase (direct and indirect, from the Form 4).<br>\"New position\" means the insider held none before. The higher it is, the bigger the bet relative to what they already owned.",
-    flags:"<b>Effective</b>: counted in effective trades.<br><b>10b5-1 plan</b>: a pre-set automatic trading plan, not a decision made at the time.<br><b>Option-exercise sale</b>: sold the day options were exercised, usually cashing in pay.<br><b>Tax sale</b>: sold to cover taxes on stock pay.<br><b>IPO / offering</b>: bought in an offering or private placement, not on the open market.<br><b>Filed >30d late</b>: filed more than 30 days after the trade.",
+    flags:"<b>Effective</b>: counted in effective trades.<br><b>10b5-1 plan</b>: a pre-set automatic trading plan, not a decision made at the time.<br><b>Option-exercise sale</b>: sold the day options were exercised, usually cashing in pay.<br><b>Tax sale</b>: sold to cover taxes on stock pay.<br><b>IPO / offering</b>: bought in an offering, private placement or company-arranged subscription (several insiders, same day, same price), or sold into an underwritten offering; not an open-market trade.<br><b>Internal transfer</b>: shares moved between the insider's own accounts, trusts, family or the company (private agreement, asset substitution, matched buy and sell); the exposure did not change.<br><b>Institutional holder</b>: the filer is a fund or company, or a director trading through a fund they run; counted separately.<br><b>Small <$10K</b>: the amount counts, but not toward people or filing counts.<br><b>Filed >30d late</b>: filed more than 30 days after the trade; after 90 days it no longer counts as effective.",
     f144:"<b>Form 144 (proposed sale)</b>: a notice insiders file with the SEC around the time they place an order to sell restricted or control shares. A Form 4 follows once the sale happens. The amount is the approximate market value at filing; \"10b5-1\" marks sales under a pre-set trading plan.",
     filed:"<b>By filing date</b>: figures are grouped by the date the Form 4 was filed with the SEC. Trades usually happen 0–2 business days earlier; each filing shows its trade date."},fPeriod:"PERIOD",fScope:"SCOPE",dPrev:"Previous trading day",dNext:"Next trading day",dLatest:"latest",
   daySum:(d,b,s,n,m)=>`Filed on <b>${d}</b>: bought <b class="pos">${b}</b>, sold <b class="neg">${s}</b>. ${n} Form 4s, ${m} with open-market trades.`,
@@ -539,23 +540,23 @@ const T={
   flaggedTitle:"Filings excluded as likely errors",flagged:(d,t,c,sh,px,v)=>`${d} ${t} ${c==="P"?"bought":"sold"} ${sh} shares @ $${px} (${v})`,
   qPh:"Ticker or company name",qClear:"Clear",histT:"Recent",histClr:"Clear history",tabs:{overview:"Overview",signals:"Stock signals",sectors:"Sectors",trend:"Trend"},winAria:"Time range",winLbl:{"1d":"Day","1w":"1 week","1m":"1 month","3m":"3 months"},
   rangeLine:(a,b,n)=>`${a} – ${b} · ${n} trading day${n===1?"":"s"}`,dayLine:(d,w)=>`${d} (${w})`,rangeShort:(a,b,n)=>`${a} – ${b} (${n} trading day${n===1?"":"s"})`,
-  heroNet:{eff:"Effective net buying",od:"Officer & director net buying",all:"Insider net buying"},vsPrevW:(u,b,s)=>`vs previous ${u}: buys ${b}, sales ${s}`,prevUnit:{"1d":"trading day","1w":"week","1m":"month","3m":"quarter"},noPrev:"Not enough earlier data to compare",
+  heroNet:{eff:"Effective net buying",inst:"Institutional net buying",od:"Officer & director net buying",all:"Insider net buying"},vsPrevW:(u,b,s)=>`vs previous ${u}: buys ${b}, sales ${s}`,prevUnit:{"1d":"trading day","1w":"week","1m":"month","3m":"quarter"},noPrev:"Not enough earlier data to compare",
   sumTitle:"Key points",hBuy:x=>`Purchases were ${x}× sales`,hSell:x=>`Sales were ${x}× purchases`,hOnlyBuy:"Only purchases, no sales",hOnlySell:"Only sales, no purchases",hNone:"No qualifying trades in this period",lAll:"Overall",lSec:"Sectors",lBuy:"Top buy",lSell:"Top sale",lCl:"Clusters",vsPrevShort:u=>`arrows vs previous ${u}`,next:"Next:",clCount:(n,ext)=>`<b>${n}</b> compan${n===1?"y":"ies"}${ext?" with new buys":""}`,clMost:"most:",sumAuto:"Written automatically from the data",scopeName:{eff:"officers and directors (effective trades)",od:"officers and directors",all:"all insiders"},
   sum1:(rg,sc,b,s,net,n,c)=>`${rg}, ${sc} bought <b class="pos">${b}</b> and sold <b class="neg">${s}</b>, a net ${net>=0?"purchase":"sale"} of <b class="${net>=0?"pos":"neg"}">${n}</b>${c&&c[1]!=null&&c[2]!=null?`; versus the previous ${c[0]}, purchases were ${c[1]>=0?"up":"down"} ${Math.abs(c[1])}% and sales ${c[2]>=0?"up":"down"} ${Math.abs(c[2])}%`:""}.`,
   sum2:(a,b)=>`By sector, ${a?`<b>${a[0]}</b> saw the most net buying (${a[1]})`:""}${a&&b?" and ":""}${b?`<b>${b[0]}</b> the most net selling (${b[1]})`:""}.`,
   sum3:(tk,nm,amt,who,hold,o)=>`The top effective net buyer was ${tk} (${nm}, ${amt})${who?`, mainly ${who}${hold?` (${hold.toLowerCase()})`:""}`:""}${o.length?`, followed by ${o.join(", ")}`:""}.`,
   sumNoBuy:"No effective officer or director purchases in this period.",sum4:(tk,nm,amt)=>`The top effective net seller was ${tk} (${nm}, ${amt}).`,
   sum5:(n,tk,p,ext)=>`${n} compan${n===1?"y":"ies"} saw cluster buying ${ext?"in the last month":"in this period"} (2+ officers or directors each buying); the most was ${tk} with ${p} insiders.`,
-  topBuyT:"Top 5 effective net buyers",seeAll:"See all →",clNoneW:"No cluster buying in this period.",clLast:d=>`latest ${d}`,clWinExt:"last month",clNewIn:w=>`new buys · ${w}`,clExtNote:"Clusters with a new insider purchase in the selected period; insider counts cover the last 30 days.",clNoneExt:"No cluster had a new purchase in the selected period.",
+  topBuyT:"Top 5 effective net buyers",topBuyTInst:"Top 5 institutional net buyers",seeAll:"See all →",clNoneW:"No cluster buying in this period.",clLast:d=>`latest ${d}`,clWinExt:"last month",clNewIn:w=>`new buys · ${w}`,clExtNote:"Clusters with a new insider purchase in the selected period; insider counts cover the last 30 days.",clNoneExt:"No cluster had a new purchase in the selected period.",
   clSub2:"Two or more officers or directors each bought the same company in the open market (effective purchases). Several insiders buying with their own money is one of the most watched insider signals.",
   flowSum:(b,s,top,bot)=>`Bought <b class="pos">${b}</b>, sold <b class="neg">${s}</b>. ${top?`Biggest net buyer: <b>${top}</b>. `:""}${bot?`Biggest net seller: <b>${bot}</b>.`:""}`,
   trendSub:(a,b,n)=>`${a} – ${b}, ${n} trading days`,hcTitle:n=>`Daily net · ${n} trading days`,hcBuy:"Net buying",hcSell:"Net selling",hcSel:"Selected period",netWord:"net",hcDay:(d,v)=>`selected ${d}: <b style="color:var(--hero-ink)">${v}</b>`,hcClip:"Scaled to the selected period; taller bars are clipped (white line marks the cut).",trendDim:"Faded bars are outside the selected period",clTitle:"Cluster buying",clSub:"In the last 30 days, two or more officers or directors each bought the same company in the open market (effective purchases). Several insiders buying with their own money is one of the most watched insider signals.",clPeople:n=>`${n} insiders`,clNone:"No cluster buying in the last 30 days.",clBadge:n=>`Cluster ${n}`,clCo:(n,names)=>`Last 30 days: <b>${n}</b> officers/directors made effective purchases: ${names}`,clProg:"Same day & price",clProgLong:"Several insiders bought on the same day at exactly the same price, which may be a company-arranged purchase program and is a weaker signal.",holdUp:p=>`Holding +${p}`,holdNew:"New position",holdLine:(a,b)=>`Holding ${a} → ${b} sh`,maxHold:p=>`up to +${p} holding`,copyLink:"Copy link",copied:"Copied ✓",flagReason:"price inconsistent with its footnote or the stock's usual price",fxNoRate:"no FX rate",chartT:"Daily chart",chartHide:"Hide",chartShow:"Show",chartNote:"Chart by TradingView with exchange prices; recently listed companies only have data since listing.",chartNone:"No trading symbol for this company, so no chart.",plotT:"Insider trade prices",plotSub:"Each dot is one filing's average trade price; compare with the chart above to see the price levels insiders traded at. Bigger dot, bigger trade.",plotEffB:"Effective buy",plotEffS:"Effective sale",plotOther:"Hollow: planned or other",plotNone:"No trades to plot in this period.",go:"Search",sHint:(a,b,n)=>`Search ${n} companies with open-market insider trades filed ${a} to ${b}.`,
   sLoading:"Loading full history…",sLoadErr:"Couldn't load the full history; search covers the last 30 days.",sMatches:n=>`${n} matching companies:`,
   sNone:(q,a,b)=>`No open-market insider trades for <b>${q}</b> filed between ${a} and ${b}.`,edgarAll:"All Form 4s on EDGAR ↗",secf4:"secform4 ↗",
-  r7:"7d",r30:"30d",r90:"90d",rAll:"All",tNet:"Net",tEb:"Effective bought",tEs:"Effective sold",tEnet:"Effective net",
+  r7:"7d",r30:"30d",r90:"90d",rAll:"All",tNet:"Net",tEb:"Effective bought",tEs:"Effective sold",tIb:"Institutional bought",tIs:"Institutional sold",tEnet:"Effective net",
   tFilings:(n,i)=>`${n} filing${n===1?"":"s"} · ${i} insider${i===1?"":"s"}`,byInsider:"By insider",filingsTitle:"Filings",
   filed:"Filed",traded:"Traded",open:"View filing ↗",buyB:"Buy",sellB:"Sell",ownerB:"10% owner / other",effB:"Effective",
-  FL:{plan:"10b5-1 plan",exercise:"Option-exercise sale",tax:"Tax sale",offering:"IPO / offering",spac:"SPAC",drip:"Reinvestment / subscription",fund:"Fund / trust",nontraded:"Not traded",nonequity:"Preferred / debt",affiliate:"Via affiliated company",late:"Filed >30d late",fx:"Converted to USD"},
+  FL:{plan:"10b5-1 plan",exercise:"Option-exercise sale",tax:"Tax sale",offering:"IPO / offering",spac:"SPAC",drip:"Reinvestment / subscription",fund:"Fund / trust",nontraded:"Not traded",nonequity:"Preferred / debt",internal:"Internal transfer",stale:"Filed >90d late",inst:"Institutional holder",small:"Small <$10K",affiliate:"Via affiliated company",late:"Filed >30d late",fx:"Converted to USD"},
   noLinks:"Some days have no per-filing detail and appear in totals only.",loading:"Loading data…",loadErr:e=>`Couldn't load the data (${e}). Refresh to try again.`,noData:"No data yet.",
   notesTitle:"Method and verification",foot:"Source: SEC EDGAR Form 4. For information only, not investment advice.",
   notes:[["How to read","Dates are the day a filing reached the SEC; the trade itself is usually a few days earlier. By default only the strongest signals are shown (effective trades): officers' and directors' open-market buys and sells, excluding planned trades, IPO/offering buys and exercise-day sales. Switch the scope to see all officers and directors or all insiders."],["Chart","Bars are scaled to the selected period; very tall bars are clipped, and a white line marks the cut."],["Key points","Written automatically from the data, not editorial commentary and not investment advice."],["Source","SEC EDGAR daily Form 4 index, grouped by filing date. Only original Form 4s (no 4/A) and only open-market purchases (P) and sales (S) in the non-derivative table count; value = shares × price. Grants, exercises, RSU vesting, gifts and tax withholding are excluded. Form 144 proposed sales are a different form and are not included."],["Foreign-currency prices","A few foreign issuers (e.g. ASE/ASX in New Taiwan dollars) report the per-share price in local currency and say so only in a footnote. Trades whose price footnote names a foreign currency are converted to USD at the trade-date rate and tagged \"Converted to USD\"; trades with no available rate are left out of totals."],
@@ -576,7 +577,7 @@ try{const q=new URLSearchParams(location.search).get("lang");if(LANGS.includes(q
 const L=()=>T[lang];
 const SN=n=>lang==="zh"?(SEC_ZH[n]||n):lang==="tw"?(SEC_TW[n]||n):n;
 const state={days:[],who:"eff",win:"1w",tab:"overview",period:"7d",dayIdx:0,day:null,list:"net",role:"all",minAmt:0,person:null,sector:null,rank:"buy",rankWin:"7d",loaded:false,err:null,view:"sectors",q:"",co:null,srange:"all",hist:null,histState:"idle",idxCache:null};
-try{const w=localStorage.getItem("sif-who");if(["eff","od","all"].includes(w))state.who=w;const v=localStorage.getItem("sif-win");if(["1d","1w","1m","3m"].includes(v))state.win=v}catch(e){}
+try{const w=localStorage.getItem("sif-who");if(["eff","inst","od","all"].includes(w))state.who=w;const v=localStorage.getItem("sif-win");if(["1d","1w","1m","3m"].includes(v))state.win=v}catch(e){}
 const BASE_TITLE=document.title;
 function readHash(){let h="";try{h=decodeURIComponent(location.hash||"")}catch(e){h=location.hash||""}
   const m=/^#t=(.+)$/.exec(h);if(m){state.view="search";state.q=m[1].trim();state.co=null;state.person=null;return}
@@ -599,6 +600,7 @@ const wk=iso=>WK[lang][new Date(iso+"T12:00:00Z").getUTCDay()];
 const md=iso=>lang!=="en"?`${+iso.slice(5,7)}月${+iso.slice(8)}日`:new Date(iso+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",timeZone:"UTC"});
 
 function pick(s){
+  if(state.who==="inst")return{buy:s.buy_inst_usd||0,sell:s.sell_inst_usd||0,plan:0,bf:s.buy_inst_filings||0,sf:s.sell_inst_filings||0};
   if(state.who==="eff")return{buy:(s.buy_eff_usd??s.buy_od_usd)||0,sell:s.sell_eff_usd||0,plan:0,bf:(s.buy_eff_filings??s.buy_od_filings)||0,sf:s.sell_eff_filings||0};
   if(state.who==="od")return{buy:s.buy_od_usd||0,sell:s.sell_od_usd||0,plan:0,bf:s.buy_od_filings||0,sf:s.sell_od_filings||0};
   return{buy:s.buy_usd||0,sell:s.sell_usd||0,plan:s.sell_plan_usd||0,bf:s.buy_filings||0,sf:s.sell_filings||0};
@@ -611,6 +613,8 @@ const coKey=c=>c.cik||((c.ticker||"")+"|"+c.name);
 function companies(days,sector){const m={};
   for(const d of days)for(const c of d.companies||[]){if(sector&&c.sector!==sector)continue;const k=coKey(c);
     const t=m[k]||(m[k]={key:k,cik:c.cik,ticker:c.ticker,name:c.name,sector:c.sector,eb:0,es:0,ebf:0,esf:0,buyers:new Set(),sellers:new Set()});
+    if(state.who==="inst"){t.eb+=c.inst_buy_usd||0;t.es+=c.inst_sell_usd||0;t.ebf+=c.inst_buy_filings||0;t.esf+=c.inst_sell_filings||0;
+      (c.inst_buyers||[]).forEach(b=>t.buyers.add(b));(c.inst_sellers||[]).forEach(b=>t.sellers.add(b));continue}
     t.eb+=c.eff_buy_usd||0;t.es+=c.eff_sell_usd||0;t.ebf+=c.eff_buy_filings||0;t.esf+=c.eff_sell_filings||0;
     (c.buyers||[]).forEach(b=>t.buyers.add(b));(c.sellers||[]).forEach(b=>t.sellers.add(b))}
   return Object.values(m)}
@@ -623,8 +627,8 @@ function renderStatic(){const t=L();
   $("view-sectors").innerHTML=`<svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="10" width="3.5" height="8" rx="1.2" fill="currentColor"/><rect x="8.25" y="6" width="3.5" height="12" rx="1.2" fill="currentColor"/><rect x="14.5" y="2" width="3.5" height="16" rx="1.2" fill="currentColor"/></svg>${esc(t.vSectors)}`;
   $("view-search").innerHTML=`<svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>${esc(t.vSearch)}`;
   $("view-sectors").setAttribute("aria-pressed",state.view==="sectors");$("view-search").setAttribute("aria-pressed",state.view==="search");
-  $("who-eff").textContent=t.whoEff;$("who-od").textContent=t.whoOd;$("who-all").textContent=t.whoAll;
-  ["eff","od","all"].forEach(k=>$("who-"+k).setAttribute("aria-pressed",state.who===k));
+  $("who-eff").textContent=t.whoEff;$("who-inst").textContent=t.whoInst;$("who-od").textContent=t.whoOd;$("who-all").textContent=t.whoAll;
+  ["eff","inst","od","all"].forEach(k=>$("who-"+k).setAttribute("aria-pressed",state.who===k));
   $("scopehint").textContent=t.hint[state.who];
   $("scope").hidden=true;app.hidden=state.view!=="sectors";srch.hidden=state.view!=="search";
   $("notes-title").textContent=t.notesTitle;
@@ -688,13 +692,13 @@ function topBuy(set,key){let best=null;for(const d of set)for(const c of d.compa
 function controls(days,r){const t=L();
   const tabs=`<nav class="subtabs" role="tablist">${["overview","sectors","signals"].map(k=>`<button type="button" class="tab" role="tab" data-tab="${k}" aria-selected="${state.tab===k}" aria-pressed="${state.tab===k}">${t.tabs[k]}</button>`).join("")}</nav>`;
   const win=`<div class="seg" role="group" aria-label="${esc(t.winAria)}">${WINS.map(k=>`<button type="button" data-win="${k}" aria-pressed="${state.win===k}">${t.winLbl[k]}</button>`).join("")}</div>`;
-  const who=`<div class="seg" role="group">${["eff","od","all"].map(k=>`<button type="button" data-who="${k}" aria-pressed="${state.who===k}" title="${esc(t.hint[k])}">${t["who"+k[0].toUpperCase()+k.slice(1)]}</button>`).join("")}</div>`;
+  const who=`<div class="seg" role="group">${["eff","inst","od","all"].map(k=>`<button type="button" data-who="${k}" aria-pressed="${state.who===k}" title="${esc(t.hint[k])}">${t["who"+k[0].toUpperCase()+k.slice(1)]}</button>`).join("")}</div>`;
   const all=MANIFEST.dates.length?MANIFEST.dates:days.map(d=>d.date),cur=r.to,ci=all.indexOf(cur);
   const chips=state.win==="1d"?`<div class="dayrow"><button type="button" class="dstep" data-dstep="1" aria-label="${esc(t.dPrev)}" title="${esc(t.dPrev)}" ${ci>=all.length-1?"disabled":""}>‹</button>
     <select id="daysel" aria-label="${esc(t.pickDay)}">${all.map(d=>`<option value="${d}"${d===cur?" selected":""}>${md(d)} ${wk(d)}${d===all[0]?` · ${t.dLatest}`:""}</option>`).join("")}</select>
     <button type="button" class="dstep" data-dstep="-1" aria-label="${esc(t.dNext)}" title="${esc(t.dNext)}" ${ci<=0?"disabled":""}>›</button></div>`:"";
   const loading=state.win!=="1w"&&state.histState==="loading"?` · ${t.sLoading}`:"";
-  const whoSel=`<span class="whopick"><select class="hsel" id="whosel" aria-label="${esc(t.fScope)}" title="${esc(t.hint[state.who])}">${["eff","od","all"].map(k=>`<option value="${k}"${state.who===k?" selected":""}>${t["who"+k[0].toUpperCase()+k.slice(1)]}</option>`).join("")}</select></span>`;
+  const whoSel=`<span class="whopick"><select class="hsel" id="whosel" aria-label="${esc(t.fScope)}" title="${esc(t.hint[state.who])}">${["eff","inst","od","all"].map(k=>`<option value="${k}"${state.who===k?" selected":""}>${t["who"+k[0].toUpperCase()+k.slice(1)]}</option>`).join("")}</select></span>`;
   const upd=MANIFEST.updated?`<span class="upd">${t.updAt(new Date(MANIFEST.updated).toLocaleString(LOC[lang],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false,timeZoneName:"short"}))}</span>`:"";
   return `<section class="card ctl">${tabs}<div class="ctlbar">${win}${whoSel}${chips}</div>
     <div class="sub ctlline"><span>${state.win==="1d"?`<span class="upd" style="font-size:12.5px">${t.basis}</span>`:`<b>${rangeTxt(t,r)}</b>`}${qm("ctl")}${loading}</span>${upd}</div></section>`}
@@ -702,7 +706,7 @@ function controls(days,r){const t=L();
 function renderHFilters(days,r){const t=L(),el=$("hfilters");if(!el)return;
   const all=MANIFEST.dates.length?MANIFEST.dates:days.map(d=>d.date),ci=all.indexOf(r.to);
   el.innerHTML=`<div class="hfrow"><div class="seg" role="group" aria-label="${esc(t.fPeriod)}">${WINS.map(k=>`<button type="button" data-win="${k}" aria-pressed="${state.win===k}">${t.winLbl[k]}</button>`).join("")}</div>
-    <select class="hsel" id="hwhosel" aria-label="${esc(t.fScope)}">${["eff","od","all"].map(k=>`<option value="${k}"${state.who===k?" selected":""}>${t["who"+k[0].toUpperCase()+k.slice(1)]}</option>`).join("")}</select>
+    <select class="hsel" id="hwhosel" aria-label="${esc(t.fScope)}">${["eff","inst","od","all"].map(k=>`<option value="${k}"${state.who===k?" selected":""}>${t["who"+k[0].toUpperCase()+k.slice(1)]}</option>`).join("")}</select>
     ${state.win==="1d"?`<span class="hday"><button type="button" class="dstep sm" data-dstep="1" aria-label="${esc(t.dPrev)}" ${ci>=all.length-1?"disabled":""}>‹</button><select class="hsel" id="hdaysel" aria-label="${esc(t.pickDay)}">${all.map(d=>`<option value="${d}"${d===r.to?" selected":""}>${md(d)} ${wk(d)}</option>`).join("")}</select><button type="button" class="dstep sm" data-dstep="-1" aria-label="${esc(t.dNext)}" ${ci<=0?"disabled":""}>›</button></span>`:""}
     <span class="hrange">${t.tabs[state.tab]} · ${rangeTxt(t,r)}</span></div>`}
 let compactOn=false;
@@ -788,9 +792,9 @@ function rankList(t,list,key,clMap){return list.map((c,i)=>{const net=c.eb-c.es,
       <span class="amt ${cls(net)}">${money(net,true)}<small>${t.filings(key==="buy"?c.ebf:c.esf)}</small></span></button>`}).join("")}
 
 function topCard(days,r){const t=L(),cs=companies(r.set,null),cw=clusterWin(days,r);
-  const clMap=new Map(clusters(days,cw.from,cw.to).filter(c=>!c.program).map(c=>[c.key,c.people.size]));
+  const clMap=new Map(state.who==="inst"?[]:clusters(days,cw.from,cw.to).filter(c=>!c.program).map(c=>[c.key,c.people.size]));
   const list=cs.filter(c=>c.eb-c.es>0).sort((a,b)=>(b.eb-b.es)-(a.eb-a.es)).slice(0,5);
-  return `<section class="card"><div class="head"><h2>${t.topBuyT}</h2><button type="button" class="more" data-tab="signals">${t.seeAll}</button></div>
+  return `<section class="card"><div class="head"><h2>${state.who==="inst"?t.topBuyTInst:t.topBuyT}</h2><button type="button" class="more" data-tab="signals">${t.seeAll}</button></div>
     <div class="rank">${list.length?rankList(t,list,"buy",clMap):`<div class="empty">${t.noneBuy}</div>`}</div></section>`}
 
 function clusterCard(days,r,limit,more){const t=L(),cw=clusterWin(days,r),all=clusters(days,cw.from,cw.to).filter(c=>!cw.ext||c.last>=r.from),cl=(more?all.filter(c=>!c.program):all).slice(0,limit);
@@ -827,7 +831,7 @@ function secTrend(sec,r){const t=L(),a=swRows(sec);if(!a||!a.some(x=>x.net))retu
     <div class="swplot"><div class="swy"><span>${mx>1?money(mx,true):""}</span><span class="b">${mn?money(-mn,true):""}</span></div><svg class="swsvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(t.swTitle(a.length))}">${g}</svg></div>
     <div class="hx swx"><span>${md(a[0].w)}</span><span>${md(mid.w)}</span><span>${md(last.w)}</span></div>${dom}</div>`}
 function rankCard(days,r,withChips){const t=L(),cs=companies(r.set,state.sector),cw=clusterWin(days,r);
-  const clMap=new Map(clusters(days,cw.from,cw.to).filter(c=>!c.program).map(c=>[c.key,c.people.size]));
+  const clMap=new Map(state.who==="inst"?[]:clusters(days,cw.from,cw.to).filter(c=>!c.program).map(c=>[c.key,c.people.size]));
   const list=state.rank==="buy"?cs.filter(c=>c.eb-c.es>0).sort((a,b)=>(b.eb-b.es)-(a.eb-a.es)).slice(0,10)
                                :cs.filter(c=>c.es-c.eb>0).sort((a,b)=>(b.es-b.eb)-(a.es-a.eb)).slice(0,10);
   const chips=withChips?`<div class="scroller secchips" role="group" style="margin-top:12px"><button type="button" class="chip" data-sec="" aria-pressed="${!state.sector}">${t.allSec}</button>${SECTORS.map(n=>`<button type="button" class="chip" data-sec="${esc(n)}" aria-pressed="${state.sector===n}">${esc(SN(n))}</button>`).join("")}</div>`:"";
@@ -906,9 +910,9 @@ function renderSearch(){const t=L();PLOT=[];
   if(state.person)detail=personDetail(t,HD);
   else if(state.co){
     const rStart=state.srange==="all"?null:addDays(last,1-(+state.srange)),days=rStart?HD.filter(d=>d.date>=rStart):HD;
-    let info=null,noLink=0;const rows=[],ins={},to={b:0,s:0,eb:0,es:0,n:0};
+    let info=null,noLink=0;const rows=[],ins={},to={b:0,s:0,eb:0,es:0,ib:0,is:0,n:0};
     for(const d of days)for(const c of d.companies||[]){if(coKey(c)!==state.co)continue;info=info||c;
-      to.b+=c.buy_usd;to.s+=c.sell_usd;to.eb+=c.eff_buy_usd||0;to.es+=c.eff_sell_usd||0;
+      to.b+=c.buy_usd;to.s+=c.sell_usd;to.eb+=c.eff_buy_usd||0;to.es+=c.eff_sell_usd||0;to.ib+=c.inst_buy_usd||0;to.is+=c.inst_sell_usd||0;
       if(!c.filings){noLink++;to.n+=c.buy_filings+c.sell_filings;continue}
       for(const f of c.filings){rows.push({...f,date:d.date});to.n++;const k=f.who||"—",r=ins[k]||(ins[k]={who:k,b:0,s:0,n:0,od:f.od});r.b+=f.buy;r.s+=f.sell;r.n++}}
     if(!info)info=companyIndex().find(c=>c.key===state.co)||{};
@@ -925,7 +929,7 @@ function renderSearch(){const t=L();PLOT=[];
     const fmtN=v=>v?Number(v).toLocaleString(LOC[lang]):"—";
     const px=(usd,sh)=>sh?"$"+(usd/sh).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"—";
     const badges=(f,k)=>{if(!f.flags)return f.od?"":`<span class="badge b-mute">${t.ownerB}</span>`;
-      const rel=k==="P"?["plan","offering","spac","drip","fund","nontraded","nonequity","affiliate","late","fx"]:["plan","exercise","tax","spac","drip","fund","nontraded","nonequity","affiliate","late","fx"];
+      const rel=k==="P"?["plan","offering","spac","drip","fund","nontraded","nonequity","internal","stale","inst","small","affiliate","late","fx"]:["plan","exercise","tax","offering","spac","drip","fund","nontraded","nonequity","internal","stale","inst","small","affiliate","late","fx"];
       return ((k==="P"?f.eff_buy>0:f.eff_sell>0)?`<span class="badge b-eff">${t.effB}</span>`:"")+f.flags.filter(x=>rel.includes(x)).map(x=>`<span class="badge b-mute">${esc((t.FL[x]||x)+(x==="fx"&&f.fx&&f.fx.length?" ("+[...new Set(f.fx.map(e=>e.ccy))].join("/")+")":""))}</span>`).join("")+(f.od?"":`<span class="badge b-mute">${t.ownerB}</span>`)};
     const items=[];for(const f of rows){const u=filingUrl(f.path);
       const one=(k,usd,sh)=>`<div class="item"><div class="l1"><b>${pBtn(firstOwner(f).name)}</b><span class="num ${k==="P"?"pos":"neg"}" style="font-weight:700">${k==="P"?"+":"−"}${money(usd)}</span></div>
@@ -944,7 +948,7 @@ function renderSearch(){const t=L();PLOT=[];
       ${coCl?`<div class="clnote">${t.clCo(coCl.people.size,esc([...coCl.people.keys()].join("、")))}${coCl.program?`<br><span class="sub">${t.clProgLong}</span>`:""}</div>`:""}
       ${seg}
       ${empty?`<div class="summary" style="margin-top:12px">${t.sNone(esc(info.ticker||info.name||""),rStart||first,last)}</div>`:`
-      <div class="tiles">${tile(t.bought,money(to.b),"pos")}${tile(t.sold,money(to.s),"neg")}${tile(t.tNet,money(to.b-to.s,true),cls(to.b-to.s))}${tile(t.tEb,money(to.eb),"pos")}${tile(t.tEs,money(to.es),"neg")}${tile(t.tEnet,money(to.eb-to.es,true),cls(to.eb-to.es))}</div>
+      <div class="tiles">${tile(t.bought,money(to.b),"pos")}${tile(t.sold,money(to.s),"neg")}${tile(t.tNet,money(to.b-to.s,true),cls(to.b-to.s))}${tile(t.tEb,money(to.eb),"pos")}${tile(t.tEs,money(to.es),"neg")}${tile(t.tEnet,money(to.eb-to.es,true),cls(to.eb-to.es))}${to.ib||to.is?tile(t.tIb,money(to.ib),"pos")+tile(t.tIs,money(to.is),"neg"):""}</div>
       <div class="sub" style="margin-top:8px">${t.tFilings(to.n,insRows.length)}</div>
       ${insList}
       ${sec144}
@@ -1081,7 +1085,7 @@ function personDetail(t,HD){const P=state.person,rows=[],cos={},to={b:0,s:0,eb:0
     <div class="sub" style="margin-top:6px">${esc(roles)}</div>
     <div class="links"><button type="button" class="copylink" id="copyperson" data-p="${esc(P)}">${t.copyLink}</button></div>
     <div class="sub" style="margin-top:10px">${t.pSum(Object.keys(cos).length,rows.length,first,last)}</div>
-    <div class="tiles">${tile(t.bought,money(to.b),"pos")}${tile(t.sold,money(to.s),"neg")}${tile(t.tNet,money(to.b-to.s,true),cls(to.b-to.s))}${tile(t.tEb,money(to.eb),"pos")}${tile(t.tEs,money(to.es),"neg")}${tile(t.tEnet,money(to.eb-to.es,true),cls(to.eb-to.es))}</div>
+    <div class="tiles">${tile(t.bought,money(to.b),"pos")}${tile(t.sold,money(to.s),"neg")}${tile(t.tNet,money(to.b-to.s,true),cls(to.b-to.s))}${tile(t.tEb,money(to.eb),"pos")}${tile(t.tEs,money(to.es),"neg")}${tile(t.tEnet,money(to.eb-to.es,true),cls(to.eb-to.es))}${to.ib||to.is?tile(t.tIb,money(to.ib),"pos")+tile(t.tIs,money(to.is),"neg"):""}</div>
     <div class="eyebrow" style="margin-top:18px">${t.pByCo}</div><div class="rank">${coRows}</div>
     ${p144(t,HD,P)}
     <div class="eyebrow" style="margin-top:18px">${t.filingsTitle}${qm("flags")}</div><div class="list">${items.join("")}</div></section>`}
@@ -1227,7 +1231,7 @@ srch.addEventListener("click",e=>{
 function openCo(k){state.co=k;state.person=null;state.view="search";const c=companyIndex().find(x=>x.key===k);state.q=c?(c.ticker||c.name):"";addHist(state.q);go(state.q);render();window.scrollTo({top:0})}
 const setView=v=>{state.view=v;compactOn=false;$("top").classList.remove("compact");try{history.replaceState(null,"",v==="search"?"#search":"#sectors")}catch(e){}render();window.scrollTo({top:0})};
 $("view-sectors").onclick=()=>setView("sectors");$("view-search").onclick=()=>setView("search");
-["eff","od","all"].forEach(k=>$("who-"+k).onclick=()=>{state.who=k;try{localStorage.setItem("sif-who",k)}catch(e){}render()});
+["eff","inst","od","all"].forEach(k=>$("who-"+k).onclick=()=>{state.who=k;try{localStorage.setItem("sif-who",k)}catch(e){}render()});
 const setLang=l=>{lang=l;try{localStorage.setItem("sif-lang",l)}catch(e){}if(window.FORCE_LANG){window.FORCE_LANG=l;try{history.replaceState(null,"","/"+l+"/"+location.hash)}catch(e){}}render()};
 LANGS.forEach(k=>$("lang-"+k).onclick=()=>setLang(k));
 addEventListener("popstate",()=>{readHash();render();window.scrollTo({top:0})});

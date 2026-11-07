@@ -321,6 +321,36 @@ def security_kind(tx, ticker=""):
     return "nonequity"
 
 
+# Sales into an underwritten / secondary offering (the selling holder sells to underwriters at the
+# offering price): a financing event, not a view on the stock.
+OFFER_S_RX = re.compile(r"secondary (public )?offering|\bunderwritten\b|underwriting discount|selling (stock|share)holder in|"
+                        r"public offering price|(sold|sale)[^.]{0,80}\b(initial public offering|IPO)\b|sold to the underwriters", re.I)
+# Transfers between the insider's own pockets, the company or family (privately negotiated, asset
+# substitutions in a trust): money moves, the economic exposure does not.
+INTERNAL_RX = re.compile(r"(private(ly)?[- ]negotiated|private (transaction|sale))[^.]{0,120}\b(trust|estate planning|family|issuer|"
+                         r"company|director|officer)\b|\b(trust|estate planning|family|issuer|company)\b[^.]{0,120}"
+                         r"(private(ly)?[- ]negotiated|private (transaction|sale))|power to substitute|substitut\w* (of )?assets|"
+                         r"stock transfer agreement|in exchange for the cancellation", re.I)
+# Reporting owner is a company / fund rather than a person (a fund with a board seat, a sponsor...)
+OWNER_ENT_RX = re.compile(r"\b(LLC|L\.L\.C|LP|L\.P|INC|CORP|CORPORATION|LTD|LIMITED|FUND|CAPITAL|MANAGEMENT|PARTNERS|GROUP|"
+                          r"HOLDINGS?|ADVISORS|ADVISERS|INVESTMENTS?|VENTURES|S\.A|AG|GMBH|S\.A R\.L|PLC|N\.V|B\.V|AS|ASA|AB|"
+                          r"TRUST COMPANY)\b\.?", re.I)
+# A person trading through a fund they manage (a VC / hedge / PE fund, not a personal holding company,
+# family partnership, trust or IRA): fund words, or a numbered fund series ("Fund VI", "Partners XI, L.P.")
+FUNDVEH_RX = re.compile(r"\bfunds?\b|ventures?\b|investimentos|asset management|capital management|master fund|"
+                        r"opportunit\w* fund|crossover|co-?invest|aggregator|"
+                        r"biocapital|\b([IVX]{1,4}|\d{1,2})\b,?\s*(\(|L\.?P\b|L\.P\.|LLC|Holdings|$)", re.I)
+STALE_DAYS = 90          # reported more than 90 days after the trade: too old to read as a current signal
+SMALL_USD = 10_000       # effective trades below this still add to dollar totals but not to filing / people counts
+
+
+def via_fund(tx):
+    if (_t(tx, "ownershipNature/directOrIndirectOwnership/value") or "") != "I":
+        return False
+    nat = (_t(tx, "ownershipNature/natureOfOwnership/value") or "").strip()
+    return bool(FUNDVEH_RX.search(nat)) and not re.search(r"trust|\bira\b|spouse|famil", nat, re.I)
+
+
 def via_entity(tx):
     if (_t(tx, "ownershipNature/directOrIndirectOwnership/value") or "") != "I":
         return False
@@ -329,10 +359,11 @@ def via_entity(tx):
 
 
 # Flags that keep a trade out of "effective" purchases / sales
-EFF_BUY_EXCL = {"plan", "offering", "spac", "drip", "fund", "nontraded", "nonequity"}
-EFF_SELL_EXCL = {"plan", "exercise", "tax", "spac", "drip", "fund", "nontraded", "nonequity"}
-FLAG_ORDER = ["plan", "exercise", "tax", "offering", "spac", "drip", "fund", "nontraded", "nonequity", "affiliate",
-              "late", "fx", "fx_unknown", "ccy_note", "price_error"]
+EFF_BUY_EXCL = {"plan", "offering", "spac", "drip", "fund", "nontraded", "nonequity", "internal", "stale"}
+EFF_SELL_EXCL = {"plan", "exercise", "tax", "offering", "spac", "drip", "fund", "nontraded", "nonequity", "internal", "stale"}
+# "inst": effective, but by a fund / company holder -> reported apart from individual insiders
+FLAG_ORDER = ["plan", "exercise", "tax", "offering", "spac", "drip", "fund", "nontraded", "nonequity", "internal",
+              "stale", "inst", "affiliate", "small", "late", "fx", "fx_unknown", "ccy_note", "price_error"]
 
 
 def holdings(root):
@@ -431,6 +462,7 @@ def parse_filing(txt, filed=None):
         base.add("fund")          # no SIC code: funds, trusts, interval/BDC vehicles
     if not ticker:
         base.add("nontraded")
+    owner_ent = bool(names and OWNER_ENT_RX.search(names[0]))
     txs = []
     for tx in root.findall("nonDerivativeTable/nonDerivativeTransaction"):
         code = _t(tx, "transactionCoding/transactionCode")
@@ -473,6 +505,10 @@ def parse_filing(txt, filed=None):
             fl.add("nonequity")
         if via_entity(tx):
             fl.add("affiliate")
+        if owner_ent or via_fund(tx):
+            fl.add("inst")
+        if INTERNAL_RX.search(ft):
+            fl.add("internal")
         if code == "P":
             if (RX["offering"].search(ft) or (dte in conv_dates and RX["ipo_any"].search(all_text))
                     or (dte, None) in deriv_buy_dates or (dte, round(px, 4)) in deriv_buy_dates):
@@ -489,10 +525,15 @@ def parse_filing(txt, filed=None):
                 fl.add("exercise")
             if RX["tax"].search(ft):
                 fl.add("tax")
+            if OFFER_S_RX.search(ft):
+                fl.add("offering")
         if filed and dte:
             try:
-                if (dt.date.fromisoformat(filed) - dt.date.fromisoformat(dte)).days > 30:
+                lag = (dt.date.fromisoformat(filed) - dt.date.fromisoformat(dte)).days
+                if lag > 30:
                     fl.add("late")
+                if lag > STALE_DAYS:
+                    fl.add("stale")
             except ValueError:
                 pass
         t = {"code": code, "shares": sh, "price": px, "usd": sh * px, "date": dte,
@@ -502,6 +543,14 @@ def parse_filing(txt, filed=None):
         if ccy:
             t.update({"ccy": ccy, "price_local": px_local, "usd_per_unit": fxr})
         txs.append(t)
+    # a buy and a sale of the same shares at the same price on the same day inside one filing:
+    # moving shares between the insider's own accounts
+    ps = {}
+    for t in txs:
+        ps.setdefault((t["date"], round(t["shares"], 4), round(t["price"], 4)), set()).add(t["code"])
+    for t in txs:
+        if ps[(t["date"], round(t["shares"], 4), round(t["price"], 4))] == {"P", "S"}:
+            t["flags"] = sorted(set(t["flags"]) | {"internal"}, key=FLAG_ORDER.index)
     # same filing, same typo on a line without the footnote (e.g. APCX: 2,895 footnoted, 2,900 not)
     bad_px = [t["price"] for t in txs if "price_error" in t["flags"]]
     for t in txs:
@@ -518,12 +567,73 @@ def parse_filing(txt, filed=None):
     }
 
 
+def _addflag(t, f):
+    if f not in t["flags"]:
+        t["flags"] = sorted(set(t["flags"]) | {f}, key=FLAG_ORDER.index)
+
+
+def _round_px(px):
+    c = round(px * 100)
+    return abs(px * 100 - c) < 1e-6 and c % 25 == 0
+
+
+def cross_filing(filings, order, dup_mark):
+    """Rules that need all of a day's filings at once. Adds to dup_mark and to transaction flags."""
+    # 1) the same trade reported by several filers but split differently (one line vs several lines):
+    #    same issuer, side, date and price, same total shares
+    agg = {}
+    for i in order:
+        url, fl = filings[i]
+        if not fl:
+            continue
+        tot = {}
+        for j, t in enumerate(fl["txs"]):
+            k = (fl["cik"], t["code"], t["date"], round(t["price"], 2))
+            tot.setdefault(k, [0.0, []]); tot[k][0] += t["shares"]; tot[k][1].append(j)
+        for k, (sh, js) in tot.items():
+            kk = k + (round(sh),)
+            first = agg.get(kk)
+            if first is None:
+                agg[kk] = (url, len(js))
+            elif first[0] != url and (len(js) > 1 or first[1] > 1):
+                dup_mark.update((url, j) for j in js)
+    # 2) one filer buys exactly what another sells (same day, shares, price): a private transfer
+    #    between related holders, not a market trade
+    side = {}
+    for url, fl in filings:
+        if not fl:
+            continue
+        for j, t in enumerate(fl["txs"]):
+            if (url, j) in dup_mark:
+                continue
+            side.setdefault((fl["cik"], t["date"], round(t["shares"], 4), round(t["price"], 4)), []).append((url, t))
+    for v in side.values():
+        if {t["code"] for _, t in v} == {"P", "S"} and len({u for u, _ in v}) > 1:
+            for _, t in v:
+                _addflag(t, "internal")
+    # 3) many insiders buying on the same day at the same price: a company-arranged subscription
+    #    (IPO allocation, second-step conversion, director share program), not open-market buying
+    grp = {}
+    for url, fl in filings:
+        if not fl:
+            continue
+        for j, t in enumerate(fl["txs"]):
+            if t["code"] == "P" and (url, j) not in dup_mark:
+                grp.setdefault((fl["cik"], t["date"], round(t["price"], 4)), []).append(((fl["owners"] or [url])[0], t))
+    for (_, _, px), v in grp.items():
+        n = len({o for o, _ in v})
+        if n >= 5 or (n >= 3 and _round_px(px)):
+            for _, t in v:
+                _addflag(t, "offering")
+
+
 def summarize(d, filings, n_total):
     sec = {s: {"buy_usd": 0.0, "sell_usd": 0.0, "sell_plan_usd": 0.0, "buy_plan_usd": 0.0, "buy_filings": 0,
                "sell_filings": 0, "buy_cos": set(), "sell_cos": set(),
                "buy_od_usd": 0.0, "sell_od_usd": 0.0, "buy_od_filings": 0, "sell_od_filings": 0,
                "buy_eff_usd": 0.0, "buy_eff_filings": 0,
-               "sell_eff_usd": 0.0, "sell_eff_filings": 0} for s in SECTORS}
+               "sell_eff_usd": 0.0, "sell_eff_filings": 0,
+               "buy_inst_usd": 0.0, "buy_inst_filings": 0, "sell_inst_usd": 0.0, "sell_inst_filings": 0} for s in SECTORS}
     cos, flagged = {}, []
     excluded = {}            # flag -> usd removed from "effective" (od trades only)
     dups = {"count": 0, "usd": 0.0, "examples": []}
@@ -543,11 +653,12 @@ def summarize(d, filings, n_total):
                 dup_mark.add((url, j))
             else:
                 seen.setdefault(key, url)
+    cross_filing(filings, order, dup_mark)
     for url, fl in filings:
         if not fl or not fl["txs"]:
             continue
         od = any(r not in ("10% Owner", "Other") for r in fl["roles"])
-        b = s_ = bsh = ssh = eb = es = bplan = splan = 0.0
+        b = s_ = bsh = ssh = eb = es = ib = is_ = bplan = splan = 0.0
         rm = {"P": 0.0, "S": 0.0}     # usd removed from this filing (duplicates / outliers)
         tdates, fflags, fxl = [], set(), []
         for j, t in enumerate(fl["txs"]):
@@ -582,6 +693,8 @@ def summarize(d, filings, n_total):
                     bad = tf & EFF_BUY_EXCL
                     if bad:
                         for k in bad: excluded[("P", k)] = excluded.get(("P", k), 0) + t["usd"]
+                    elif "inst" in tf:
+                        ib += t["usd"]
                     else:
                         eb += t["usd"]
             else:
@@ -591,6 +704,8 @@ def summarize(d, filings, n_total):
                     bad = tf & EFF_SELL_EXCL
                     if bad:
                         for k in bad: excluded[("S", k)] = excluded.get(("S", k), 0) + t["usd"]
+                    elif "inst" in tf:
+                        is_ += t["usd"]
                     else:
                         es += t["usd"]
             if t["date"]: tdates.append(t["date"])
@@ -599,19 +714,28 @@ def summarize(d, filings, n_total):
         S = sec[fl["sector"]]
         if od and b: S["buy_od_usd"] += b; S["buy_od_filings"] += 1
         if od and s_: S["sell_od_usd"] += s_; S["sell_od_filings"] += 1
-        if eb: S["buy_eff_usd"] += eb; S["buy_eff_filings"] += 1
-        if es: S["sell_eff_usd"] += es; S["sell_eff_filings"] += 1
+        # small trades (< SMALL_USD) count in dollars but not in filing / people counts
+        cb, cs_, cib, cis = eb >= SMALL_USD, es >= SMALL_USD, ib >= SMALL_USD, is_ >= SMALL_USD
+        if eb: S["buy_eff_usd"] += eb; S["buy_eff_filings"] += cb
+        if es: S["sell_eff_usd"] += es; S["sell_eff_filings"] += cs_
+        if ib: S["buy_inst_usd"] += ib; S["buy_inst_filings"] += cib
+        if is_: S["sell_inst_usd"] += is_; S["sell_inst_filings"] += cis
+        if (eb and not cb) or (es and not cs_) or (ib and not cib) or (is_ and not cis):
+            fflags.add("small")
         S["sell_plan_usd"] += splan; S["buy_plan_usd"] += bplan
         key = fl["cik"] or fl["ticker"]
         c = cos.setdefault(key, {"cik": fl["cik"], "ticker": fl["ticker"], "name": fl["name"], "sector": fl["sector"],
                                  "buy_usd": 0.0, "sell_usd": 0.0, "buy_filings": 0, "sell_filings": 0,
                                  "eff_buy_usd": 0.0, "eff_sell_usd": 0.0, "eff_buy_filings": 0, "eff_sell_filings": 0,
-                                 "buyers": set(), "sellers": set(), "od_buy": False, "filings": []})
+                                 "inst_buy_usd": 0.0, "inst_sell_usd": 0.0, "inst_buy_filings": 0, "inst_sell_filings": 0,
+                                 "buyers": set(), "sellers": set(), "inst_buyers": set(), "inst_sellers": set(),
+                                 "od_buy": False, "filings": []})
         who = [nm + (f" ({', '.join(fl['roles'])})" if fl["roles"] else "") for nm in fl["owners"]]
         c["filings"].append({"path": url, "who": "; ".join(who)[:160],
                              "tx_date": min(tdates) if tdates else None,
                              "buy": round(b), "buy_sh": round(bsh), "sell": round(s_), "sell_sh": round(ssh),
                              "eff_buy": round(eb), "eff_sell": round(es),
+                             **({"inst_buy": round(ib)} if ib else {}), **({"inst_sell": round(is_)} if is_ else {}),
                              "od": od, "plan": bool(fl["plan"]) or bool(bplan or splan),
                              "flags": sorted(fflags, key=FLAG_ORDER.index),
                              **({"fx": fxl} if fxl else {}),
@@ -626,8 +750,10 @@ def summarize(d, filings, n_total):
         if s_:
             S["sell_usd"] += s_; S["sell_filings"] += 1; S["sell_cos"].add(key)
             c["sell_usd"] += s_; c["sell_filings"] += 1
-        if eb: c["eff_buy_usd"] += eb; c["eff_buy_filings"] += 1; c["buyers"].update(who)
-        if es: c["eff_sell_usd"] += es; c["eff_sell_filings"] += 1; c["sellers"].update(who)
+        if eb: c["eff_buy_usd"] += eb; c["eff_buy_filings"] += cb; cb and c["buyers"].update(who)
+        if es: c["eff_sell_usd"] += es; c["eff_sell_filings"] += cs_; cs_ and c["sellers"].update(who)
+        if ib: c["inst_buy_usd"] += ib; c["inst_buy_filings"] += cib; cib and c["inst_buyers"].update(who)
+        if is_: c["inst_sell_usd"] += is_; c["inst_sell_filings"] += cis; cis and c["inst_sellers"].update(who)
     sectors = []
     for name, S in sec.items():
         row = {"sector": name}
@@ -636,10 +762,13 @@ def summarize(d, filings, n_total):
         sectors.append(row)
     keep = []
     for c in cos.values():
-        for k in ("buy_usd", "sell_usd", "eff_buy_usd", "eff_sell_usd"):
+        for k in ("buy_usd", "sell_usd", "eff_buy_usd", "eff_sell_usd", "inst_buy_usd", "inst_sell_usd"):
             c[k] = round(c[k])
-        c["buyers"] = sorted(c["buyers"])[:4]
-        c["sellers"] = sorted(c["sellers"])[:4]
+        for k in ("buyers", "sellers", "inst_buyers", "inst_sellers"):
+            c[k] = sorted(c[k])[:4]
+        for k in ("inst_buy_usd", "inst_sell_usd", "inst_buy_filings", "inst_sell_filings", "inst_buyers", "inst_sellers"):
+            if not c[k]:
+                del c[k]
         if c["buy_usd"] or c["sell_usd"]:
             keep.append(c)
     return {"date": d.isoformat(), "form4_filings": n_total, "schema": 2,

@@ -54,11 +54,14 @@ def check_day(path):
         a = agg[c["sector"]]
         for k in ("buy_usd", "sell_usd", "buy_filings", "sell_filings", "eff_buy_usd", "eff_sell_usd"):
             a[k] += c[k]
+        for k in ("inst_buy_usd", "inst_sell_usd"):
+            a[k] += c.get(k, 0)
     for s, S in secs.items():
         a = agg[s]
         tol = max(5, a["buy_filings"] + a["sell_filings"])
         pairs = [("buy_usd", "buy_usd"), ("sell_usd", "sell_usd"),
-                 ("buy_eff_usd", "eff_buy_usd"), ("sell_eff_usd", "eff_sell_usd")]
+                 ("buy_eff_usd", "eff_buy_usd"), ("sell_eff_usd", "eff_sell_usd"),
+                 ("buy_inst_usd", "inst_buy_usd"), ("sell_inst_usd", "inst_sell_usd")]
         for sk, ck in pairs:
             if abs(S.get(sk, 0) - a[ck]) > tol:
                 errs.append(f"{s}: {sk} {S.get(sk, 0)} != companies sum {a[ck]}")
