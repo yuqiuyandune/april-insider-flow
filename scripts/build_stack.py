@@ -2,6 +2,7 @@
 """Build stack/data.json for the five-layer AI supply-chain chart (stack/index.html).
 
   python3 scripts/build_stack.py            # reads stack/*.csv, stack/taxonomy.json, data/days/*.json
+  python3 scripts/build_stack.py energy     # same files under energy/ -> energy/data.json (the energy chain)
 
 Sources
   stack/company_master.csv  the company list (edit this): layer, segment, type (核心 / 热门), reason, extra layers
@@ -16,7 +17,11 @@ Insider overlay = the last 30 days (filing dates) up to the newest day in data/d
 import csv, glob, json, os, re, sys, datetime as dt
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-S = lambda *p: os.path.join(ROOT, "stack", *p)
+THEMES = {"stack": "energy", "energy": "stack"}   # theme folder -> the other theme (for "also in" links)
+THEME = sys.argv[1] if len(sys.argv) > 1 else "stack"
+if THEME not in THEMES:
+    sys.exit(f"unknown theme {THEME!r}; expected one of {sorted(THEMES)}")
+S = lambda *p: os.path.join(ROOT, THEME, *p)
 WINDOW_DAYS = 30
 
 
@@ -38,6 +43,8 @@ def main():
     first = min(d["date"] for d in days)
 
     mine = {r["ticker"] for r in master}
+    other_path = os.path.join(ROOT, THEMES[THEME], "company_master.csv")
+    other = {r["ticker"] for r in read_csv(other_path)} if os.path.exists(other_path) else set()
     agg = {t: {"seen": False, "filed": 0, "buy": 0, "sell": 0, "page": None} for t in mine}
     for d in days:
         for c in d.get("companies") or []:
@@ -68,6 +75,7 @@ def main():
             "seg": seg["id"], "type": "core" if r["类型"] == "核心" else "hot",
             "reason": {"zh": r["入选理由"], "tw": x["reason_tw"], "en": x["reason_en"]},
             "also": also,
+            **({"cross": THEMES[THEME]} if t in other else {}),
             "listed": t not in tax.get("unlisted", []),
             "seen": a["seen"],
             "page": a["page"] if a["seen"] else None,
@@ -79,7 +87,7 @@ def main():
            "segments": [{"id": s["id"], "layer": s["layer"], "name": s["name"]} for s in tax["segments"]],
            "companies": comps}
     json.dump(out, open(S("data.json"), "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
-    print(f"stack/data.json: {len(comps)} companies, insider window {start}..{asof}, "
+    print(f"{THEME}/data.json: {len(comps)} companies, insider window {start}..{asof}, "
           f"{sum(1 for c in comps if c['ins']['filed'])} with filings in window")
 
 

@@ -1,0 +1,36 @@
+{
+  "layers": [
+    {"id": 1, "zh": "资源", "hue": 40,
+     "name": {"zh": "资源", "tw": "資源", "en": "Resources"},
+     "sub":  {"zh": "从地下取出石油、天然气和铀，以及为此服务的油服公司", "tw": "從地下取出石油、天然氣和鈾，以及為此服務的油服公司", "en": "Getting oil, gas and uranium out of the ground, and the service firms that help"}},
+    {"id": 2, "zh": "运输与加工", "hue": 15,
+     "name": {"zh": "运输与加工", "tw": "運輸與加工", "en": "Midstream and refining"},
+     "sub":  {"zh": "用管道和 LNG 把油气运到需要的地方，再炼成燃料", "tw": "用管道和 LNG 把油氣運到需要的地方，再煉成燃料", "en": "Moving oil and gas by pipeline and LNG, and refining it into fuels"}},
+    {"id": 3, "zh": "发电", "hue": 75,
+     "name": {"zh": "发电", "tw": "發電", "en": "Generation"},
+     "sub":  {"zh": "把燃料、核能和阳光变成电，以及造发电设备的公司", "tw": "把燃料、核能和陽光變成電，以及造發電設備的公司", "en": "Turning fuel, nuclear and sunlight into electricity, and the makers of the machines"}},
+    {"id": 4, "zh": "电网", "hue": 205,
+     "name": {"zh": "电网", "tw": "電網", "en": "Grid"},
+     "sub":  {"zh": "输配电设备，以及架线、建变电站的工程公司", "tw": "輸配電設備，以及架線、建變電站的工程公司", "en": "Transmission and distribution equipment, and the contractors who build the grid"}},
+    {"id": 5, "zh": "公用事业", "hue": 150,
+     "name": {"zh": "公用事业", "tw": "公用事業", "en": "Utilities"},
+     "sub":  {"zh": "受监管的电力公司，把电卖给家庭、企业和数据中心", "tw": "受監管的電力公司，把電賣給家庭、企業和資料中心", "en": "Regulated power companies selling electricity to homes, businesses and data centers"}}
+  ],
+  "segments": [
+    {"id": 1,  "layer": 1, "zh": "油气开采",       "name": {"zh": "油气开采", "tw": "油氣開採", "en": "Oil and gas producers"}},
+    {"id": 2,  "layer": 1, "zh": "天然气开采",     "name": {"zh": "天然气开采", "tw": "天然氣開採", "en": "Natural gas producers"}},
+    {"id": 3,  "layer": 1, "zh": "铀与核燃料",     "name": {"zh": "铀与核燃料", "tw": "鈾與核燃料", "en": "Uranium and nuclear fuel"}},
+    {"id": 4,  "layer": 1, "zh": "油服",           "name": {"zh": "油服", "tw": "油服", "en": "Oilfield services"}},
+    {"id": 5,  "layer": 2, "zh": "管道与储运",     "name": {"zh": "管道与储运", "tw": "管道與儲運", "en": "Pipelines and storage"}},
+    {"id": 6,  "layer": 2, "zh": "液化天然气",     "name": {"zh": "液化天然气（LNG）", "tw": "液化天然氣（LNG）", "en": "LNG"}},
+    {"id": 7,  "layer": 2, "zh": "炼油",           "name": {"zh": "炼油", "tw": "煉油", "en": "Refining"}},
+    {"id": 8,  "layer": 3, "zh": "独立发电与核电", "name": {"zh": "独立发电与核电", "tw": "獨立發電與核電", "en": "Independent power and nuclear"}},
+    {"id": 9,  "layer": 3, "zh": "新型核电",       "name": {"zh": "新型核电", "tw": "新型核電", "en": "Advanced nuclear"}},
+    {"id": 10, "layer": 3, "zh": "太阳能与储能",   "name": {"zh": "太阳能与储能", "tw": "太陽能與儲能", "en": "Solar and storage"}},
+    {"id": 11, "layer": 3, "zh": "发电设备",       "name": {"zh": "发电设备", "tw": "發電設備", "en": "Generation equipment"}},
+    {"id": 12, "layer": 4, "zh": "输配电设备",     "name": {"zh": "输配电设备", "tw": "輸配電設備", "en": "Grid equipment"}},
+    {"id": 13, "layer": 4, "zh": "电网建设",       "name": {"zh": "电网建设", "tw": "電網建設", "en": "Grid construction"}},
+    {"id": 14, "layer": 5, "zh": "受监管电力公司", "name": {"zh": "受监管电力公司", "tw": "受監管電力公司", "en": "Regulated utilities"}}
+  ],
+  "unlisted": []
+}

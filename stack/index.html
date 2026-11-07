@@ -51,6 +51,11 @@ a{color:var(--accent)}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 
 h1{font:700 clamp(24px,3.4vw,30px)/1.12 var(--display);letter-spacing:-.015em;margin:8px 0 6px}
+.themes{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.themes a{font-size:13.5px;font-weight:600;text-decoration:none;color:var(--muted);padding:6px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+.themes a:hover{color:var(--ink);border-color:var(--faint)}
+.themes a[aria-current=page]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.themes a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .deck{max-width:70ch;color:var(--muted);margin:0 0 4px;font-size:14.5px}
 .asof{font-size:13px;color:var(--faint);margin:0}
 
@@ -144,6 +149,7 @@ button.tag{cursor:pointer;font:inherit;font-size:12.5px}
 .row .note{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .row p.msg{margin:0;font-size:14px;color:var(--muted)}
 .links{display:flex;flex-wrap:wrap;gap:8px}
+a.xlink{display:inline-block;text-decoration:none;font-weight:600;color:var(--accent);background:var(--surface-2);border-color:var(--line)}
 .btn.alt{background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:9px 15px}
 .btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:600;font-size:14px;padding:10px 16px;border-radius:12px}
 .fine{margin:12px 0 0;font-size:12px;color:var(--faint)}
@@ -199,6 +205,7 @@ footer{padding:20px 0 44px;font-size:12.5px;color:var(--faint)}
   </header>
 
   <main>
+    <nav class="themes" id="themes" aria-label="Supply chains"></nav>
     <h1 id="title">The AI supply chain in five layers</h1>
     <p class="deck" id="deck"></p>
     <p class="asof" id="asof"></p>
@@ -238,11 +245,11 @@ en:{title:"The AI supply chain in five layers", tabAll:"Overview", openLayer:"Op
  m_up:"Net effective buying, last 30 days", m_down:"Net effective selling, last 30 days", lNone:"No marker: no effective trades in 30 days",
  mood:"30 days", unit:n=>n, emptyH:"Pick a company", emptyP:"See why it sits in this layer, which other layers it touches, and its insider activity over the last 30 days.",
  core:"Core", hot:"Popular", also:"Also touches", ins:"Insider activity, last 30 days", buy:"Effective buying", sell:"Effective selling",
- days:n=>`${n} filing ${n===1?"day":"days"} in the window`, onlyExcl:"Filings exist, but all are of types the site excludes (10b5-1 plans, option exercises, tax withholding and similar).",
+ days:n=>`${n} filing ${n===1?"day":"days"} in the window`, onlyExcl:"Filings exist, but all are of types the site excludes (10b5-1 plans, option exercises, tax withholding and similar) or are by funds and companies.",
  noWin:"No open-market buy or sell filings in the last 30 days.", notListed:"Not listed yet, so no data.", noRec:f=>`No open-market buy or sell filings for this company in the site's data since ${f}.`,
  details:"See insider trade details", earn:"See earnings analysis", fine:"A summary of public filings, not trading advice.", close:"Close", err:"Could not load the data. Please refresh.",
  notes:[`<b>How to read.</b> Jensen Huang describes AI as a five-layer cake: energy, chips, infrastructure, models and applications, each built on the one below (<a href="${NV}" rel="noopener">NVIDIA blog</a>). Each company sits in the layer where it mainly earns its money; companies that span layers say so in the detail panel.`,
-  `<b>Insider markers.</b> Only effective trades in SEC Form 4 filings are counted: 10b5-1 plan trades, option exercises, tax withholding, IPO and SPAC purchases are excluded. This summarizes public filings and is not a trading signal.`,
+  `<b>Insider markers.</b> Only effective trades in SEC Form 4 filings by individual officers and directors are counted: 10b5-1 plan trades, option exercises, tax withholding, IPO and offering trades, internal transfers and trades by funds or companies are excluded. This summarizes public filings and is not a trading signal.`,
   `<b>Capital.</b> Banks and asset managers sit below the five layers. They make nothing in the stack, but their loans, bonds and equity pay for much of it, so their earnings show whether the money behind AI spending is still flowing.`,
   `<b>The list.</b> Maintained by hand, not a recommendation, and revisited each earnings season.`,
   `<b>Further reading.</b> Which links in this chain have no substitute? <a href="/articles/ai-chokepoints/">After the midterms, how to position in AI semiconductors</a> scores 13 supply-chain links one by one.`]},
@@ -254,11 +261,11 @@ zh:{title:"AI 产业链：五层全景", tabAll:"全景", openLayer:"展开这�
  m_up:"近 30 天有效净买入", m_down:"近 30 天有效净卖出", lNone:"没有标记：近 30 天没有有效交易",
  mood:"近 30 天", unit:n=>`${n} 家`, emptyH:"点一家公司看详情", emptyP:"看它为什么在这一层、还涉及哪几层，以及近 30 天的内部人买卖。",
  core:"核心", hot:"热门", also:"也涉及", ins:"近 30 天内部人动向", buy:"有效买入", sell:"有效卖出",
- days:n=>`期间共 ${n} 个申报日`, onlyExcl:"有申报，但都属于站点已排除的类型（10b5-1 计划、期权行权、税务代扣等）。",
+ days:n=>`期间共 ${n} 个申报日`, onlyExcl:"有申报，但都属于站点已排除的类型（10b5-1 计划、期权行权、税务代扣等），或来自基金和公司类持有人。",
  noWin:"近 30 天没有公开市场买卖申报。", notListed:"尚未上市，暂无数据。", noRec:f=>`自 ${f} 起，站点数据里没有这家公司的公开市场买卖申报。`,
  details:"查看内部人动向明细", earn:"查看财报解读", fine:"这是公开申报的汇总，不是买卖建议。", close:"关闭", err:"数据加载失败，请刷新重试。",
  notes:[`<b>怎么读。</b>黄仁勋用“五层蛋糕”描述 AI 产业：能源、芯片、基础设施、模型、应用，每一层都建立在下一层之上（<a href="${NV}" rel="noopener">NVIDIA 官方博客</a>）。每家公司放在它主要赚钱的那一层，跨层的公司会在详情里标出。`,
-  `<b>内部人标记。</b>只统计 SEC Form 4 里的有效交易，已排除 10b5-1 交易计划、期权行权、税务代扣、IPO 与 SPAC 买入。这是公开申报的汇总，不是买卖信号。`,
+  `<b>内部人标记。</b>只统计 SEC Form 4 里高管、董事本人的有效交易，已排除 10b5-1 交易计划、期权行权、税务代扣、IPO 与发行相关交易、内部转让，以及基金和公司类持有人的交易。这是公开申报的汇总，不是买卖信号。`,
   `<b>资金方。</b>银行和资产管理公司放在五层之下。它们不生产链上的东西，但 AI 建设的很大一部分钱来自它们的贷款、债券和股权投资，它们的财报能看出 AI 资本开支背后的钱还在不在流动。`,
   `<b>名单。</b>由人工维护，不是推荐，每个财报季会回顾调整。`,
   `<b>延伸阅读。</b>这条链上哪些环节真正没有替代品？<a href="/articles/ai-chokepoints/">《中期选举之后，AI半导体怎么布局？》</a>逐一给13个供应链环节打了分。`]},
@@ -270,15 +277,45 @@ tw:{title:"AI 產業鏈：五層全景", tabAll:"全景", openLayer:"展開這�
  m_up:"近 30 天有效淨買入", m_down:"近 30 天有效淨賣出", lNone:"沒有標記：近 30 天沒有有效交易",
  mood:"近 30 天", unit:n=>`${n} 家`, emptyH:"點一家公司看詳情", emptyP:"看它為什麼在這一層、還涉及哪幾層，以及近 30 天的內部人買賣。",
  core:"核心", hot:"熱門", also:"也涉及", ins:"近 30 天內部人動向", buy:"有效買入", sell:"有效賣出",
- days:n=>`期間共 ${n} 個申報日`, onlyExcl:"有申報，但都屬於站點已排除的類型（10b5-1 計畫、選擇權行使、稅務代扣等）。",
+ days:n=>`期間共 ${n} 個申報日`, onlyExcl:"有申報，但都屬於站點已排除的類型（10b5-1 計畫、選擇權行使、稅務代扣等），或來自基金和公司類持有人。",
  noWin:"近 30 天沒有公開市場買賣申報。", notListed:"尚未上市，暫無資料。", noRec:f=>`自 ${f} 起，站點資料裡沒有這家公司的公開市場買賣申報。`,
  details:"查看內部人動向明細", earn:"查看財報解讀", fine:"這是公開申報的彙總，不是買賣建議。", close:"關閉", err:"資料載入失敗，請重新整理。",
  notes:[`<b>怎麼讀。</b>黃仁勳用「五層蛋糕」描述 AI 產業：能源、晶片、基礎設施、模型、應用，每一層都建立在下一層之上（<a href="${NV}" rel="noopener">NVIDIA 官方部落格</a>）。每家公司放在它主要賺錢的那一層，跨層的公司會在詳情裡標出。`,
-  `<b>內部人標記。</b>只統計 SEC Form 4 裡的有效交易，已排除 10b5-1 交易計畫、選擇權行使、稅務代扣、IPO 與 SPAC 買入。這是公開申報的彙總，不是買賣訊號。`,
+  `<b>內部人標記。</b>只統計 SEC Form 4 裡高管、董事本人的有效交易，已排除 10b5-1 交易計劃、期權行權、稅務代扣、IPO 與發行相關交易、內部轉讓，以及基金和公司類持有人的交易。這是公開申報的彙總，不是買賣訊號。`,
   `<b>資金方。</b>銀行和資產管理公司放在五層之下。它們不生產鏈上的東西，但 AI 建設的很大一部分錢來自它們的貸款、債券和股權投資，它們的財報能看出 AI 資本支出背後的錢還在不在流動。`,
   `<b>名單。</b>由人工維護，不是推薦，每個財報季會回顧調整。`,
   `<b>延伸閱讀。</b>這條鏈上哪些環節真正沒有替代品？<a href="/articles/ai-chokepoints/">《中期選舉之後，AI半導體怎麼佈局？》</a>逐一給13個供應鏈環節打了分。`]}
 };
+/* Same page serves two chains: / (AI, data in /stack/) and /energy/ (data in /energy/). Energy texts override T. */
+const THEME=/^\/energy(\/|$)/.test(location.pathname)?"energy":"ai";
+const THEMES=[["ai","/"],["energy","/energy/"]];
+const TNAME={en:{ai:"AI chain",energy:"Energy chain"},zh:{ai:"AI 产业链",energy:"能源产业链"},tw:{ai:"AI 產業鏈",energy:"能源產業鏈"}};
+const XT={en:{cross:o=>`Also in the ${o==="stack"?"AI":"energy"} chain`},zh:{cross:o=>`也在${o==="stack"?" AI ":"能源"}产业链`},tw:{cross:o=>`也在${o==="stack"?" AI ":"能源"}產業鏈`}};
+const TE={
+en:{title:"The energy supply chain", deck:"From oil, gas and uranium in the ground to the power bill: the key US-listed companies in each link, with insider activity.",
+ search:"Search ticker or name, e.g. XOM", lCore:"Core: leads its segment, is hard to replace, or moves the chain's prices", lHot:"Popular: added because retail investors watch it",
+ emptyP:"See why it sits in this link, which other links it touches, and its insider activity over the last 30 days.",
+ notes:[`<b>How to read.</b> Energy flows bottom to top: resources are produced, moved and refined, turned into electricity, carried over the grid and sold by utilities. Each company sits where it mainly earns its money; companies that span links say so in the detail panel.`,
+  `<b>What moves these stocks.</b> Producers and refiners follow oil, natural gas and refining margins; power generators follow power prices and capacity auctions; utilities follow rate cases and interest rates. Dividends and buybacks matter more here than in AI: most of these companies return a large share of their cash, so a cut or a big raise is a real signal.`,
+  `<b>Where AI comes in.</b> Data-center power demand is new growth for gas, nuclear, grid equipment and utilities. Companies that are also in the AI chain carry a link to it in the detail panel.`,
+  `<b>Insider markers.</b> Only effective trades in SEC Form 4 filings by individual officers and directors are counted: plan trades, option exercises, tax withholding, offering trades, internal transfers and trades by funds or companies are excluded. Canadian filers such as Cameco and NexGen do not file Form 4. This summarizes public filings and is not a trading signal.`,
+  `<b>The list.</b> Maintained by hand, not a recommendation, and revisited each earnings season.`]},
+zh:{title:"能源产业链", deck:"从地下的石油、天然气和铀，到你的电费账单：每一环最重要的美股公司，以及内部人买卖。",
+ search:"搜索代码或公司名，如 XOM、雪佛龙", lCore:"核心：该环节份额领先、地位难以替代，或能影响整条链的价格", lHot:"热门：散户关注度高的补充",
+ emptyP:"看它为什么在这一环、还涉及哪几环，以及近 30 天的内部人买卖。",
+ notes:[`<b>怎么读。</b>能源自下而上流动：资源被开采出来，经管道运输和炼化，变成电，再经电网由公用事业卖给用户。每家公司放在它主要赚钱的那一环，跨环节的公司会在详情里标出。`,
+  `<b>什么在驱动股价。</b>油气公司和炼油商看油价、天然气价格和炼油利润；发电公司看电价和容量拍卖价格；公用事业看监管定价和利率。股息和回购在这里比在 AI 里重要得多：大多数公司把大部分现金分给股东，所以削减或大幅提高分红本身就是信号。`,
+  `<b>和 AI 的关系。</b>数据中心用电是天然气、核电、电网设备和公用事业的新增量。同时属于 AI 产业链的公司，在详情里可以直接跳过去。`,
+  `<b>内部人标记。</b>只统计 SEC Form 4 里高管、董事本人的有效交易，已排除交易计划、期权行权、税务代扣、发行相关交易、内部转让，以及基金和公司类持有人的交易。卡梅科、NexGen 等加拿大公司不申报 Form 4。这是公开申报的汇总，不是买卖信号。`,
+  `<b>名单。</b>人工维护，不构成推荐，每个财报季复核一次。`]},
+tw:{title:"能源產業鏈", deck:"從地下的石油、天然氣和鈾，到你的電費帳單：每一環最重要的美股公司，以及內部人買賣。",
+ search:"搜尋代碼或公司名，如 XOM、雪佛龍", lCore:"核心：該環節市占領先、地位難以取代，或能影響整條鏈的價格", lHot:"熱門：散戶關注度高的補充",
+ emptyP:"看它為什麼在這一環、還涉及哪幾環，以及近 30 天的內部人買賣。",
+ notes:[`<b>怎麼讀。</b>能源由下而上流動：資源被開採出來，經管道運輸和煉化，變成電，再經電網由公用事業賣給用戶。每家公司放在它主要賺錢的那一環，跨環節的公司會在詳情裡標出。`,
+  `<b>什麼在驅動股價。</b>油氣公司和煉油商看油價、天然氣價格和煉油利潤；發電公司看電價和容量拍賣價格；公用事業看監管定價和利率。股息和庫藏股在這裡比在 AI 裡重要得多：大多數公司把大部分現金分給股東，所以削減或大幅提高配息本身就是訊號。`,
+  `<b>和 AI 的關係。</b>資料中心用電是天然氣、核電、電網設備和公用事業的新增量。同時屬於 AI 產業鏈的公司，在詳情裡可以直接跳過去。`,
+  `<b>內部人標記。</b>只統計 SEC Form 4 裡高管、董事本人的有效交易，已排除交易計劃、期權行權、稅務代扣、發行相關交易、內部轉讓，以及基金和公司類持有人的交易。卡梅科、NexGen 等加拿大公司不申報 Form 4。這是公開申報的彙總，不是買賣訊號。`,
+  `<b>名單。</b>人工維護，不構成推薦，每個財報季複核一次。`]}};
 const LANGS=["en","zh","tw"],LOC={en:"en",zh:"zh-CN",tw:"zh-TW"};
 function detectLang(){const ls=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||"en"]).map(x=>String(x).toLowerCase());
   for(const l of ls){if(l.startsWith("zh"))return /hant|-tw|-hk|-mo/.test(l)?"tw":"zh";if(l.startsWith("en"))return "en"}return "en"}
@@ -289,7 +326,7 @@ try{const q=new URLSearchParams(location.search).get("lang");if(LANGS.includes(q
 let D=null,ftype="all",query="",sel=null;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const t=()=>T[lang];
+const t=()=>Object.assign({},T[lang],XT[lang],THEME==="energy"?TE[lang]:{});
 const nm=c=>c.name[lang]||c.name.zh;
 const money=v=>{const a=Math.abs(v);return a>=1e9?`$${(a/1e9).toFixed(2)}B`:a>=1e6?`$${(a/1e6).toFixed(1)}M`:a>=1e3?`$${Math.round(a/1e3)}K`:`$${Math.round(a)}`};
 const fmtDate=iso=>lang==="en"?new Date(iso+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",timeZone:"UTC"}):`${+iso.slice(0,4)}年${+iso.slice(5,7)}月${+iso.slice(8)}日`;
@@ -358,6 +395,7 @@ function renderPanel(){
     <h2><span class="tk">${esc(c.t)}</span>${esc(nm(c))} <span class="badge ${c.type}">${esc(c.type==="core"?s.core:s.hot)}</span></h2>
     <p class="reason">${esc(c.reason[lang]||c.reason.zh)}</p>
     ${also?`<div class="row"><h4>${esc(s.also)}</h4><div class="tags">${also}</div></div>`:""}
+    ${c.cross?`<div class="row"><a class="tag xlink" href="${c.cross==="stack"?"/":"/energy/"}#${encodeURIComponent(c.t)}">${esc(s.cross(c.cross))} →</a></div>`:""}
     <div class="row"><h4>${esc(s.ins)}</h4>${insHtml}</div>
     ${href||earnHas(c.t)?`<div class="links">${href?`<a class="btn" href="${href}">${esc(s.details)}</a>`:""}${earnHas(c.t)?`<a class="btn alt" href="/earnings/#${encodeURIComponent(c.t)}">${esc(s.earn)}</a>`:""}</div>`:""}
     <p class="fine">${esc(s.fine)}</p>`;
@@ -376,6 +414,7 @@ function renderStatic(){
   const s=t();document.documentElement.lang=LOC[lang];
   document.title=`${s.title} · April's Stock Atlas`;
   $("title").textContent=s.title;$("deck").textContent=s.deck;
+  $("themes").innerHTML=THEMES.map(([k,h])=>`<a href="${h}"${k===THEME?' aria-current="page"':""}>${esc(TNAME[lang][k])}</a>`).join("");
   $("q").placeholder=s.search;$("q-l").textContent=s.search;
   LANGS.forEach(k=>$("lang-"+k).setAttribute("aria-pressed",String(lang===k)));
   $("notes").innerHTML=s.notes.map(x=>`<p>${x}</p>`).join("");
@@ -408,7 +447,7 @@ $("q").addEventListener("keydown",e=>{if(e.key!=="Enter"||!query)return;
 
 renderStatic();
 fetch("/earnings/data/index.json").then(r=>r.ok?r.json():null).then(j=>{if(j&&j.companies){EARN=new Set(j.companies.map(c=>c.t));if(D)renderPanel()}}).catch(()=>{});
-fetch("/stack/data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
+fetch(THEME==="energy"?"/energy/data.json":"/stack/data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
   D=d;renderStatic();
   let h="";try{h=decodeURIComponent(location.hash.slice(1))}catch(e){}
   const hit=h&&D.companies.find(c=>c.t===h.toUpperCase()),lm=/^layer-(\d)$/.exec(h);
