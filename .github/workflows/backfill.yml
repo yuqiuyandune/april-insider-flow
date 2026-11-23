@@ -77,7 +77,7 @@ jobs:
                          if dt.date(y, m, d).weekday() < 5))
           EOF
           )
-          python3 scripts/daily_update.py --ua "$SEC_UA" --dates $dates
+          python3 scripts/daily_update.py --ua "$SEC_UA" --secs-per-date 600 --dates $dates
           echo "ADDED=$(tr '\n' ' ' < work/added.txt | xargs)" >> "$GITHUB_ENV"
 
       - name: Consistency check of the new days

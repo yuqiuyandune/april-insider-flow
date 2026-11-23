@@ -35,6 +35,7 @@ def main():
     ap.add_argument("--lookback", type=int, default=10)
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--sample", type=int, default=30)
+    ap.add_argument("--secs-per-date", type=int, default=150, help="fetch time budget per date (backfill uses more)")
     a = ap.parse_args()
 
     shutil.rmtree(WORK, ignore_errors=True)
@@ -56,7 +57,7 @@ def main():
     else:
         print("Target dates:", " ".join(targets), flush=True)
         rc, out = run(PY + ["scripts/form4_sector.py", "--ua", a.ua, "--out", NEW, "--force", "--dates"] + targets,
-                      timeout=150 * len(targets) + 300)
+                      timeout=a.secs_per_date * len(targets) + 300)
         no_index = set(re.findall(r"^(\d{4}-\d\d-\d\d) no index", out, re.M))
         for d in targets:
             f = os.path.join(NEW, f"{d}.json")
