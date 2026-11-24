@@ -63,10 +63,10 @@ jobs:
       - name: Fetch and verify every weekday of ${{ matrix.month }}
         env:
           MONTH: ${{ matrix.month }}
+          # same SEC contact as the daily workflow, from the repository secret
+          SEC_UA: ${{ secrets.SEC_UA }}
         run: |
-          # same SEC contact as the daily workflow (kept in one place: daily.yml)
-          SEC_UA=$(sed -n 's/^ *SEC_UA: *"\(.*\)"/\1/p' .github/workflows/daily.yml | head -1)
-          [ -n "$SEC_UA" ] || { echo "SEC_UA not found in daily.yml"; exit 1; }
+          [ -n "$SEC_UA" ] || { echo "repository secret SEC_UA is not set"; exit 1; }
           dates=$(python3 - <<'EOF'
           import calendar, datetime as dt, os
           spec = os.environ["MONTH"]

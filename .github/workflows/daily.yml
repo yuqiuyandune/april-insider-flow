@@ -32,7 +32,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SEC_UA: "April Insider Tracker yuqiuyandune@gmail.com"
+  # SEC fair-access contact, kept in the repository secret SEC_UA (not in this public file)
+  SEC_UA: ${{ secrets.SEC_UA }}
   PYTHONUNBUFFERED: "1"
 
 jobs:
