@@ -61,6 +61,14 @@ jobs:
           python3 scripts/daily_update.py "${args[@]}"
           echo "ADDED=$(tr '\n' ' ' < work/added.txt | xargs)" >> "$GITHUB_ENV"
 
+      - name: Update the macro calendar from the official schedules
+        # Fed, BLS (CPI, jobs, PPI), BEA (PCE, GDP), NYSE holidays; each source at most every 3 days.
+        # A source that cannot be read keeps its previous dates and is reported in the issue below.
+        continue-on-error: true
+        run: |
+          python3 -I scripts/fetch_macro.py --ua "$SEC_UA"
+          if [ -f work/macro_changed ]; then echo "MACRO=1" >> "$GITHUB_ENV"; fi
+
       - name: Consistency check (all stored days)
         run: python3 -I scripts/check_data.py | tee -a work/check.txt
 
@@ -77,14 +85,14 @@ jobs:
           fi
 
       - name: Build site
-        if: env.ADDED != '' || inputs.deploy
+        if: env.ADDED != '' || env.MACRO == '1' || inputs.deploy
         run: |
           python3 -I scripts/build_stack.py
           python3 -I scripts/build_stack.py energy
           python3 -I scripts/build_site.py data/days site/index.html public
 
       - name: Deploy to Cloudflare Pages
-        if: env.ADDED != '' || inputs.deploy
+        if: env.ADDED != '' || env.MACRO == '1' || inputs.deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -93,12 +101,14 @@ jobs:
           grep -q "Deployment complete" work/deploy.txt
 
       - name: Commit new data
-        if: env.ADDED != ''
+        if: env.ADDED != '' || env.MACRO == '1'
         run: |
           git config user.name "insider-flow-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/days
-          git commit -m "Add Form 4 data: $ADDED"
+          git add data/days data/macro.json
+          if [ -n "$ADDED" ]; then msg="Add Form 4 data: $ADDED"; else msg="Update macro calendar"; fi
+          [ -n "$ADDED" ] && [ "$MACRO" = "1" ] && msg="$msg; update macro calendar"
+          git commit -m "$msg"
           # the build step rewrites tracked files (e.g. stack/data.json); keep only the data commit
           git checkout -- . && git clean -fdq -e work -e public
           # other people or sessions also push to main: rebase on top of them and retry
@@ -109,7 +119,7 @@ jobs:
           echo "could not push the new data commit"; exit 1
 
       - name: Open an issue for withheld days or urgent anomalies
-        if: always() && (hashFiles('work/problems.md') != '' || hashFiles('work/urgent.md') != '' || failure())
+        if: always() && (hashFiles('work/problems.md') != '' || hashFiles('work/urgent.md') != '' || hashFiles('work/macro_problems.md') != '' || failure())
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -118,6 +128,7 @@ jobs:
             echo "Run: $RUN_URL"; echo
             [ -f work/problems.md ] && { echo "## Withheld or missing days"; echo; cat work/problems.md; echo; echo "Withheld days are retried automatically on the next run."; echo; }
             [ -f work/urgent.md ] && { echo "## Urgent anomalies"; echo; cat work/urgent.md; echo; }
+            [ -f work/macro_problems.md ] && { echo "## Macro calendar"; echo; cat work/macro_problems.md; echo; echo "Retried automatically on the next run."; echo; }
             [ "${{ job.status }}" = "failure" ] && echo "## The run failed. Open the run link for the failing step (nothing was deployed after the failing step)."
             true
           } > issue.md

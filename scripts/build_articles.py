@@ -358,7 +358,7 @@ MK = {
 }
 
 MARKET_CSS = """
-.mk-hero{margin:16px 0 22px}.mk-hero h1{margin-bottom:8px}.mk-hero p{color:var(--muted);max-width:68ch;margin:0}
+.mk-hero{margin:16px 0 22px}.mk-hero h1{margin-bottom:8px}.mk-hero p{color:var(--muted);max-width:68ch;margin:0}.mk-hero .mk-cal{margin-top:10px;font-weight:700}.mk-cal a{text-decoration:none}
 .mk-sec{margin:0 0 40px}.mk-sec>h2{border:0;padding:0;margin:0 0 6px}.mk-sec>p.lead{color:var(--muted);margin:0 0 16px;max-width:72ch;font-size:15px}
 .dash{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 @media (max-width:860px){.dash{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -442,6 +442,8 @@ fetch("/earnings/data/market.json",{cache:"no-cache"}).then(function(r){if(!r.ok
 })();
 </script>"""
 
+CAL_GO = {"zh": "本周宏观日程：CPI、议息、PCE、休市 →", "tw": "本週總經日程：CPI、利率決議、PCE、休市 →", "en": "This week's macro calendar: CPI, Fed, PCE, holidays →"}
+
 def market_page(arts, out):
     ins = insider_sectors()
     sec = {}
@@ -449,7 +451,7 @@ def market_page(arts, out):
         u, m = UI[l], MK[l]
         cards = "".join(f'<a class="card" href="/articles/{a["slug"]}/"><p class="meta">{html.escape(a["date"])}</p><h2>{inline(a["l"][l][0].get("title", ""))}</h2>'
                         f'<p>{inline(a["l"][l][0].get("summary", ""))}</p><span class="go">{u["read"]}</span></a>' for a in arts)
-        sec[l] = (f'<div data-l="{l}" lang="{LOC[l]}" class="mk-hero"><h1>{m["title"]}</h1><p>{m["intro"]}</p></div>',
+        sec[l] = (f'<div data-l="{l}" lang="{LOC[l]}" class="mk-hero"><h1>{m["title"]}</h1><p>{m["intro"]}</p><p class="mk-cal"><a href="/calendar/">{CAL_GO[l]}</a></p></div>',
                   f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["dashH"]}</h2><p class="lead">{m["dashP"]}</p></div>',
                   f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["secH"]}</h2><p class="lead">{m["secP"]}</p></div>',
                   f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["artH"]}</h2><p class="lead">{m["artP"]}</p><div class="cards">{cards}</div></div>',

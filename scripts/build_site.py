@@ -334,6 +334,10 @@ def main():
     _spec = importlib.util.spec_from_file_location("build_articles", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_articles.py"))
     _ba = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_ba)
     art_paths = _ba.build(out)
+    # Calendar (/calendar/): macro releases, Fed meetings, market holidays from data/macro.json (scripts/fetch_macro.py)
+    _spec = importlib.util.spec_from_file_location("build_calendar", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_calendar.py"))
+    _bc = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bc)
+    if (cal := _bc.build(out, _ba.page)): art_paths.insert(0, cal)
     os.makedirs(f"{out}/overview", exist_ok=True)
     shutil.copyfile(os.path.join(os.path.dirname(index_html), "overview.html"), f"{out}/overview/index.html")
     if not has_home: shutil.copyfile(f"{out}/insider/index.html", f"{out}/index.html")
@@ -351,7 +355,7 @@ def main():
     open(f"{out}/_headers", "w").write("/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/data/*\n  Cache-Control: public, max-age=300\n/index.html\n  Cache-Control: public, max-age=300\n"
                                        "/feed*.xml\n  Content-Type: application/rss+xml; charset=utf-8\n  Cache-Control: public, max-age=900\n"
                                        "/stack/data.json\n  Cache-Control: public, max-age=300\n/energy/data.json\n  Cache-Control: public, max-age=300\n/insider/\n  Cache-Control: public, max-age=300\n"
-                                       "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n/market/*\n  Cache-Control: public, max-age=300\n")
+                                       "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n/market/*\n  Cache-Control: public, max-age=300\n/calendar/*\n  Cache-Control: public, max-age=300\n")
     open(f"{out}/_redirects", "w").write("/stack / 301\n/stack/ / 301\n/articles /market/ 301\n/articles/ /market/ 301\n")
     print(f"built {len(dates)} days: {dates[0]} .. {dates[-1]}; {len(pages)} company pages; feeds + sitemap")
 

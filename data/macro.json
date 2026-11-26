@@ -1,0 +1,404 @@
+{
+"updated": "2026-11-26",
+"sources": {
+"fomc": {
+"ok": "2026-11-26",
+"url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+"n": 12
+},
+"cpi": {
+"failed": "2026-11-26",
+"reported": "2026-11-26"
+},
+"jobs": {
+"failed": "2026-11-26",
+"reported": "2026-11-26"
+},
+"ppi": {
+"failed": "2026-11-26",
+"reported": "2026-11-26"
+},
+"bea": {
+"ok": "2026-11-26",
+"url": "https://www.bea.gov/news/schedule/full",
+"n": 12
+},
+"nyse": {
+"ok": "2026-11-26",
+"url": "https://www.nyse.com/markets/hours-calendars",
+"n": 27
+}
+},
+"events": [
+{
+"date": "2026-07-29",
+"time": "14:00",
+"kind": "fomc",
+"start": "2026-07-28",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2026-07-30",
+"time": "08:30",
+"kind": "gdp",
+"ref": "2026Q2",
+"est": "adv",
+"src": "bea"
+},
+{
+"date": "2026-07-30",
+"time": "08:30",
+"kind": "pce",
+"ref": "2026-06",
+"src": "bea"
+},
+{
+"date": "2026-08-26",
+"time": "08:30",
+"kind": "gdp",
+"ref": "2026Q2",
+"est": "2nd",
+"src": "bea"
+},
+{
+"date": "2026-08-26",
+"time": "08:30",
+"kind": "pce",
+"ref": "2026-07",
+"src": "bea"
+},
+{
+"date": "2026-09-07",
+"time": null,
+"kind": "closed",
+"name": "Labor Day",
+"src": "nyse"
+},
+{
+"date": "2026-09-16",
+"time": "14:00",
+"kind": "fomc",
+"start": "2026-09-15",
+"sep": true,
+"src": "fomc"
+},
+{
+"date": "2026-09-30",
+"time": "08:30",
+"kind": "gdp",
+"ref": "2026Q2",
+"est": "3rd",
+"src": "bea"
+},
+{
+"date": "2026-09-30",
+"time": "08:30",
+"kind": "pce",
+"ref": "2026-08",
+"src": "bea"
+},
+{
+"date": "2026-10-28",
+"time": "14:00",
+"kind": "fomc",
+"start": "2026-10-27",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2026-10-29",
+"time": "08:30",
+"kind": "gdp",
+"ref": "2026Q3",
+"est": "adv",
+"src": "bea"
+},
+{
+"date": "2026-10-29",
+"time": "08:30",
+"kind": "pce",
+"ref": "2026-09",
+"src": "bea"
+},
+{
+"date": "2026-11-25",
+"time": "08:30",
+"kind": "gdp",
+"ref": "2026Q3",
+"est": "2nd",
+"src": "bea"
+},
+{
+"date": "2026-11-25",
+"time": "08:30",
+"kind": "pce",
+"ref": "2026-10",
+"src": "bea"
+},
+{
+"date": "2026-11-26",
+"time": null,
+"kind": "closed",
+"name": "Thanksgiving Day",
+"src": "nyse"
+},
+{
+"date": "2026-11-27",
+"time": "13:00",
+"kind": "early",
+"src": "nyse"
+},
+{
+"date": "2026-12-09",
+"time": "14:00",
+"kind": "fomc",
+"start": "2026-12-08",
+"sep": true,
+"src": "fomc"
+},
+{
+"date": "2026-12-23",
+"time": "08:30",
+"kind": "gdp",
+"ref": "2026Q3",
+"est": "3rd",
+"src": "bea"
+},
+{
+"date": "2026-12-23",
+"time": "08:30",
+"kind": "pce",
+"ref": "2026-11",
+"src": "bea"
+},
+{
+"date": "2026-12-24",
+"time": "13:00",
+"kind": "early",
+"src": "nyse"
+},
+{
+"date": "2026-12-25",
+"time": null,
+"kind": "closed",
+"name": "Christmas Day",
+"src": "nyse"
+},
+{
+"date": "2027-01-01",
+"time": null,
+"kind": "closed",
+"name": "New Year’s Day",
+"src": "nyse"
+},
+{
+"date": "2027-01-18",
+"time": null,
+"kind": "closed",
+"name": "Martin Luther King, Jr. Day",
+"src": "nyse"
+},
+{
+"date": "2027-01-27",
+"time": "14:00",
+"kind": "fomc",
+"start": "2027-01-26",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2027-02-15",
+"time": null,
+"kind": "closed",
+"name": "Washington's Birthday",
+"src": "nyse"
+},
+{
+"date": "2027-03-17",
+"time": "14:00",
+"kind": "fomc",
+"start": "2027-03-16",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2027-03-26",
+"time": null,
+"kind": "closed",
+"name": "Good Friday",
+"src": "nyse"
+},
+{
+"date": "2027-04-28",
+"time": "14:00",
+"kind": "fomc",
+"start": "2027-04-27",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2027-05-31",
+"time": null,
+"kind": "closed",
+"name": "Memorial Day",
+"src": "nyse"
+},
+{
+"date": "2027-06-09",
+"time": "14:00",
+"kind": "fomc",
+"start": "2027-06-08",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2027-06-18",
+"time": null,
+"kind": "closed",
+"name": "Juneteenth National Independence Day",
+"src": "nyse"
+},
+{
+"date": "2027-07-05",
+"time": null,
+"kind": "closed",
+"name": "Independence Day",
+"src": "nyse"
+},
+{
+"date": "2027-07-28",
+"time": "14:00",
+"kind": "fomc",
+"start": "2027-07-27",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2027-09-06",
+"time": null,
+"kind": "closed",
+"name": "Labor Day",
+"src": "nyse"
+},
+{
+"date": "2027-09-15",
+"time": "14:00",
+"kind": "fomc",
+"start": "2027-09-14",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2027-10-27",
+"time": "14:00",
+"kind": "fomc",
+"start": "2027-10-26",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2027-11-17",
+"time": "14:00",
+"kind": "fomc",
+"start": "2027-11-16",
+"sep": false,
+"src": "fomc"
+},
+{
+"date": "2027-11-25",
+"time": null,
+"kind": "closed",
+"name": "Thanksgiving Day",
+"src": "nyse"
+},
+{
+"date": "2027-11-26",
+"time": "13:00",
+"kind": "early",
+"src": "nyse"
+},
+{
+"date": "2027-12-24",
+"time": null,
+"kind": "closed",
+"name": "Christmas Day",
+"src": "nyse"
+},
+{
+"date": "2028-01-17",
+"time": null,
+"kind": "closed",
+"name": "Martin Luther King, Jr. Day",
+"src": "nyse"
+},
+{
+"date": "2028-02-21",
+"time": null,
+"kind": "closed",
+"name": "Washington's Birthday",
+"src": "nyse"
+},
+{
+"date": "2028-04-14",
+"time": null,
+"kind": "closed",
+"name": "Good Friday",
+"src": "nyse"
+},
+{
+"date": "2028-05-29",
+"time": null,
+"kind": "closed",
+"name": "Memorial Day",
+"src": "nyse"
+},
+{
+"date": "2028-06-19",
+"time": null,
+"kind": "closed",
+"name": "Juneteenth National Independence Day",
+"src": "nyse"
+},
+{
+"date": "2028-07-03",
+"time": "13:00",
+"kind": "early",
+"src": "nyse"
+},
+{
+"date": "2028-07-04",
+"time": null,
+"kind": "closed",
+"name": "Independence Day",
+"src": "nyse"
+},
+{
+"date": "2028-09-04",
+"time": null,
+"kind": "closed",
+"name": "Labor Day",
+"src": "nyse"
+},
+{
+"date": "2028-11-23",
+"time": null,
+"kind": "closed",
+"name": "Thanksgiving Day",
+"src": "nyse"
+},
+{
+"date": "2028-11-24",
+"time": "13:00",
+"kind": "early",
+"src": "nyse"
+},
+{
+"date": "2028-12-25",
+"time": null,
+"kind": "closed",
+"name": "Christmas Day",
+"src": "nyse"
+}
+]
+}
