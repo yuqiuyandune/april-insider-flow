@@ -7,16 +7,19 @@
 "n": 12
 },
 "cpi": {
-"failed": "2026-11-26",
-"reported": "2026-11-26"
+"ok": "2026-11-26",
+"url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+"n": 14
 },
 "jobs": {
-"failed": "2026-11-26",
-"reported": "2026-11-26"
+"ok": "2026-11-26",
+"url": "https://www.bls.gov/schedule/news_release/empsit.htm",
+"n": 14
 },
 "ppi": {
-"failed": "2026-11-26",
-"reported": "2026-11-26"
+"ok": "2026-11-26",
+"url": "https://www.bls.gov/schedule/news_release/ppi.htm",
+"n": 14
 },
 "bea": {
 "ok": "2026-11-26",
@@ -122,6 +125,27 @@
 "src": "bea"
 },
 {
+"date": "2026-11-06",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2026-10",
+"src": "jobs"
+},
+{
+"date": "2026-11-10",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2026-10",
+"src": "cpi"
+},
+{
+"date": "2026-11-13",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2026-10",
+"src": "ppi"
+},
+{
 "date": "2026-11-25",
 "time": "08:30",
 "kind": "gdp",
@@ -150,12 +174,33 @@
 "src": "nyse"
 },
 {
+"date": "2026-12-04",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2026-11",
+"src": "jobs"
+},
+{
 "date": "2026-12-09",
 "time": "14:00",
 "kind": "fomc",
 "start": "2026-12-08",
 "sep": true,
 "src": "fomc"
+},
+{
+"date": "2026-12-10",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2026-11",
+"src": "cpi"
+},
+{
+"date": "2026-12-15",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2026-11",
+"src": "ppi"
 },
 {
 "date": "2026-12-23",
@@ -193,6 +238,27 @@
 "src": "nyse"
 },
 {
+"date": "2027-01-08",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2026-12",
+"src": "jobs"
+},
+{
+"date": "2027-01-13",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2026-12",
+"src": "cpi"
+},
+{
+"date": "2027-01-14",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2026-12",
+"src": "ppi"
+},
+{
 "date": "2027-01-18",
 "time": null,
 "kind": "closed",
@@ -208,11 +274,53 @@
 "src": "fomc"
 },
 {
+"date": "2027-02-05",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-01",
+"src": "jobs"
+},
+{
+"date": "2027-02-11",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-01",
+"src": "cpi"
+},
+{
+"date": "2027-02-12",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-01",
+"src": "ppi"
+},
+{
 "date": "2027-02-15",
 "time": null,
 "kind": "closed",
 "name": "Washington's Birthday",
 "src": "nyse"
+},
+{
+"date": "2027-03-05",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-02",
+"src": "jobs"
+},
+{
+"date": "2027-03-10",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-02",
+"src": "cpi"
+},
+{
+"date": "2027-03-12",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-02",
+"src": "ppi"
 },
 {
 "date": "2027-03-17",
@@ -230,6 +338,27 @@
 "src": "nyse"
 },
 {
+"date": "2027-04-02",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-03",
+"src": "jobs"
+},
+{
+"date": "2027-04-13",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-03",
+"src": "cpi"
+},
+{
+"date": "2027-04-14",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-03",
+"src": "ppi"
+},
+{
 "date": "2027-04-28",
 "time": "14:00",
 "kind": "fomc",
@@ -238,11 +367,39 @@
 "src": "fomc"
 },
 {
+"date": "2027-05-07",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-04",
+"src": "jobs"
+},
+{
+"date": "2027-05-12",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-04",
+"src": "cpi"
+},
+{
+"date": "2027-05-13",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-04",
+"src": "ppi"
+},
+{
 "date": "2027-05-31",
 "time": null,
 "kind": "closed",
 "name": "Memorial Day",
 "src": "nyse"
+},
+{
+"date": "2027-06-04",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-05",
+"src": "jobs"
 },
 {
 "date": "2027-06-09",
@@ -253,6 +410,20 @@
 "src": "fomc"
 },
 {
+"date": "2027-06-10",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-05",
+"src": "cpi"
+},
+{
+"date": "2027-06-11",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-05",
+"src": "ppi"
+},
+{
 "date": "2027-06-18",
 "time": null,
 "kind": "closed",
@@ -260,11 +431,32 @@
 "src": "nyse"
 },
 {
+"date": "2027-07-02",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-06",
+"src": "jobs"
+},
+{
 "date": "2027-07-05",
 "time": null,
 "kind": "closed",
 "name": "Independence Day",
 "src": "nyse"
+},
+{
+"date": "2027-07-14",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-06",
+"src": "cpi"
+},
+{
+"date": "2027-07-15",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-06",
+"src": "ppi"
 },
 {
 "date": "2027-07-28",
@@ -275,11 +467,53 @@
 "src": "fomc"
 },
 {
+"date": "2027-08-06",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-07",
+"src": "jobs"
+},
+{
+"date": "2027-08-10",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-07",
+"src": "ppi"
+},
+{
+"date": "2027-08-11",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-07",
+"src": "cpi"
+},
+{
+"date": "2027-09-03",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-08",
+"src": "jobs"
+},
+{
 "date": "2027-09-06",
 "time": null,
 "kind": "closed",
 "name": "Labor Day",
 "src": "nyse"
+},
+{
+"date": "2027-09-10",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-08",
+"src": "ppi"
+},
+{
+"date": "2027-09-14",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-08",
+"src": "cpi"
 },
 {
 "date": "2027-09-15",
@@ -290,12 +524,54 @@
 "src": "fomc"
 },
 {
+"date": "2027-10-08",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-09",
+"src": "jobs"
+},
+{
+"date": "2027-10-14",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-09",
+"src": "cpi"
+},
+{
+"date": "2027-10-15",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-09",
+"src": "ppi"
+},
+{
 "date": "2027-10-27",
 "time": "14:00",
 "kind": "fomc",
 "start": "2027-10-26",
 "sep": false,
 "src": "fomc"
+},
+{
+"date": "2027-11-05",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-10",
+"src": "jobs"
+},
+{
+"date": "2027-11-10",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-10",
+"src": "cpi"
+},
+{
+"date": "2027-11-12",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-10",
+"src": "ppi"
 },
 {
 "date": "2027-11-17",
@@ -317,6 +593,27 @@
 "time": "13:00",
 "kind": "early",
 "src": "nyse"
+},
+{
+"date": "2027-12-03",
+"time": "08:30",
+"kind": "jobs",
+"ref": "2027-11",
+"src": "jobs"
+},
+{
+"date": "2027-12-10",
+"time": "08:30",
+"kind": "cpi",
+"ref": "2027-11",
+"src": "cpi"
+},
+{
+"date": "2027-12-15",
+"time": "08:30",
+"kind": "ppi",
+"ref": "2027-11",
+"src": "ppi"
 },
 {
 "date": "2027-12-24",
