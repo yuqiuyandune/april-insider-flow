@@ -27,10 +27,11 @@ LOC = {"zh": "zh-CN", "tw": "zh-TW", "en": "en"}
 NAV = [  # (key, href, zh, tw, en)
     ("home", "/", "今日", "今日", "Today"),
     ("ins", "/insider/", "内部人", "內部人", "Insiders"),
+    ("opt", "/options/", "期权", "選擇權", "Options"),
     ("earn", "/earnings/", "财报", "財報", "Earnings"),
     ("cal", "/calendar/", "日历", "日曆", "Calendar"),
     ("mkt", "/market/", "市场", "市場", "Markets"),
-    ("chain", "/themes/", "产业链", "產業鏈", "Supply chains"),
+    ("chain", "/themes/", "产业链", "產業鏈", "Themes"),
 ]
 LOGO = ('<span class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18"><rect x="2" y="9" width="3" height="7" rx="1.5" fill="#ff7b72"/>'
         '<rect x="7.5" y="5" width="3" height="11" rx="1.5" fill="#3ddc9b"/><rect x="13" y="2" width="3" height="14" rx="1.5" fill="#3ddc9b"/></svg></span>')
@@ -99,9 +100,9 @@ T = {
            "asof": "内部人数据截至 {a}", "mkAsof": "行情截至 {a}", 
            "d1": "上个交易日",
            "sigL": "今日信号", "sigH": "内部人在买什么", "sigAll": "打开内部人页面 →",
-           "sigP": "近 5 个交易日，多位高管和董事同时买入的公司排在最前。以后接入期权和机构持仓后，多个来源同时出现的信号会排得更高。",
+           "sigP": "近 5 个交易日，多位高管和董事同时买入的公司排在最前。同一家公司的期权如果也有动静，会亮起「期权」并标出方向；内部人在买、期权却偏看跌的，同样值得留意。",
            "srcIns": "内部人", "srcOpt": "期权", "srcEarn": "财报", "srcInst": "机构",
-           "calL": "本周与接下来", "calAll": "完整日历 →", "earnL": "最新财报解读", "earnAll": "全部 →", "volL": "昨日量价", "volAll": "量价分析 →",
+           "calL": "本周与接下来", "calAll": "完整日历 →", "earnL": "最新财报解读", "earnAll": "全部 →", "volL": "昨日量价", "volAll": "量价分析 →", "optL": "昨日期权", "optAll": "期权异动 →",
            "insL": "内部人动向", "insH": "近 5 个交易日的有效买卖", "buy": "▲ 最大的买入", "sell": "▼ 最大的卖出",
            "expL": "探索 Stock Atlas", "soon": "即将上线",
            "subH": "每周一封周报", "subP": "每个周末汇总一周的内部人买卖要点和新上线的财报解读。中文在前，英文在后。免费，随时退订。", "subB": "订阅", "em": "你的邮箱",
@@ -113,9 +114,9 @@ T = {
            "asof": "內部人資料截至 {a}", "mkAsof": "行情截至 {a}", 
            "d1": "上個交易日",
            "sigL": "今日信號", "sigH": "內部人在買什麼", "sigAll": "打開內部人頁面 →",
-           "sigP": "近 5 個交易日，多位高管和董事同時買入的公司排在最前。之後接入選擇權和機構持股後，多個來源同時出現的信號會排得更高。",
+           "sigP": "近 5 個交易日，多位高管和董事同時買入的公司排在最前。同一家公司的選擇權如果也有動靜，會亮起「選擇權」並標出方向；內部人在買、選擇權卻偏看跌的，同樣值得留意。",
            "srcIns": "內部人", "srcOpt": "選擇權", "srcEarn": "財報", "srcInst": "機構",
-           "calL": "本週與接下來", "calAll": "完整日曆 →", "earnL": "最新財報解讀", "earnAll": "全部 →", "volL": "昨日量價", "volAll": "量價分析 →",
+           "calL": "本週與接下來", "calAll": "完整日曆 →", "earnL": "最新財報解讀", "earnAll": "全部 →", "volL": "昨日量價", "volAll": "量價分析 →", "optL": "昨日選擇權", "optAll": "選擇權異動 →",
            "insL": "內部人動向", "insH": "近 5 個交易日的有效買賣", "buy": "▲ 最大的買入", "sell": "▼ 最大的賣出",
            "expL": "探索 Stock Atlas", "soon": "即將上線",
            "subH": "每週一封週報", "subP": "每個週末彙總一週的內部人買賣要點和新上線的財報解讀。中文在前，英文在後。免費，隨時退訂。", "subB": "訂閱", "em": "你的郵箱",
@@ -127,9 +128,9 @@ T = {
            "asof": "Insider data through {a}", "mkAsof": "Prices as of {a}", 
            "d1": "last session",
            "sigL": "Today's signals", "sigH": "What insiders are buying", "sigAll": "Open the insider page →",
-           "sigP": "Companies where several officers and directors bought in the last 5 trading days come first. Once options and institutional holdings are added, signals seen in several sources will rank higher.",
+           "sigP": "Companies where several officers and directors bought in the last 5 trading days come first. When the same company's options also moved, Options lights up with the direction; insiders buying while options lean bearish is worth a look too.",
            "srcIns": "Insiders", "srcOpt": "Options", "srcEarn": "Earnings", "srcInst": "Institutions",
-           "calL": "This week and next", "calAll": "Full calendar →", "earnL": "Latest earnings reviews", "earnAll": "All →", "volL": "Price and volume", "volAll": "Full table →",
+           "calL": "This week and next", "calAll": "Full calendar →", "earnL": "Latest earnings reviews", "earnAll": "All →", "volL": "Price and volume", "volAll": "Full table →", "optL": "Options", "optAll": "Options activity →",
            "insL": "Insider activity", "insH": "Effective buying and selling, last 5 trading days", "buy": "▲ Largest buys", "sell": "▼ Largest sells",
            "expL": "Explore Stock Atlas", "soon": "Coming soon",
            "subH": "A weekly email", "subP": "Every weekend: the week's insider trading highlights and new earnings reviews. Chinese first, English below. Free, unsubscribe anytime.", "subB": "Subscribe", "em": "you@example.com",
@@ -139,12 +140,12 @@ T = {
 }
 MODULES = [  # (href or None, zh name, zh desc, tw name, tw desc, en name, en desc)
     ("/insider/", "内部人", "高管和董事在公开市场的真实买卖，每天更新。", "內部人", "高管和董事在公開市場的真實買賣，每天更新。", "Insiders", "Open-market buying and selling by officers and directors, daily."),
+    ("/options/", "期权", "大盘、重点个股和内部人在买的公司，期权成交和大额新开仓。", "選擇權", "大盤、重點個股和內部人在買的公司，選擇權成交和大額新建倉。", "Options", "Options volume and large new positions in the index, key stocks and insider buys."),
     ("/earnings/", "财报", "重点公司的季度财报解读和三情景估值。", "財報", "重點公司的季度財報解讀和三情境估值。", "Earnings", "Quarterly earnings reviews with three valuation scenarios."),
     ("/calendar/", "日历", "CPI、议息、PCE 和休市，美东和北京时间。", "日曆", "CPI、利率決議、PCE 和休市，美東和北京時間。", "Calendar", "CPI, the Fed, PCE and holidays, in ET and Beijing time."),
     ("/market/volume/", "量价分析", "每天收盘后，大盘、板块和重点个股的涨跌和成交量。", "量價分析", "每天收盤後，大盤、板塊和重點個股的漲跌和成交量。", "Price and volume", "After every close: moves and volume for the index, sectors and key stocks."),
     ("/market/", "市场", "宏观仪表盘、板块轮动和长文研究。", "市場", "總經儀表板、板塊輪動和長文研究。", "Markets", "Macro dashboard, sector rotation and research notes."),
-    ("/themes/ai/", "AI 产业链", "从能源到应用，五层里最重要的美股公司。", "AI 產業鏈", "從能源到應用，五層裡最重要的美股公司。", "AI supply chain", "The key US-listed companies in each of five layers."),
-    ("/themes/energy/", "能源产业链", "油气、发电、电网，AI 用电背后的公司。", "能源產業鏈", "油氣、發電、電網，AI 用電背後的公司。", "Energy supply chain", "Oil and gas, power and grid: who powers AI."),
+    ("/themes/", "产业链", "AI 和能源两条产业链，每一环最重要的美股公司。", "產業鏈", "AI 和能源兩條產業鏈，每一環最重要的美股公司。", "Supply chains", "The AI and energy chains: the key US-listed companies in each link."),
     (None, "机构持仓", "13F 季度持仓和 13D 举牌，大资金在买什么。", "機構持股", "13F 季度持股和 13D 舉牌，大資金在買什麼。", "Institutions", "13F holdings and 13D stakes: what big money is buying."),
 ]
 ROLE = [  # (pattern, zh, tw, en), in display order
@@ -300,9 +301,11 @@ a.mod:hover{border-color:var(--accent)}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:560px){.subf{width:100%}.subf input{flex:1 1 100%;width:auto}.subf button{flex:1 1 100%}}
 .foot{max-width:1200px;margin:0 auto;padding:0 16px 40px;color:var(--faint);font-size:13px;display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.chip.tag.up{color:#0b7a52}.chip.tag.dn{color:#c0362c}
 .vsum{margin:8px 0 0;padding:0;list-style:none}.vsum li{padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.6}
 .empty{color:var(--muted);font-size:14px;padding:12px 0;border-top:1px solid var(--line)}
-@media (max-width:900px){.grid{grid-template-columns:1fr}.mods{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr;gap:16px}}
+@media (max-width:900px){.pair{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.mods{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr;gap:16px}}
 @media (max-width:700px){.tiles{display:flex;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px}.tiles::-webkit-scrollbar{display:none}.tile{flex:0 0 136px}}
 @media (max-width:560px){.box{padding:16px}.sig{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}.tk{grid-column:1/-1;justify-self:start;padding:3px 10px;font-size:13px}.home{gap:18px;padding-top:18px}}
 """
@@ -311,22 +314,25 @@ def block(l, inner): return f'<div data-l="{l}" lang="{LOC[l]}">{inner}</div>'
 def tri(fn): return "".join(block(l, fn(l)) for l in LANGS)
 def E(s): return html.escape(str(s))
 
-def sig_html(l, sigs):
-    t = T[l]
+def sig_html(l, sigs, of=None, ol=None):
+    t = T[l]; of = of or {}
     if not sigs: return f'<p class="empty">{t["nobody"]}</p>'
     out = []
     for s in sigs:
         tag = f'<span class="chip tag">{E(s["tag"][l])}</span>' if s.get("tag") else ""
+        fl = of.get(s["t"], [])
+        opt = (f'<span class="chip on">{t["srcOpt"]}</span>' if fl else f'<span class="chip off">{t["srcOpt"]}</span>')
+        optag = "".join(f'<span class="chip tag {"up" if f in ("callHeavy", "newCalls") else "dn" if f in ("putHeavy", "newPuts") else ""}">{E(ol[l][f])}</span>' for f in fl) if ol else ""
         out.append(f'<a class="sig" href="/s/{E(s["t"])}.html"><span class="tk">{E(s["t"])}</span><span><span class="st">{E(s["title"][l])}</span>'
-                   f'<span class="sw">{E(s["why"][l])}</span><span class="chips"><span class="chip on">{t["srcIns"]}</span><span class="chip off">{t["srcOpt"]}</span>'
-                   f'<span class="chip off">{t["srcEarn"]}</span><span class="chip off">{t["srcInst"]}</span><span class="chip tag">{E(s["kind"][l])}</span>{tag}</span></span>'
+                   f'<span class="sw">{E(s["why"][l])}</span><span class="chips"><span class="chip on">{t["srcIns"]}</span>{opt}'
+                   f'<span class="chip off">{t["srcEarn"]}</span><span class="chip off">{t["srcInst"]}</span><span class="chip tag">{E(s["kind"][l])}</span>{tag}{optag}</span></span>'
                    f'<span class="amt num up">{E(s["amt"])}</span></a>')
     return "".join(out)
 
 def list_html(rows, cls):
     return "".join(f'<a class="ir" href="/s/{E(r["t"])}.html"><span><b>{E(r["t"])}</b> <em>{E(r["n"])}</em></span><b class="num {cls}">{E(r["v"])}</b></a>' for r in rows)
 
-def body(asof, sigs, buys, sells, vol=""):
+def body(asof, sigs, buys, sells, vol="", opt="", of=None, ol=None):
     def today(l):
         t = T[l]
         a = asof.split("-")
@@ -334,7 +340,7 @@ def body(asof, sigs, buys, sells, vol=""):
         return (f'<div class="today"><h1 class="td-date">&nbsp;</h1><span class="pill mk td-mk" hidden></span>'
                 f'<span class="asof">{t["asof"].format(a=ad)}<span class="td-mkasof"></span></span></div>')
     sig_box = tri(lambda l: f'<div class="box-h"><div><p class="lbl">{T[l]["sigL"]}</p><h2 class="h2">{T[l]["sigH"]}</h2></div><a href="/insider/">{T[l]["sigAll"]}</a></div>'
-                            f'<p class="sig-p">{T[l]["sigP"]}</p>{sig_html(l, sigs)}')
+                            f'<p class="sig-p">{T[l]["sigP"]}</p>{sig_html(l, sigs, of, ol)}')
     cal_h = tri(lambda l: f'<div class="box-h"><h2 class="lbl">{T[l]["calL"]}</h2><a href="/calendar/">{T[l]["calAll"]}</a></div>')
     earn_h = tri(lambda l: f'<div class="box-h"><h2 class="lbl">{T[l]["earnL"]}</h2><a href="/earnings/">{T[l]["earnAll"]}</a></div>')
     ins = tri(lambda l: f'<div class="box-h"><div><p class="lbl">{T[l]["insL"]}</p><h2 class="h2">{T[l]["insH"]}</h2></div><a href="/insider/">{T[l]["sigAll"]}</a></div>'
@@ -350,8 +356,16 @@ def body(asof, sigs, buys, sells, vol=""):
     foot = tri(lambda l: f'<footer class="foot"><span>April\'s Stock Atlas · {T[l]["foot"]}</span><span>{T[l]["src"]}</span></footer>')
     return (f'<main class="home"><section aria-label="Today">{tri(today)}<div class="tiles" id="tiles"></div><p class="tiles-msg" id="tiles-msg" hidden></p></section>'
             f'<div class="grid"><section class="box">{sig_box}</section><div class="side">'
-            f'<section class="box">{cal_h}<div id="cal"></div></section>{vol}<section class="box">{earn_h}<div id="earn"></div></section></div></div>'
+            f'<section class="box">{cal_h}<div id="cal"></div></section><section class="box">{earn_h}<div id="earn"></div></section></div></div>'
+            + (f'<div class="pair">{vol}{opt}</div>' if vol or opt else "") +
             f'<section class="box">{ins}</section><section>{mods}</section><div id="subscribe">{sub}</div></main>{foot}')
+
+def opt_box(bo):
+    data = bo.load() if bo else None
+    if not data: return ""
+    inner = tri(lambda l: f'<div class="box-h"><h2 class="lbl">{T[l]["optL"]}</h2><a href="/options/">{T[l]["optAll"]}</a></div>'
+                          '<ul class="vsum">' + "".join(f"<li>{x}</li>" for x in bo.summary(data, l, 3)) + "</ul>")
+    return f'<section class="box">{inner}</section>'
 
 def vol_box(bv):
     data = bv.load() if bv else None
@@ -402,7 +416,7 @@ fetch("/earnings/data/index.json",{cache:"no-cache"}).then(function(r){if(!r.ok)
 # old homepage links: /#layer-3, /#NVDA (the AI chain lived at /) now go to /ai/
 HASH_JS = """<script>(function(){var h=location.hash;if(/^#(layer-[\\w-]+|[A-Z][A-Z0-9.\\-]{0,11})$/.test(h))location.replace("/themes/ai/"+h)})();</script>"""
 
-def build(out, days, pages, ba, bc, bv=None):
+def build(out, days, pages, ba, bc, bv=None, bo=None):
     """ba = build_articles module (FONTS, CSS, JS), bc = build_calendar module (event labels), bv = build_volume (summary)."""
     asof, sigs, buys, sells = insider(days)
     md = os.path.join(ROOT, "data", "macro.json")
@@ -433,7 +447,7 @@ def build(out, days, pages, ba, bc, bv=None):
 </head>
 <body>
 {header("home")}
-{body(asof_txt, sigs, buys, sells, vol_box(bv))}
+{body(asof_txt, sigs, buys, sells, vol_box(bv), opt_box(bo), bo.flags_for(bo.load()) if bo and bo.load() else {}, {l: bo.T[l]["f"] for l in LANGS} if bo else None)}
 {JS.replace("__VT__", json.dumps(vt, ensure_ascii=False)).replace("__VD__", json.dumps(vd)).replace("__T__", json.dumps(T, ensure_ascii=False)).replace("__EV__", json.dumps(ev, ensure_ascii=False, separators=(",", ":"))).replace("__CK__", json.dumps(ck, ensure_ascii=False))}
 {HEADER_JS.replace("__TICKERS__", json.dumps(tickers, separators=(",", ":"))).replace("__PH__", json.dumps(SEARCH_PH, ensure_ascii=False))}
 {ba.JS % json.dumps(titles, ensure_ascii=False)}

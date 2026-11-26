@@ -346,12 +346,16 @@ def main():
     _spec = importlib.util.spec_from_file_location("build_volume", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_volume.py"))
     _bv = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bv)
     if (vol := _bv.build(out, _ba.page)): art_paths.insert(0, vol)
+    # Options (/options/): from data/options.json (scripts/fetch_options.py)
+    _spec = importlib.util.spec_from_file_location("build_options", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_options.py"))
+    _bo = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bo)
+    if (opt := _bo.build(out, _ba.page)): art_paths.insert(0, opt)
     os.makedirs(f"{out}/overview", exist_ok=True)
     shutil.copyfile(os.path.join(os.path.dirname(index_html), "overview.html"), f"{out}/overview/index.html")
     # Homepage (/): built by scripts/build_home.py, the entry point to every section
     _spec = importlib.util.spec_from_file_location("build_home", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_home.py"))
     _bh = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bh)
-    _bh.build(out, days, pages, _ba, _bc, _bv)
+    _bh.build(out, days, pages, _ba, _bc, _bv, _bo)
     sm += [f"<url><loc>{SITE}/{p}</loc><lastmod>{dates[-1]}</lastmod></url>" for p in art_paths]
     open(f"{out}/sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(sm) + "</urlset>")
     open(f"{out}/favicon.svg", "w").write(ICON_SVG)
@@ -366,7 +370,7 @@ def main():
     open(f"{out}/_headers", "w").write("/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/data/*\n  Cache-Control: public, max-age=300\n/index.html\n  Cache-Control: public, max-age=300\n"
                                        "/feed*.xml\n  Content-Type: application/rss+xml; charset=utf-8\n  Cache-Control: public, max-age=900\n"
                                        "/stack/data.json\n  Cache-Control: public, max-age=300\n/energy/data.json\n  Cache-Control: public, max-age=300\n/themes/*\n  Cache-Control: public, max-age=300\n/insider/\n  Cache-Control: public, max-age=300\n"
-                                       "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n/market/*\n  Cache-Control: public, max-age=300\n/calendar/*\n  Cache-Control: public, max-age=300\n")
+                                       "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n/market/*\n  Cache-Control: public, max-age=300\n/calendar/*\n  Cache-Control: public, max-age=300\n/options/*\n  Cache-Control: public, max-age=300\n")
     open(f"{out}/_redirects", "w").write("/stack /themes/ai/ 301\n/stack/ /themes/ai/ 301\n/ai /themes/ai/ 301\n/ai/ /themes/ai/ 301\n"
                                          "/energy /themes/energy/ 301\n/energy/ /themes/energy/ 301\n/themes /themes/ai/ 302\n/themes/ /themes/ai/ 302\n"
                                          "/articles /market/ 301\n/articles/ /market/ 301\n")

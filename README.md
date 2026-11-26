@@ -19,6 +19,8 @@ Source, data and daily pipeline for https://april-insider-flow.com — SEC Form 
 - Supply chains live under `/themes/`: `/themes/ai/` and `/themes/energy/` (from `stack/index.html`, data.json next to each). `/stack/`, `/energy/` and `/ai/` redirect there.
 - `scripts/fetch_volume.py` — daily price and volume read of 32 key ETFs and stocks (index, 11 sector ETFs, SMH/TLT/GLD/USO/IBIT, the largest tech and AI names) from Nasdaq's public quote API into `data/volume.json`: change, relative volume, close in range, 20/50/200-day averages, distance from the one-year high, rule-based flags.
 - `scripts/build_volume.py` — builds `/market/volume/` (量价分析) and the short summary on the homepage; the homepage market tiles come from the same file.
+- `scripts/fetch_options.py` — daily options read from Nasdaq's public option chains for index/asset ETFs, key stocks and the companies on the homepage's insider signals: call and put volume, put/call ratio, premium, volume/open interest, unusual new positions (volume 5x+ open interest, real size, 7 days to a year out, out of the money or at most 10% in) and rule-based flags, into `data/options.json`; daily totals accumulate in `data/options_hist.json` for a 20-day comparison.
+- `scripts/build_options.py` — builds `/options/` (期权异动) and the homepage's options box; the homepage signals light up Options for a company whose options also moved.
 - `scripts/build_calendar.py` — builds `/calendar/` from `data/macro.json` (also published as `/calendar/macro.json`). Times show US Eastern first, then Beijing, converted in the browser so daylight saving needs no upkeep.
 - `scripts/weekly.py`, `scripts/whatsnew.py`, `scripts/bd_post.py` — weekly digest email (Buttondown).
 
