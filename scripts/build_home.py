@@ -53,21 +53,20 @@ def header(cur):
 
 HEADER_CSS = """
 .hd{background:var(--surface);border-bottom:1px solid var(--line);position:relative;z-index:5}
-.hd-in{max-width:1200px;margin:0 auto;padding:0 16px;min-height:64px;display:flex;align-items:center;gap:22px}
+.hd-in{max-width:1200px;margin:0 auto;padding:0 16px;min-height:64px;display:flex;align-items:center;gap:16px}
 .hd .brand{flex:none}
-.nav{display:flex;gap:20px;align-items:center;flex:1;min-width:0}
+.nav{display:flex;gap:16px;align-items:center;flex:1;min-width:0}
 .nav a{color:var(--muted);text-decoration:none;font-size:14.5px;font-weight:500;padding:20px 1px 18px;border-bottom:2px solid transparent;white-space:nowrap}
 .nav a:hover{color:var(--ink)}.nav a.cur{color:var(--ink);font-weight:700;border-bottom-color:var(--accent)}
 .nav [data-l]{display:none}html.l-zh .nav [data-l=zh],html.l-tw .nav [data-l=tw],html.l-en .nav [data-l=en]{display:inline}
 .subbtn [data-l]{display:none}html.l-zh .subbtn [data-l=zh],html.l-tw .subbtn [data-l=tw],html.l-en .subbtn [data-l=en]{display:inline}
-.srch{position:relative;display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:0 12px;height:38px;width:210px;flex:none;color:var(--faint)}
+.srch{position:relative;display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:0 12px;height:38px;width:170px;flex:none;color:var(--faint)}
 .srch input{border:0;background:transparent;outline:none;font:inherit;font-size:14px;width:100%;color:var(--ink);min-width:0}
 .srch:focus-within{border-color:var(--accent)}
 .srch-msg{position:absolute;left:0;top:42px;font-size:12.5px;color:var(--muted);white-space:nowrap}
 .hd .lang button{padding:5px 10px}
 .subbtn{border:0;background:var(--accent);color:#fff;font-weight:700;font-size:14px;border-radius:10px;padding:9px 16px;cursor:pointer;flex:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .subbtn{color:#0b111b}}
-@media (max-width:1320px){.hd-in{gap:16px}.nav{gap:16px}.srch{width:170px}}
 @media (max-width:1180px){
  .hd-in{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand sub" "srch lang" "nav nav";gap:10px 10px;padding-top:10px;min-height:0}
  .hd .brand{grid-area:brand}.subbtn{grid-area:sub;justify-self:end}.srch{grid-area:srch;width:auto}.hd .lang{grid-area:lang;align-self:center}
