@@ -6,9 +6,9 @@
 <title>The AI supply chain in five layers · April's Stock Atlas</title>
 <meta name="description" content="AI 产业链：五层全景：能源、芯片、基础设施、模型、应用，每一层最重要的美股公司，以及近 30 天内部人买卖。The AI supply chain in five layers: the key US-listed companies in each layer, with 30-day insider activity.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="April's Stock Atlas"><meta property="og:title" content="AI 产业链：五层全景 · The AI supply chain in five layers">
-<meta property="og:description" content="能源、芯片、基础设施、模型、应用，每层最重要的美股公司与近 30 天内部人买卖。"><meta property="og:url" content="https://april-insider-flow.com/"><meta property="og:image" content="https://april-insider-flow.com/og.png">
+<meta property="og:description" content="能源、芯片、基础设施、模型、应用，每层最重要的美股公司与近 30 天内部人买卖。"><meta property="og:url" content="https://april-insider-flow.com/themes/ai/"><meta property="og:image" content="https://april-insider-flow.com/og.png">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://april-insider-flow.com/og.png">
-<link rel="canonical" href="https://april-insider-flow.com/">
+<link rel="canonical" href="https://april-insider-flow.com/themes/ai/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b111b" media="(prefers-color-scheme: dark)">
@@ -286,9 +286,9 @@ tw:{title:"AI 產業鏈：五層全景", tabAll:"全景", openLayer:"展開這�
   `<b>名單。</b>由人工維護，不是推薦，每個財報季會回顧調整。`,
   `<b>延伸閱讀。</b>這條鏈上哪些環節真正沒有替代品？<a href="/articles/ai-chokepoints/">《中期選舉之後，AI半導體怎麼佈局？》</a>逐一給13個供應鏈環節打了分。`]}
 };
-/* Same page serves two chains: / (AI, data in /stack/) and /energy/ (data in /energy/). Energy texts override T. */
-const THEME=/^\/energy(\/|$)/.test(location.pathname)?"energy":"ai";
-const THEMES=[["ai","/"],["energy","/energy/"]];
+/* Same page serves two chains: /themes/ai/ and /themes/energy/ (data.json next to each). Energy texts override T. */
+const THEME=/^\/(themes\/)?energy(\/|$)/.test(location.pathname)?"energy":"ai";
+const THEMES=[["ai","/themes/ai/"],["energy","/themes/energy/"]];
 const TNAME={en:{ai:"AI chain",energy:"Energy chain"},zh:{ai:"AI 产业链",energy:"能源产业链"},tw:{ai:"AI 產業鏈",energy:"能源產業鏈"}};
 const XT={en:{cross:o=>`Also in the ${o==="stack"?"AI":"energy"} chain`},zh:{cross:o=>`也在${o==="stack"?" AI ":"能源"}产业链`},tw:{cross:o=>`也在${o==="stack"?" AI ":"能源"}產業鏈`}};
 const TE={
@@ -395,7 +395,7 @@ function renderPanel(){
     <h2><span class="tk">${esc(c.t)}</span>${esc(nm(c))} <span class="badge ${c.type}">${esc(c.type==="core"?s.core:s.hot)}</span></h2>
     <p class="reason">${esc(c.reason[lang]||c.reason.zh)}</p>
     ${also?`<div class="row"><h4>${esc(s.also)}</h4><div class="tags">${also}</div></div>`:""}
-    ${c.cross?`<div class="row"><a class="tag xlink" href="${c.cross==="stack"?"/":"/energy/"}#${encodeURIComponent(c.t)}">${esc(s.cross(c.cross))} →</a></div>`:""}
+    ${c.cross?`<div class="row"><a class="tag xlink" href="${c.cross==="stack"?"/themes/ai/":"/themes/energy/"}#${encodeURIComponent(c.t)}">${esc(s.cross(c.cross))} →</a></div>`:""}
     <div class="row"><h4>${esc(s.ins)}</h4>${insHtml}</div>
     ${href||earnHas(c.t)?`<div class="links">${href?`<a class="btn" href="${href}">${esc(s.details)}</a>`:""}${earnHas(c.t)?`<a class="btn alt" href="/earnings/#${encodeURIComponent(c.t)}">${esc(s.earn)}</a>`:""}</div>`:""}
     <p class="fine">${esc(s.fine)}</p>`;
@@ -447,7 +447,7 @@ $("q").addEventListener("keydown",e=>{if(e.key!=="Enter"||!query)return;
 
 renderStatic();
 fetch("/earnings/data/index.json").then(r=>r.ok?r.json():null).then(j=>{if(j&&j.companies){EARN=new Set(j.companies.map(c=>c.t));if(D)renderPanel()}}).catch(()=>{});
-fetch(THEME==="energy"?"/energy/data.json":"/stack/data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
+fetch(THEME==="energy"?"/themes/energy/data.json":"/themes/ai/data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(d=>{
   D=d;renderStatic();
   let h="";try{h=decodeURIComponent(location.hash.slice(1))}catch(e){}
   const hit=h&&D.companies.find(c=>c.t===h.toUpperCase()),lm=/^layer-(\d)$/.exec(h);

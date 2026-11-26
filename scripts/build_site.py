@@ -233,31 +233,35 @@ def lang_pages(html, out):
 
 
 def stack_page(out):
-    """Homepage = the AI supply-chain chart (stack/index.html); its data lives at /stack/data.json. /stack/ redirects to /."""
+    """The supply-chain chart (stack/index.html) at /themes/ai/ and /themes/energy/, each with its data.json next to it.
+    Old addresses (/stack/, /energy/, and / which this page used to be) redirect there; the data files are also kept at
+    /stack/data.json and /energy/data.json for anything still reading them."""
     src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "stack")
     if not os.path.exists(os.path.join(src, "data.json")): return False
-    os.makedirs(f"{out}/stack", exist_ok=True)
-    shutil.copyfile(os.path.join(src, "data.json"), f"{out}/stack/data.json")
+    for d in ("stack", "themes/ai"):
+        os.makedirs(f"{out}/{d}", exist_ok=True)
+        shutil.copyfile(os.path.join(src, "data.json"), f"{out}/{d}/data.json")
     page = open(os.path.join(src, "index.html"), encoding="utf-8").read()
-    open(f"{out}/index.html", "w", encoding="utf-8").write(page)
+    open(f"{out}/themes/ai/index.html", "w", encoding="utf-8").write(page)
     # /energy/: the same chart page over energy/data.json; the page switches its texts by path, only the head differs
     esrc = os.path.join(src, "..", "energy", "data.json")
     if os.path.exists(esrc):
-        os.makedirs(f"{out}/energy", exist_ok=True)
-        shutil.copyfile(esrc, f"{out}/energy/data.json")
+        for d in ("energy", "themes/energy"):
+            os.makedirs(f"{out}/{d}", exist_ok=True)
+            shutil.copyfile(esrc, f"{out}/{d}/data.json")
         head = {"<title>The AI supply chain in five layers · April's Stock Atlas</title>": "<title>The energy supply chain · April's Stock Atlas</title>",
                 'AI 产业链：五层全景：能源、芯片、基础设施、模型、应用，每一层最重要的美股公司，以及近 30 天内部人买卖。The AI supply chain in five layers: the key US-listed companies in each layer, with 30-day insider activity.':
                 '能源产业链：资源、运输与加工、发电、电网、公用事业，每一环最重要的美股公司，以及近 30 天内部人买卖。The energy supply chain from resources to utilities: the key US-listed companies in each link, with 30-day insider activity.',
                 'AI 产业链：五层全景 · The AI supply chain in five layers': '能源产业链 · The energy supply chain',
                 '能源、芯片、基础设施、模型、应用，每层最重要的美股公司与近 30 天内部人买卖。': '油气、核燃料、管道、发电、电网与公用事业，每一环最重要的美股公司与近 30 天内部人买卖。',
-                '<meta property="og:url" content="https://april-insider-flow.com/">': '<meta property="og:url" content="https://april-insider-flow.com/energy/">',
-                '<link rel="canonical" href="https://april-insider-flow.com/">': '<link rel="canonical" href="https://april-insider-flow.com/energy/">',
+                '<meta property="og:url" content="https://april-insider-flow.com/themes/ai/">': '<meta property="og:url" content="https://april-insider-flow.com/themes/energy/">',
+                '<link rel="canonical" href="https://april-insider-flow.com/themes/ai/">': '<link rel="canonical" href="https://april-insider-flow.com/themes/energy/">',
                 '<h1 id="title">The AI supply chain in five layers</h1>': '<h1 id="title">The energy supply chain</h1>'}
         ep = page
         for k, v in head.items():
             if k not in ep: raise SystemExit(f"energy page: head text not found: {k[:50]}")
             ep = ep.replace(k, v)
-        open(f"{out}/energy/index.html", "w", encoding="utf-8").write(ep)
+        open(f"{out}/themes/energy/index.html", "w", encoding="utf-8").write(ep)
     return True
 
 
@@ -324,7 +328,7 @@ def main():
     lang_pages(open(index_html, encoding="utf-8").read(), out)
     pages = company_pages(days, out)
     feeds(days, out)
-    sm = [f"<url><loc>{SITE}/{p}</loc><lastmod>{dates[-1]}</lastmod><changefreq>daily</changefreq></url>" for p in ("", "energy/", "overview/", "insider/", "en/", "zh/", "tw/")]
+    sm = [f"<url><loc>{SITE}/{p}</loc><lastmod>{dates[-1]}</lastmod><changefreq>daily</changefreq></url>" for p in ("", "themes/ai/", "themes/energy/", "calendar/", "overview/", "insider/", "en/", "zh/", "tw/")]
     sm += [f"<url><loc>{SITE}/s/{s}.html</loc><lastmod>{lm}</lastmod></url><url><loc>{SITE}/tw/s/{s}.html</loc><lastmod>{lm}</lastmod></url>" for s, lm in sorted(pages)]
     open(f"{out}/sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(sm) + "</urlset>")
     open(f"{out}/robots.txt", "w").write(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
@@ -340,7 +344,10 @@ def main():
     if (cal := _bc.build(out, _ba.page)): art_paths.insert(0, cal)
     os.makedirs(f"{out}/overview", exist_ok=True)
     shutil.copyfile(os.path.join(os.path.dirname(index_html), "overview.html"), f"{out}/overview/index.html")
-    if not has_home: shutil.copyfile(f"{out}/insider/index.html", f"{out}/index.html")
+    # Homepage (/): built by scripts/build_home.py, the entry point to every section
+    _spec = importlib.util.spec_from_file_location("build_home", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_home.py"))
+    _bh = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bh)
+    _bh.build(out, days, pages, _ba, _bc)
     sm += [f"<url><loc>{SITE}/{p}</loc><lastmod>{dates[-1]}</lastmod></url>" for p in art_paths]
     open(f"{out}/sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(sm) + "</urlset>")
     open(f"{out}/favicon.svg", "w").write(ICON_SVG)
@@ -354,9 +361,11 @@ def main():
         if b64: open(f"{out}/{fn}", "wb").write(base64.b64decode(b64))
     open(f"{out}/_headers", "w").write("/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/data/*\n  Cache-Control: public, max-age=300\n/index.html\n  Cache-Control: public, max-age=300\n"
                                        "/feed*.xml\n  Content-Type: application/rss+xml; charset=utf-8\n  Cache-Control: public, max-age=900\n"
-                                       "/stack/data.json\n  Cache-Control: public, max-age=300\n/energy/data.json\n  Cache-Control: public, max-age=300\n/insider/\n  Cache-Control: public, max-age=300\n"
+                                       "/stack/data.json\n  Cache-Control: public, max-age=300\n/energy/data.json\n  Cache-Control: public, max-age=300\n/themes/*\n  Cache-Control: public, max-age=300\n/insider/\n  Cache-Control: public, max-age=300\n"
                                        "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n/market/*\n  Cache-Control: public, max-age=300\n/calendar/*\n  Cache-Control: public, max-age=300\n")
-    open(f"{out}/_redirects", "w").write("/stack / 301\n/stack/ / 301\n/articles /market/ 301\n/articles/ /market/ 301\n")
+    open(f"{out}/_redirects", "w").write("/stack /themes/ai/ 301\n/stack/ /themes/ai/ 301\n/ai /themes/ai/ 301\n/ai/ /themes/ai/ 301\n"
+                                         "/energy /themes/energy/ 301\n/energy/ /themes/energy/ 301\n/themes /themes/ai/ 302\n/themes/ /themes/ai/ 302\n"
+                                         "/articles /market/ 301\n/articles/ /market/ 301\n")
     print(f"built {len(dates)} days: {dates[0]} .. {dates[-1]}; {len(pages)} company pages; feeds + sitemap")
 
 
