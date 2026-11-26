@@ -16,7 +16,11 @@ over the last 30 days (computed here from data/days and embedded in the page). /
 
     build(out)  -> list of site paths written, e.g. ["market/", "articles/ai-chokepoints/"]
 """
-import os, re, html, glob, json
+import os, re, html, glob, json, importlib.util
+
+# chart studies (/market/<slug>/): loaded by path because python3 -I drops the script dir from sys.path
+_spec = importlib.util.spec_from_file_location("build_cta", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_cta.py"))
+build_cta = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(build_cta)
 
 SITE = "https://april-insider-flow.com"
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "articles", "src")
@@ -298,6 +302,7 @@ MK = {
            "dashH": "宏观仪表盘", "dashP": "六个最影响整体估值的指标。不需要每天看，每周看一次变化方向就够了。",
            "secH": "板块轮动", "secP": "11个板块的表现，对照近30天内部人的有效买卖（已排除10b5-1计划、期权行权、税务代扣等，与内部人动向页口径一致）。点表头可以排序。",
            "artH": "文章", "artP": "对单一主题的长篇研究笔记，每篇附资料来源。",
+           "chH": "图表研究", "chP": "用历史数据检验市场上常见的说法，附可交互的图。", "chGo": "查看图表 →",
            "loading": "价格数据加载中…", "err": "价格数据暂时无法加载，请稍后再试。",
            "wk": "近一周", "m1": "近1个月", "ytd": "今年以来", "hi": "距52周高点", "sector": "板块", "etf": "ETF",
            "ib": "内部人有效买入", "is": "有效卖出", "nb": "买入公司数", "flag": "股价跌、内部人净买入",
@@ -316,6 +321,7 @@ MK = {
            "dashH": "總經儀表板", "dashP": "六個最影響整體估值的指標。不需要每天看，每週看一次變化方向就夠了。",
            "secH": "板塊輪動", "secP": "11個板塊的表現，對照近30天內部人的有效買賣（已排除10b5-1計畫、選擇權行權、稅務代扣等，與內部人動向頁口徑一致）。點表頭可以排序。",
            "artH": "文章", "artP": "對單一主題的長篇研究筆記，每篇附資料來源。",
+           "chH": "圖表研究", "chP": "用歷史資料檢驗市場上常見的說法，附可互動的圖。", "chGo": "查看圖表 →",
            "loading": "價格資料載入中…", "err": "價格資料暫時無法載入，請稍後再試。",
            "wk": "近一週", "m1": "近1個月", "ytd": "今年以來", "hi": "距52週高點", "sector": "板塊", "etf": "ETF",
            "ib": "內部人有效買入", "is": "有效賣出", "nb": "買入公司數", "flag": "股價跌、內部人淨買入",
@@ -334,6 +340,7 @@ MK = {
            "dashH": "Macro dashboard", "dashP": "Six indicators that move valuations across the market. No need to check daily; the weekly direction is enough.",
            "secH": "Sector rotation", "secP": "How the 11 sectors are doing, next to effective insider buying and selling over the last 30 days (10b5-1 plans, option exercises, tax withholding and similar excluded, as on the insider page). Click a column header to sort.",
            "artH": "Articles", "artP": "Long-form research notes on a single theme, each with its sources.",
+           "chH": "Chart studies", "chP": "Common market claims checked against history, with interactive charts.", "chGo": "Open the chart →",
            "loading": "Loading price data…", "err": "Price data could not be loaded. Please try again later.",
            "wk": "1 week", "m1": "1 month", "ytd": "Year to date", "hi": "From 52-week high", "sector": "Sector", "etf": "ETF",
            "ib": "Insider effective buying", "is": "Effective selling", "nb": "Companies buying", "flag": "Price down, insiders net buying",
@@ -445,11 +452,15 @@ def market_page(arts, out):
         sec[l] = (f'<div data-l="{l}" lang="{LOC[l]}" class="mk-hero"><h1>{m["title"]}</h1><p>{m["intro"]}</p></div>',
                   f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["dashH"]}</h2><p class="lead">{m["dashP"]}</p></div>',
                   f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["secH"]}</h2><p class="lead">{m["secP"]}</p></div>',
-                  f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["artH"]}</h2><p class="lead">{m["artP"]}</p><div class="cards">{cards}</div></div>')
+                  f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["artH"]}</h2><p class="lead">{m["artP"]}</p><div class="cards">{cards}</div></div>',
+                  (f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["chH"]}</h2><p class="lead">{m["chP"]}</p><div class="cards">'
+                   f'<a class="card" href="/market/cta/"><h2>{html.escape(ch[0])}</h2><p>{html.escape(ch[1])}</p><span class="go">{m["chGo"]}</span></a></div></div>'
+                   if (ch := build_cta.card(l)) else ""))
     pick = lambda i: "".join(sec[l][i] for l in LANGS)
     body = (f'<main>{pick(0)}<section class="mk-sec">{pick(1)}<div id="mk-dash"></div></section>'
             f'<section class="mk-sec">{pick(2)}<div id="mk-sect"></div><p class="mk-note" id="mk-note"></p></section>'
-            f'<section class="mk-sec" id="articles">{pick(3)}</section></main>'
+            + (f'<section class="mk-sec" id="charts">{pick(4)}</section>' if build_cta.card("zh") else "")
+            + f'<section class="mk-sec" id="articles">{pick(3)}</section></main>'
             f'<style>{MARKET_CSS}</style>')
     js = (MARKET_JS.replace("__MK__", json.dumps(MK, ensure_ascii=False)).replace("__INS__", json.dumps(ins))
           .replace("__SEC__", json.dumps(SEC_NAME, ensure_ascii=False)).replace("__ETF__", json.dumps(SECTOR_ETF)))
@@ -500,6 +511,8 @@ def build(out):
         open(f"{out}/articles/{s}/index.html", "w", encoding="utf-8").write(page(f"articles/{s}/", titles, a["l"]["zh"][0].get("summary", ""), body))
         written.append(f"articles/{s}/")
     market_page(arts, out)
+    cta = build_cta.build(out, page)
+    if cta: written.insert(0, cta)
     written.insert(0, "market/")
     return written
 
