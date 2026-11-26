@@ -10,8 +10,8 @@ Built here from local data (so the page works without JavaScript for the parts t
     the same definition as /insider/)
   - chain tags: stack/data.json (AI) and energy/data.json
   - macro events: data/macro.json (the browser picks the next ones by US Eastern date)
-Read in the browser from the earnings site: /earnings/data/market.json (market tiles) and
-/earnings/data/index.json (latest earnings reviews).
+Market tiles: SPY, QQQ, IWM, TLT and USO from data/volume.json (last session). Read in the browser from the
+earnings site: /earnings/data/index.json (latest earnings reviews).
 
     build(out, days, pages, page_bits)   pages = [(slug, lastmod)] from company_pages
 """
@@ -96,12 +96,12 @@ var s=document.getElementById("hd-sub");s.addEventListener("click",function(){va
 T = {
     "zh": {"title": "April's Stock Atlas · 美股内部人、财报、日历", "desc": "美股的内部人买卖、财报解读、宏观日历和市场观察，每天更新。只做公开数据的整理，不构成投资建议。",
            "wd": "周日,周一,周二,周三,周四,周五,周六", "md": "{m}月{d}日", "closed": "美股休市", "early": "美股半日市 · 13:00 ET 收盘", "open": "美股交易日",
-           "asof": "内部人数据截至 {a}", "mkAsof": "行情截至 {a}", "d5": "近5日",
-           "tiles": {"SPY": "标普 500 · SPY", "QQQ": "纳指 100 · QQQ", "TNX": "10 年美债收益率", "VIX": "VIX 波动率指数", "WTI": "原油 · USO"},
+           "asof": "内部人数据截至 {a}", "mkAsof": "行情截至 {a}", 
+           "d1": "上个交易日",
            "sigL": "今日信号", "sigH": "内部人在买什么", "sigAll": "打开内部人页面 →",
            "sigP": "近 5 个交易日，多位高管和董事同时买入的公司排在最前。以后接入期权和机构持仓后，多个来源同时出现的信号会排得更高。",
            "srcIns": "内部人", "srcOpt": "期权", "srcEarn": "财报", "srcInst": "机构",
-           "calL": "本周与接下来", "calAll": "完整日历 →", "earnL": "最新财报解读", "earnAll": "全部 →",
+           "calL": "本周与接下来", "calAll": "完整日历 →", "earnL": "最新财报解读", "earnAll": "全部 →", "volL": "昨日量价", "volAll": "量价分析 →",
            "insL": "内部人动向", "insH": "近 5 个交易日的有效买卖", "buy": "▲ 最大的买入", "sell": "▼ 最大的卖出",
            "expL": "探索 Stock Atlas", "soon": "即将上线",
            "subH": "每周一封周报", "subP": "每个周末汇总一周的内部人买卖要点和新上线的财报解读。中文在前，英文在后。免费，随时退订。", "subB": "订阅", "em": "你的邮箱",
@@ -110,12 +110,12 @@ T = {
            },
     "tw": {"title": "April's Stock Atlas · 美股內部人、財報、日曆", "desc": "美股的內部人買賣、財報解讀、總經日曆和市場觀察，每天更新。只做公開資料的整理，不構成投資建議。",
            "wd": "週日,週一,週二,週三,週四,週五,週六", "md": "{m}月{d}日", "closed": "美股休市", "early": "美股半日市 · 13:00 ET 收盤", "open": "美股交易日",
-           "asof": "內部人資料截至 {a}", "mkAsof": "行情截至 {a}", "d5": "近5日",
-           "tiles": {"SPY": "標普 500 · SPY", "QQQ": "那指 100 · QQQ", "TNX": "10 年美債殖利率", "VIX": "VIX 波動率指數", "WTI": "原油 · USO"},
+           "asof": "內部人資料截至 {a}", "mkAsof": "行情截至 {a}", 
+           "d1": "上個交易日",
            "sigL": "今日信號", "sigH": "內部人在買什麼", "sigAll": "打開內部人頁面 →",
            "sigP": "近 5 個交易日，多位高管和董事同時買入的公司排在最前。之後接入選擇權和機構持股後，多個來源同時出現的信號會排得更高。",
            "srcIns": "內部人", "srcOpt": "選擇權", "srcEarn": "財報", "srcInst": "機構",
-           "calL": "本週與接下來", "calAll": "完整日曆 →", "earnL": "最新財報解讀", "earnAll": "全部 →",
+           "calL": "本週與接下來", "calAll": "完整日曆 →", "earnL": "最新財報解讀", "earnAll": "全部 →", "volL": "昨日量價", "volAll": "量價分析 →",
            "insL": "內部人動向", "insH": "近 5 個交易日的有效買賣", "buy": "▲ 最大的買入", "sell": "▼ 最大的賣出",
            "expL": "探索 Stock Atlas", "soon": "即將上線",
            "subH": "每週一封週報", "subP": "每個週末彙總一週的內部人買賣要點和新上線的財報解讀。中文在前，英文在後。免費，隨時退訂。", "subB": "訂閱", "em": "你的郵箱",
@@ -124,12 +124,12 @@ T = {
            },
     "en": {"title": "April's Stock Atlas · US insider trades, earnings, calendar", "desc": "US insider buying and selling, earnings reviews, the macro calendar and market watch, updated daily. A summary of public data, not investment advice.",
            "wd": "Sun,Mon,Tue,Wed,Thu,Fri,Sat", "md": "{M} {d}", "closed": "US market closed", "early": "US early close · 13:00 ET", "open": "US trading day",
-           "asof": "Insider data through {a}", "mkAsof": "Prices as of {a}", "d5": "5 days",
-           "tiles": {"SPY": "S&P 500 · SPY", "QQQ": "Nasdaq 100 · QQQ", "TNX": "10-year Treasury yield", "VIX": "VIX volatility", "WTI": "Oil · USO"},
+           "asof": "Insider data through {a}", "mkAsof": "Prices as of {a}", 
+           "d1": "last session",
            "sigL": "Today's signals", "sigH": "What insiders are buying", "sigAll": "Open the insider page →",
            "sigP": "Companies where several officers and directors bought in the last 5 trading days come first. Once options and institutional holdings are added, signals seen in several sources will rank higher.",
            "srcIns": "Insiders", "srcOpt": "Options", "srcEarn": "Earnings", "srcInst": "Institutions",
-           "calL": "This week and next", "calAll": "Full calendar →", "earnL": "Latest earnings reviews", "earnAll": "All →",
+           "calL": "This week and next", "calAll": "Full calendar →", "earnL": "Latest earnings reviews", "earnAll": "All →", "volL": "Price and volume", "volAll": "Full table →",
            "insL": "Insider activity", "insH": "Effective buying and selling, last 5 trading days", "buy": "▲ Largest buys", "sell": "▼ Largest sells",
            "expL": "Explore Stock Atlas", "soon": "Coming soon",
            "subH": "A weekly email", "subP": "Every weekend: the week's insider trading highlights and new earnings reviews. Chinese first, English below. Free, unsubscribe anytime.", "subB": "Subscribe", "em": "you@example.com",
@@ -141,7 +141,7 @@ MODULES = [  # (href or None, zh name, zh desc, tw name, tw desc, en name, en de
     ("/insider/", "内部人", "高管和董事在公开市场的真实买卖，每天更新。", "內部人", "高管和董事在公開市場的真實買賣，每天更新。", "Insiders", "Open-market buying and selling by officers and directors, daily."),
     ("/earnings/", "财报", "重点公司的季度财报解读和三情景估值。", "財報", "重點公司的季度財報解讀和三情境估值。", "Earnings", "Quarterly earnings reviews with three valuation scenarios."),
     ("/calendar/", "日历", "CPI、议息、PCE 和休市，美东和北京时间。", "日曆", "CPI、利率決議、PCE 和休市，美東和北京時間。", "Calendar", "CPI, the Fed, PCE and holidays, in ET and Beijing time."),
-    ("/earnings/calendar/", "财报日历", "AI 产业链公司的财报日期。", "財報日曆", "AI 產業鏈公司的財報日期。", "Earnings calendar", "Report dates for the AI supply chain."),
+    ("/market/volume/", "量价分析", "每天收盘后，大盘、板块和重点个股的涨跌和成交量。", "量價分析", "每天收盤後，大盤、板塊和重點個股的漲跌和成交量。", "Price and volume", "After every close: moves and volume for the index, sectors and key stocks."),
     ("/market/", "市场", "宏观仪表盘、板块轮动和长文研究。", "市場", "總經儀表板、板塊輪動和長文研究。", "Markets", "Macro dashboard, sector rotation and research notes."),
     ("/themes/ai/", "AI 产业链", "从能源到应用，五层里最重要的美股公司。", "AI 產業鏈", "從能源到應用，五層裡最重要的美股公司。", "AI supply chain", "The key US-listed companies in each of five layers."),
     ("/themes/energy/", "能源产业链", "油气、发电、电网，AI 用电背后的公司。", "能源產業鏈", "油氣、發電、電網，AI 用電背後的公司。", "Energy supply chain", "Oil and gas, power and grid: who powers AI."),
@@ -254,7 +254,7 @@ CSS = """
 .pill.mk{background:color-mix(in srgb,var(--t2) 16%,transparent);color:var(--ink)}
 .asof{color:var(--muted);font-size:13.5px}
 .tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:12px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+.tile{display:block;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0;color:var(--ink);text-decoration:none}a.tile:hover{border-color:var(--accent)}
 .tile .n{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tile .v{font-size:21px;font-weight:700;line-height:1.3}
 .tile .c{font-size:13px;font-weight:600}.tile .c span{color:var(--faint);font-weight:400}
@@ -300,6 +300,7 @@ a.mod:hover{border-color:var(--accent)}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:560px){.subf{width:100%}.subf input{flex:1 1 100%;width:auto}.subf button{flex:1 1 100%}}
 .foot{max-width:1200px;margin:0 auto;padding:0 16px 40px;color:var(--faint);font-size:13px;display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap}
+.vsum{margin:8px 0 0;padding:0;list-style:none}.vsum li{padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.6}
 .empty{color:var(--muted);font-size:14px;padding:12px 0;border-top:1px solid var(--line)}
 @media (max-width:900px){.grid{grid-template-columns:1fr}.mods{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr;gap:16px}}
 @media (max-width:700px){.tiles{display:flex;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px}.tiles::-webkit-scrollbar{display:none}.tile{flex:0 0 136px}}
@@ -325,7 +326,7 @@ def sig_html(l, sigs):
 def list_html(rows, cls):
     return "".join(f'<a class="ir" href="/s/{E(r["t"])}.html"><span><b>{E(r["t"])}</b> <em>{E(r["n"])}</em></span><b class="num {cls}">{E(r["v"])}</b></a>' for r in rows)
 
-def body(asof, sigs, buys, sells):
+def body(asof, sigs, buys, sells, vol=""):
     def today(l):
         t = T[l]
         a = asof.split("-")
@@ -349,19 +350,26 @@ def body(asof, sigs, buys, sells):
     foot = tri(lambda l: f'<footer class="foot"><span>April\'s Stock Atlas · {T[l]["foot"]}</span><span>{T[l]["src"]}</span></footer>')
     return (f'<main class="home"><section aria-label="Today">{tri(today)}<div class="tiles" id="tiles"></div><p class="tiles-msg" id="tiles-msg" hidden></p></section>'
             f'<div class="grid"><section class="box">{sig_box}</section><div class="side">'
-            f'<section class="box">{cal_h}<div id="cal"></div></section><section class="box">{earn_h}<div id="earn"></div></section></div></div>'
+            f'<section class="box">{cal_h}<div id="cal"></div></section>{vol}<section class="box">{earn_h}<div id="earn"></div></section></div></div>'
             f'<section class="box">{ins}</section><section>{mods}</section><div id="subscribe">{sub}</div></main>{foot}')
+
+def vol_box(bv):
+    data = bv.load() if bv else None
+    if not data: return ""
+    inner = tri(lambda l: f'<div class="box-h"><h2 class="lbl">{T[l]["volL"]}</h2><a href="/market/volume/">{T[l]["volAll"]}</a></div>'
+                          '<ul class="vsum">' + "".join(f"<li>{x}</li>" for x in bv.summary(data, l, 3)) + "</ul>")
+    return f'<section class="box">{inner}</section>'
 
 JS = r"""<script>
 (function(){
-var T=__T__,EV=__EV__,CK=__CK__,MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var T=__T__,EV=__EV__,CK=__CK__,VT=__VT__,VD=__VD__,MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
 function f(s,o){return s.replace(/\{(\w+)\}/g,function(_,k){return o[k]})}
 function parts(ms,tz){var o={};new Intl.DateTimeFormat("en-US",{timeZone:tz,hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).formatToParts(new Date(ms)).forEach(function(p){o[p.type]=p.value});return {d:o.year+"-"+o.month+"-"+o.day,t:(o.hour==="24"?"00":o.hour)+":"+o.minute}}
 function etMs(d,t){var a=d.split("-").map(Number),b=t.split(":").map(Number),w=Date.UTC(a[0],a[1]-1,a[2],b[0],b[1]),u=w;for(var i=0;i<3;i++){var p=parts(u,"America/New_York"),x=p.d.split("-").map(Number),y=p.t.split(":").map(Number);u+=w-Date.UTC(x[0],x[1]-1,x[2],y[0],y[1])}return u}
 function dow(d){var a=d.split("-").map(Number);return new Date(Date.UTC(a[0],a[1]-1,a[2])).getUTCDay()}
 function md(l,d){var a=d.split("-").map(Number);return f(T[l].md,{m:a[1],d:a[2],M:MON[a[1]-1].slice(0,3)})}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-var TODAY=parts(Date.now(),"America/New_York").d,MK=null,EIDX=null;
+var TODAY=parts(Date.now(),"America/New_York").d,EIDX=null;
 function evName(l,e){var c=CK[l],n=c.k[e.kind],a;
  if((e.kind==="cpi"||e.kind==="jobs"||e.kind==="ppi"||e.kind==="pce")&&e.ref){a=e.ref.split("-").map(Number);n+=f(c.ref,{m:a[1],M:MON[a[1]-1]})}
  else if(e.kind==="closed"&&e.name){n+=(l==="en"?": ":"：")+(c.hol[e.name]||e.name)}
@@ -377,18 +385,16 @@ function render(l){l=l||"zh";var t=T[l];
  document.getElementById("cal").innerHTML=up.map(function(e){var a=e.date.split("-").map(Number);
   return '<div class="ev'+(e.kind==="closed"||e.kind==="early"?" mkt":"")+'"><div class="dt"><div class="m">'+(l==="en"?MON[a[1]-1].slice(0,3):a[1]+(l==="en"?"":"月"))+'</div><div class="d num">'+a[2]+'</div></div><div><b>'+esc(evName(l,e))+'</b><small class="num">'+esc(evTime(l,e))+'</small></div></div>'}).join("");
  var tb=document.getElementById("tiles"),tm=document.getElementById("tiles-msg");
- if(MK===false){tb.innerHTML="";tm.hidden=false;tm.textContent=t.noData}
- else if(MK){tm.hidden=true;tb.innerHTML=["SPY","QQQ","TNX","VIX","WTI"].map(function(k){var s=MK.t[k];if(!s||s.length<6)return"";var v=s[s.length-1][1],p=s[s.length-6][1],ch=k==="TNX"?(v-p):(v/p-1)*100,cl=ch>=0?"up":"dn";
-   var cs=(ch>=0?"▲ ":"▼ ")+(k==="TNX"?Math.abs(ch).toFixed(2):Math.abs(ch).toFixed(1)+"%");
-   return '<div class="tile"><div class="n">'+esc(t.tiles[k])+'</div><div class="v num">'+(k==="TNX"?v.toFixed(2)+"%":v.toFixed(2))+'</div><div class="c num '+cl+'">'+cs+' <span>'+t.d5+'</span></div></div>'}).join("");
-  document.querySelectorAll(".td-mkasof").forEach(function(x){x.textContent=" · "+f(t.mkAsof,{a:md(l,MK.last)})})}
+ if(!VT.length){tb.innerHTML="";tm.hidden=false;tm.textContent=t.noData}
+ else{tm.hidden=true;tb.innerHTML=VT.map(function(x){var cl=x.chg>=0?"up":"dn";
+   return '<a class="tile" href="/market/volume/"><div class="n">'+esc(x.n[l])+' · '+esc(x.t)+'</div><div class="v num">'+x.close.toFixed(2)+'</div><div class="c num '+cl+'">'+(x.chg>=0?"▲ ":"▼ ")+Math.abs(x.chg).toFixed(2)+'% <span>'+t.d1+'</span></div></a>'}).join("");
+  document.querySelectorAll(".td-mkasof").forEach(function(x){x.textContent=" · "+f(t.mkAsof,{a:md(l,VD)})})}
  var eb=document.getElementById("earn");
  if(EIDX){eb.innerHTML=EIDX.companies.slice().sort(function(a,b){return a.latestDate<b.latestDate?1:-1}).slice(0,3).map(function(c){var q=c.latest||"";
    return '<a class="er" href="/earnings/#'+encodeURIComponent(c.t)+'"><small><b>'+esc(c.t)+'</b> · '+esc(l==="en"?c.en:c.n)+' · '+esc(q.replace(/(\d{4})Q(\d)/,"$1 Q$2"))+'</small><span>'+esc(l==="en"?(c.en+" "+q.replace(/(\d{4})Q(\d)/,"Q$2 $1")+" earnings review"):c.headline)+'</span></a>'}).join("")}
 }
 window.onPageLang=(function(prev){return function(l){render(l);if(prev)prev(l)}})(window.onPageLang);
 render(window.PAGE_LANG);
-fetch("/earnings/data/market.json",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){MK=j;render(window.PAGE_LANG)}).catch(function(){MK=false;render(window.PAGE_LANG)});
 fetch("/earnings/data/index.json",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){EIDX=j;render(window.PAGE_LANG)}).catch(function(){});
 })();
 </script>"""
@@ -396,8 +402,8 @@ fetch("/earnings/data/index.json",{cache:"no-cache"}).then(function(r){if(!r.ok)
 # old homepage links: /#layer-3, /#NVDA (the AI chain lived at /) now go to /ai/
 HASH_JS = """<script>(function(){var h=location.hash;if(/^#(layer-[\\w-]+|[A-Z][A-Z0-9.\\-]{0,11})$/.test(h))location.replace("/themes/ai/"+h)})();</script>"""
 
-def build(out, days, pages, ba, bc):
-    """ba = build_articles module (FONTS, CSS, JS), bc = build_calendar module (event labels)."""
+def build(out, days, pages, ba, bc, bv=None):
+    """ba = build_articles module (FONTS, CSS, JS), bc = build_calendar module (event labels), bv = build_volume (summary)."""
     asof, sigs, buys, sells = insider(days)
     md = os.path.join(ROOT, "data", "macro.json")
     ev = json.load(open(md, encoding="utf-8"))["events"] if os.path.exists(md) else []
@@ -406,6 +412,9 @@ def build(out, days, pages, ba, bc):
     tickers = sorted(s for s, _ in pages if not s.startswith("cik-"))
     titles = {l: T[l]["title"] for l in LANGS}
     asof_txt = asof
+    vdata = bv.load() if bv else None
+    vt = [{k: i[k] for k in ("t", "n", "close", "chg")} for s in ("SPY", "QQQ", "IWM", "TLT", "USO") for i in (vdata or {}).get("items", []) if i["t"] == s]
+    vd = (vdata or {}).get("date", "")
     page = f"""<!doctype html>
 <html lang="zh-CN" class="l-zh">
 <head>
@@ -424,8 +433,8 @@ def build(out, days, pages, ba, bc):
 </head>
 <body>
 {header("home")}
-{body(asof_txt, sigs, buys, sells)}
-{JS.replace("__T__", json.dumps(T, ensure_ascii=False)).replace("__EV__", json.dumps(ev, ensure_ascii=False, separators=(",", ":"))).replace("__CK__", json.dumps(ck, ensure_ascii=False))}
+{body(asof_txt, sigs, buys, sells, vol_box(bv))}
+{JS.replace("__VT__", json.dumps(vt, ensure_ascii=False)).replace("__VD__", json.dumps(vd)).replace("__T__", json.dumps(T, ensure_ascii=False)).replace("__EV__", json.dumps(ev, ensure_ascii=False, separators=(",", ":"))).replace("__CK__", json.dumps(ck, ensure_ascii=False))}
 {HEADER_JS.replace("__TICKERS__", json.dumps(tickers, separators=(",", ":"))).replace("__PH__", json.dumps(SEARCH_PH, ensure_ascii=False))}
 {ba.JS % json.dumps(titles, ensure_ascii=False)}
 </body>

@@ -442,6 +442,7 @@ fetch("/earnings/data/market.json",{cache:"no-cache"}).then(function(r){if(!r.ok
 })();
 </script>"""
 
+VOL_GO = {"zh": "昨日量价：大盘、板块和重点个股的放量与缩量 →", "tw": "昨日量價：大盤、板塊和重點個股的放量與縮量 →", "en": "Price and volume: yesterday's moves and volume across the market →"}
 CAL_GO = {"zh": "本周宏观日程：CPI、议息、PCE、休市 →", "tw": "本週總經日程：CPI、利率決議、PCE、休市 →", "en": "This week's macro calendar: CPI, Fed, PCE, holidays →"}
 
 def market_page(arts, out):
@@ -451,7 +452,7 @@ def market_page(arts, out):
         u, m = UI[l], MK[l]
         cards = "".join(f'<a class="card" href="/articles/{a["slug"]}/"><p class="meta">{html.escape(a["date"])}</p><h2>{inline(a["l"][l][0].get("title", ""))}</h2>'
                         f'<p>{inline(a["l"][l][0].get("summary", ""))}</p><span class="go">{u["read"]}</span></a>' for a in arts)
-        sec[l] = (f'<div data-l="{l}" lang="{LOC[l]}" class="mk-hero"><h1>{m["title"]}</h1><p>{m["intro"]}</p><p class="mk-cal"><a href="/calendar/">{CAL_GO[l]}</a></p></div>',
+        sec[l] = (f'<div data-l="{l}" lang="{LOC[l]}" class="mk-hero"><h1>{m["title"]}</h1><p>{m["intro"]}</p><p class="mk-cal"><a href="/calendar/">{CAL_GO[l]}</a><br><a href="/market/volume/">{VOL_GO[l]}</a></p></div>',
                   f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["dashH"]}</h2><p class="lead">{m["dashP"]}</p></div>',
                   f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["secH"]}</h2><p class="lead">{m["secP"]}</p></div>',
                   f'<div data-l="{l}" lang="{LOC[l]}"><h2>{m["artH"]}</h2><p class="lead">{m["artP"]}</p><div class="cards">{cards}</div></div>',

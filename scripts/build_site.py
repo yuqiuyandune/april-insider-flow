@@ -342,12 +342,16 @@ def main():
     _spec = importlib.util.spec_from_file_location("build_calendar", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_calendar.py"))
     _bc = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bc)
     if (cal := _bc.build(out, _ba.page)): art_paths.insert(0, cal)
+    # Price and volume (/market/volume/): from data/volume.json (scripts/fetch_volume.py)
+    _spec = importlib.util.spec_from_file_location("build_volume", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_volume.py"))
+    _bv = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bv)
+    if (vol := _bv.build(out, _ba.page)): art_paths.insert(0, vol)
     os.makedirs(f"{out}/overview", exist_ok=True)
     shutil.copyfile(os.path.join(os.path.dirname(index_html), "overview.html"), f"{out}/overview/index.html")
     # Homepage (/): built by scripts/build_home.py, the entry point to every section
     _spec = importlib.util.spec_from_file_location("build_home", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_home.py"))
     _bh = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bh)
-    _bh.build(out, days, pages, _ba, _bc)
+    _bh.build(out, days, pages, _ba, _bc, _bv)
     sm += [f"<url><loc>{SITE}/{p}</loc><lastmod>{dates[-1]}</lastmod></url>" for p in art_paths]
     open(f"{out}/sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(sm) + "</urlset>")
     open(f"{out}/favicon.svg", "w").write(ICON_SVG)
