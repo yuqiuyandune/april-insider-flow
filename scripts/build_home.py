@@ -67,7 +67,8 @@ HEADER_CSS = """
 .hd .lang button{padding:5px 10px}
 .subbtn{border:0;background:var(--accent);color:#fff;font-weight:700;font-size:14px;border-radius:10px;padding:9px 16px;cursor:pointer;flex:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .subbtn{color:#0b111b}}
-@media (max-width:980px){
+@media (max-width:1320px){.hd-in{gap:16px}.nav{gap:16px}.srch{width:170px}}
+@media (max-width:1180px){
  .hd-in{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand sub" "srch lang" "nav nav";gap:10px 10px;padding-top:10px;min-height:0}
  .hd .brand{grid-area:brand}.subbtn{grid-area:sub;justify-self:end}.srch{grid-area:srch;width:auto}.hd .lang{grid-area:lang;align-self:center}
  .nav{grid-area:nav;gap:18px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
@@ -441,4 +442,6 @@ def build(out, days, pages, ba, bc, bv=None):
 </html>
 """
     open(f"{out}/index.html", "w", encoding="utf-8").write(page)
+    # the shared header (earnings repo switcher.js) checks searched tickers against this list
+    with open(f"{out}/tickers.json", "w") as fh: json.dump(tickers, fh, separators=(",", ":"))
     return len(sigs)
