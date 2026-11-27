@@ -125,9 +125,41 @@ def insider_symbols():
     except Exception as ex:
         print(f"insider symbols: {ex}", file=sys.stderr); return []
 
+def compare(day, hist, cv, pv, cprem, pprem):
+    """against the previous stored session: volumes, premiums and the put/call ratio"""
+    past = [h for h in hist if h[0] < day.isoformat()]
+    if not past: return None
+    d0, cv0, pv0, cp0, pp0 = past[-1]
+    pct = lambda a, b: round((a / b - 1) * 100, 1) if b else None
+    return {"day": d0, "vol": pct(cv + pv, cv0 + pv0), "cv": pct(cv, cv0), "pv": pct(pv, pv0), "cprem": pct(cprem, cp0), "pprem": pct(pprem, pp0),
+            "pcr": round(pv0 / cv0, 2) if cv0 else None}
+
+def follow(prev_unusual, rows):
+    """did yesterday's unusual contracts stay open? today's open interest against yesterday's volume
+    (open interest is counted overnight, so today's figure includes yesterday's trades)"""
+    oi = {(cp, k, e.isoformat()): o for cp, k, e, last, v, o in rows}
+    out = []
+    for u in prev_unusual:
+        now = oi.get((u["cp"], u["k"], u["exp"]))
+        if now is None: continue
+        added = now - u["oi"]
+        out.append({**{k: u[k] for k in ("cp", "k", "exp", "vol", "oi", "prem")}, "oiNow": int(now), "added": int(added),
+                    "kept": round(max(added, 0) / u["vol"], 2) if u["vol"] else None})
+    return out
+
+def in_session():
+    """US trading hours on a weekday (ET, with a margin): option volumes are then only part of a day"""
+    from zoneinfo import ZoneInfo
+    now = dt.datetime.now(ZoneInfo("America/New_York"))
+    return now.weekday() < 5 and (9, 25) <= (now.hour, now.minute) < (16, 30)
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--offline"); a = ap.parse_args()
+    if not a.offline and in_session():
+        print("US market is open: option volumes would be a partial day; keeping the previous read"); return
     hist = json.load(open(HIST, encoding="utf-8")) if os.path.exists(HIST) else {}
+    prev = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
+    prev_u = {i["t"]: (i["date"], i["unusual"]) for i in prev.get("items", [])}
     fixed = {f[0] for f in FIXED}
     universe = [(s, c, g, {"zh": zh, "tw": tw, "en": en}) for s, c, g, zh, tw, en in FIXED]
     universe += [(t, "stocks", "insider", n) for t, n in insider_symbols() if t not in fixed]
@@ -140,6 +172,10 @@ def main():
             day, px, rows = parse(fetch(sym, cls, a.offline))
             if last_session and day.isoformat() > last_session: day = dt.date.fromisoformat(last_session)
             it = {"t": sym, "g": group, "n": name, "date": day.isoformat(), **analyse(group, day, px, rows, hist.get(sym, []))}
+            it["vsPrev"] = compare(day, hist.get(sym, []), it["cv"], it["pv"], it["cprem"], it["pprem"])
+            pd_, pu = prev_u.get(sym, (None, []))
+            it["follow"] = follow(pu, rows) if pd_ and pd_ < day.isoformat() and pu else []
+            it["followDay"] = pd_ if it["follow"] else None
             items.append(it)
             h = [x for x in hist.get(sym, []) if x[0] != it["date"]] + [[it["date"], it["cv"], it["pv"], it["cprem"], it["pprem"]]]
             hist[sym] = sorted(h)[-KEEP_HIST:]
@@ -152,8 +188,9 @@ def main():
     day = max({i["date"] for i in items}, key=lambda d: (sum(i["date"] == d for i in items), d))
 
     allu = sorted(({"t": i["t"], "n": i["n"], **u} for i in items if i["date"] == day for u in i["unusual"]), key=lambda u: -u["prem"])[:15]
+    allf = sorted(({"t": i["t"], "n": i["n"], "day": i["followDay"], **f} for i in items if i["date"] == day for f in i.get("follow", [])), key=lambda f: -f["prem"])[:15]
     out = {"date": day, "generated_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"), "missing": missing,
-           "histDays": max((len(v) for v in hist.values()), default=0), "items": items, "unusual": allu}
+           "histDays": max((len(v) for v in hist.values()), default=0), "items": items, "unusual": allu, "follow": allf}
     old = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
     changed = old.get("date") != out["date"] or old.get("items") != out["items"]
     if changed:

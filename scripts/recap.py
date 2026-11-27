@@ -291,7 +291,23 @@ def recap(day, H, VIX, UST, CHAIN, SEGS):
         if stk: fact("chain", "streak", 4, t=stk[0]["t"], n=stk[0]["streak"])
         chain["avgRvol"] = r2(avg_rv); chain["ampx"] = r2(amp_ratio)
 
+    # the last five sessions side by side: each ETF's change, relative volume and close in range, and its rank among them
+    days5 = [spy.d[kk] for kk in range(i - 4, i + 1)]
+    grid = []
+    for t in BOARD:
+        s2 = sy.get(t)
+        if not s2: continue
+        cells = []
+        for d in days5:
+            k2 = s2.at(d)
+            cells.append({"chg": r2(s2.chg(k2)), "rvol": r2(s2.rvol(k2)), "pos": r2(s2.pos(k2))} if k2 else None)
+        grid.append({"t": t, "cells": cells})
+    def ranks(col):
+        xs = sorted((g for g in grid if g["cells"][col] and g["cells"][col]["chg"] is not None), key=lambda g: -g["cells"][col]["chg"])
+        return {g["t"]: n + 1 for n, g in enumerate(xs)}
+    r_now, r_prev = ranks(4), ranks(3)
+    for g in grid: g["rank"] = r_now.get(g["t"]); g["rankPrev"] = r_prev.get(g["t"])
     F.sort(key=lambda f: -f["w"])
     key = [f for f in F if f["w"] >= 6][:2]
-    return {"date": day, "prev": prev, "index": idx, "vix": vx, "board": board, "volumes": vols, "volMedian": r2(med), "spyTrail": trail,
+    return {"date": day, "prev": prev, "index": idx, "vix": vx, "board": board, "volumes": vols, "volMedian": r2(med), "spyTrail": trail, "days5": days5, "grid": grid,
             "bonds": bonds, "chain": chain, "facts": F, "key": [f["k"] for f in key]}

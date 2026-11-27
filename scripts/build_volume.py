@@ -189,6 +189,13 @@ RC_CSS = """
 .rc-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px}
 .rc-notes{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px 18px}
 .rc-note{color:var(--faint);font-size:12.5px;margin:18px 0 0}
+.rc-small{color:var(--muted);font-size:13.5px;margin:0 0 8px}
+.rc-five table{min-width:760px;font-size:13.5px}.rc-five th{white-space:nowrap}.rc-five thead th small{display:block;font-weight:400;color:var(--faint);font-size:11.5px}
+.rc-five tbody th{text-align:left;font-weight:400}.rc-five tbody th b{display:block}.rc-five tbody th small{color:var(--muted);font-size:12px}
+.rc-five td{text-align:right;padding:6px 10px;vertical-align:top}.rc-five td b{display:block;font-weight:600}.rc-five td i{display:block;font-style:normal;color:var(--muted);font-size:12.5px}
+.rc-five td i.hot{color:var(--accent);font-weight:700}.rc-five td i.cold{color:var(--faint)}
+.rc-five td:last-child,.rc-five tr>*:nth-last-child(2){border-right:0}.rc-five tbody td:nth-last-child(2){background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.rc-five .rk b{display:inline;margin-right:6px}.rc-five .rk i{display:inline;font-size:12px}
 .rc-arch{margin:28px 0 0}.rc-arch h2{font-size:16px;margin:0 0 8px;padding:12px 0 0;border-top:1px solid var(--line)}
 .rc-arch a{display:inline-block;margin:0 10px 6px 0;font-size:14px}.rc-arch b{display:inline-block;margin:0 10px 6px 0;font-size:14px}
 .rc-all{margin:40px 0 0}.rc-all>h2{font-size:22px;padding-top:18px;border-top:2px solid var(--line)}

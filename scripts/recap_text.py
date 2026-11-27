@@ -27,12 +27,12 @@ UI = {
            "chain": "AI 产业链", "notes": "导火索 · April 的笔记", "archive": "往日复盘", "table": "全部数据",
            "cols": ["", "收盘", "涨跌", "点数", "盘中最低", "收盘距最低", "离一年高点", "年内"], "vix": "VIX", "vixHigh": "盘中最高",
            "yields": "美债收益率", "bp": "个基点", "up": "涨得最多", "down": "跌得最多", "segs": "各环节平均", "trail": "最近四天的收盘位置和振幅",
-           "pos": "收盘位置", "rng": "平均振幅", "x": "倍", "note": "大盘行情：纳斯达克综合指数；标普 500、道指和罗素 2000 用 SPY、DIA、IWM 的涨跌代替。量比 = 当天成交量 ÷ 前 20 个交易日平均。"},
+           "pos": "收盘位置", "rng": "平均振幅", "x": "倍", "five": "最近五个交易日对比", "fiveP": "每格上面是涨跌，下面是量比（当天成交量 ÷ 前 20 日平均）。右边是今天在这些 ETF 里的涨幅排名，箭头是和上个交易日比排名升降。", "rank": "排名", "note": "大盘行情：纳斯达克综合指数；标普 500、道指和罗素 2000 用 SPY、DIA、IWM 的涨跌代替。量比 = 当天成交量 ÷ 前 20 个交易日平均。"},
     "en": {"title": "Daily market recap", "key": "Worth remembering", "index": "The index", "sector": "Sectors", "volume": "Volume", "flows": "Where the money went",
            "bonds": "Bonds", "chain": "The AI supply chain", "notes": "Catalysts · April's notes", "archive": "Earlier recaps", "table": "All the numbers",
            "cols": ["", "Close", "Change", "Points", "Intraday low", "Close vs low", "From 1-yr high", "YTD"], "vix": "VIX", "vixHigh": "intraday high",
            "yields": "Treasury yields", "bp": "bp", "up": "Biggest gainers", "down": "Biggest losers", "segs": "Average by segment", "trail": "Close in range and range, last four sessions",
-           "pos": "close in range", "rng": "average range", "x": "x", "note": "Index: the Nasdaq Composite; the S&P 500, the Dow and the Russell 2000 use the moves of SPY, DIA and IWM. Relative volume = the day's volume ÷ the average of the previous 20 sessions."},
+           "pos": "close in range", "rng": "average range", "x": "x", "five": "The last five sessions side by side", "fiveP": "Each cell: the change on top, relative volume below (the day's volume ÷ the previous 20-day average). On the right, today's rank by change among these ETFs, with the move since the previous session.", "rank": "Rank", "note": "Index: the Nasdaq Composite; the S&P 500, the Dow and the Russell 2000 use the moves of SPY, DIA and IWM. Relative volume = the day's volume ÷ the average of the previous 20 sessions."},
 }
 
 ZH = {
@@ -290,6 +290,21 @@ def sections(r, l, notes_html=""):
     b = sorted((x for x in r["board"] if x["chg"] is not None and x["t"] not in ("DIA",)), key=lambda x: -x["chg"])
     board = "".join(f'<span class="bd"><b>{x["t"]}</b> {E(nm(x["t"], l))} <i class="num {"up" if x["chg"] >= 0 else "dn"}">{pct(x["chg"])}</i></span>' for x in b)
     vols = "".join(f'<span class="vb"><b>{x["t"]}</b> <i class="num{" hot" if x["rvol"] >= 1.5 else " cold" if x["rvol"] < 0.8 else ""}">{num(x["rvol"])}x</i></span>' for x in r["volumes"])
+    five = ""
+    if r.get("grid"):
+        head = "".join(f"<th>{short_day(d, l)}<small>{int(d[5:7])}/{int(d[8:10])}</small></th>" for d in r["days5"])
+        def cell(c):
+            if not c or c["chg"] is None: return "<td>–</td>"
+            hot = " hot" if (c["rvol"] or 0) >= 1.5 else " cold" if (c["rvol"] or 1) < 0.8 else ""
+            return f'<td><b class="num {"up" if c["chg"] >= 0 else "dn"}">{pct(c["chg"])}</b><i class="num{hot}">{num(c["rvol"])}x</i></td>'
+        def rk(g):
+            if not g.get("rank"): return "<td></td>"
+            mv = (g["rankPrev"] or g["rank"]) - g["rank"]
+            arrow = f'<i class="up">▲{mv}</i>' if mv > 0 else f'<i class="dn">▼{-mv}</i>' if mv < 0 else "<i>–</i>"
+            return f'<td class="rk"><b class="num">{g["rank"]}</b>{arrow}</td>'
+        rows = "".join(f'<tr><th><b>{g["t"]}</b><small>{E(nm(g["t"], l))}</small></th>{"".join(cell(c) for c in g["cells"])}{rk(g)}</tr>'
+                       for g in sorted(r["grid"], key=lambda g: g.get("rank") or 99))
+        five = f'<h3>{u["five"]}</h3><p class="rc-small">{u["fiveP"]}</p><div class="rc-t rc-five"><table><thead><tr><th></th>{head}<th>{u["rank"]}</th></tr></thead><tbody>{rows}</tbody></table></div>'
     trail = "".join(f'<span class="vb">{short_day(x["d"], l)} <i class="num {"up" if (x["chg"] or 0) >= 0 else "dn"}">{pct(x["chg"])}</i> <b class="num">{num(x["rvol"])}x</b></span>' for x in r["spyTrail"])
     bonds = ""
     if r.get("bonds"):
@@ -312,7 +327,7 @@ def sections(r, l, notes_html=""):
     out = (f'<div class="rc-key"><h2>{u["key"]}</h2><ol>{key}</ol></div>'
            + _sec(u["index"], idx_tbl + para("index"))
            + _sec(u["sector"], f'<div class="rc-board">{board}</div>' + para("sector"))
-           + _sec(u["volume"], f'<div class="rc-chips">{vols}</div><h3>SPY</h3><div class="rc-chips">{trail}</div>' + para("volume"))
+           + _sec(u["volume"], f'<div class="rc-chips">{vols}</div><h3>SPY</h3><div class="rc-chips">{trail}</div>' + para("volume") + five)
            + (_sec(u["flows"], para("flows")) if para("flows") else "")
            + _sec(u["bonds"], bonds + para("bonds"))
            + (_sec(u["chain"], chain) if chain else "")

@@ -18,10 +18,16 @@ T = {
     "zh": {"title": "期权异动", "intro": "每个交易日收盘后，看大盘、主要资产、重点个股，以及内部人正在买入的公司的期权成交：看涨和看跌哪边多、钱花在哪些合约上、有没有大额新开仓。数据来自 Nasdaq 公开的期权链，按固定规则自动生成，不构成投资建议。",
            "sumH": "一句话总结", "topH": "今天最大的新开仓合约", "topP": "成交量是原有未平仓量 5 倍以上、金额够大、到期在 7 天到一年之间、价外（或价内不超过 10%）的合约。成交远超原有仓位，说明是新资金进场，而不是平掉旧仓。",
            "groups": {"index": "大盘", "asset": "主题与资产", "stock": "重点个股", "insider": "内部人正在买入的公司"},
-           "cols": ["代码", "现价", "看涨成交", "看跌成交", "看跌/看涨比", "看涨金额", "看跌金额", "成交/未平仓", "标记"],
+           "cols": ["代码", "现价", "看涨成交", "看跌成交", "看跌/看涨比", "看涨金额", "看跌金额", "成交/未平仓", "比上个交易日", "标记"],
+           "vsTot": "成交 {v}", "vsPcr": "比值 {a} → {b}", "fH": "昨天的大单，今天还在吗",
+           "fP": "未平仓量每天收盘后才统计，所以今天的未平仓量包含了昨天的交易。昨天成交的合约，如果今天未平仓量增加了差不多同样多，说明是新开的仓位而且留下来了；如果几乎没增加，说明当天就平掉了，或者是一买一卖的对倒。",
+           "fcols": ["代码", "方向", "行权价", "到期", "昨天成交", "昨天之前的未平仓", "今天的未平仓", "留下"],
+           "kept_hi": "大部分留下了，是新开的仓位", "kept_mid": "留下了一部分", "kept_lo": "几乎没留下，当天就平掉了或是对倒",
+           "fNone": "从下一个交易日开始，这里会显示前一天大单的去向。",
+           "sFollow": "昨天 {t} {exp} 到期、行权价 {k} 的{cp}成交 {vol} 张，今天未平仓增加了 {added} 张（{kept}）：{verdict}。", "sPcr": "（上个交易日 {p}）",
            "ucols": ["代码", "方向", "行权价", "到期", "价外", "成交量", "原未平仓", "金额"],
            "call": "看涨", "put": "看跌", "days": "{n} 天", "date": "{m}月{d}日（{wd}）收盘", "wd": "周日,周一,周二,周三,周四,周五,周六",
-           "mkt": "{date}：标普 500（SPY）期权的看跌/看涨比是 {a}，纳指 100（QQQ）是 {b}。",
+           "mkt": "{date}：标普 500（SPY）期权的看跌/看涨比是 {a}{pa}，纳指 100（QQQ）是 {b}{pb}。",
            "line": "{n}（{t}）：{fl}", "biggest": "，最大一笔是 {exp} 到期、行权价 {k} 的{cp}，金额 {prem}", "quiet": "其余没有明显的异动。",
            "f": {"callHeavy": "看涨成交明显偏多", "putHeavy": "看跌成交明显偏多", "newCalls": "有大额新开看涨", "newPuts": "有大额新开看跌", "volSpike": "期权成交是平时的两倍以上"},
            "hist": "成交量和 20 日平均的比较需要先积累 10 个交易日的历史（目前 {n} 天），之后会自动加上。",
@@ -34,10 +40,16 @@ T = {
     "tw": {"title": "選擇權異動", "intro": "每個交易日收盤後，看大盤、主要資產、重點個股，以及內部人正在買入的公司的選擇權成交：買權和賣權哪邊多、錢花在哪些合約上、有沒有大額新建倉。資料來自 Nasdaq 公開的選擇權鏈，按固定規則自動產生，不構成投資建議。",
            "sumH": "一句話總結", "topH": "今天最大的新建倉合約", "topP": "成交量是原有未平倉量 5 倍以上、金額夠大、到期在 7 天到一年之間、價外（或價內不超過 10%）的合約。成交遠超原有部位，說明是新資金進場，而不是平掉舊倉。",
            "groups": {"index": "大盤", "asset": "主題與資產", "stock": "重點個股", "insider": "內部人正在買入的公司"},
-           "cols": ["代碼", "現價", "買權成交", "賣權成交", "賣權/買權比", "買權金額", "賣權金額", "成交/未平倉", "標記"],
+           "cols": ["代碼", "現價", "買權成交", "賣權成交", "賣權/買權比", "買權金額", "賣權金額", "成交/未平倉", "比上個交易日", "標記"],
+           "vsTot": "成交 {v}", "vsPcr": "比值 {a} → {b}", "fH": "昨天的大單，今天還在嗎",
+           "fP": "未平倉量每天收盤後才統計，所以今天的未平倉量包含了昨天的交易。昨天成交的合約，如果今天未平倉量增加了差不多同樣多，說明是新建的部位而且留下來了；如果幾乎沒增加，說明當天就平掉了，或者是一買一賣的對敲。",
+           "fcols": ["代碼", "方向", "履約價", "到期", "昨天成交", "昨天之前的未平倉", "今天的未平倉", "留下"],
+           "kept_hi": "大部分留下了，是新建的部位", "kept_mid": "留下了一部分", "kept_lo": "幾乎沒留下，當天就平掉了或是對敲",
+           "fNone": "從下一個交易日開始，這裡會顯示前一天大單的去向。",
+           "sFollow": "昨天 {t} {exp} 到期、履約價 {k} 的{cp}成交 {vol} 口，今天未平倉增加了 {added} 口（{kept}）：{verdict}。", "sPcr": "（上個交易日 {p}）",
            "ucols": ["代碼", "方向", "履約價", "到期", "價外", "成交量", "原未平倉", "金額"],
            "call": "買權", "put": "賣權", "days": "{n} 天", "date": "{m}月{d}日（{wd}）收盤", "wd": "週日,週一,週二,週三,週四,週五,週六",
-           "mkt": "{date}：標普 500（SPY）選擇權的賣權/買權比是 {a}，那指 100（QQQ）是 {b}。",
+           "mkt": "{date}：標普 500（SPY）選擇權的賣權/買權比是 {a}{pa}，那指 100（QQQ）是 {b}{pb}。",
            "line": "{n}（{t}）：{fl}", "biggest": "，最大一筆是 {exp} 到期、履約價 {k} 的{cp}，金額 {prem}", "quiet": "其餘沒有明顯的異動。",
            "f": {"callHeavy": "買權成交明顯偏多", "putHeavy": "賣權成交明顯偏多", "newCalls": "有大額新建倉買權", "newPuts": "有大額新建倉賣權", "volSpike": "選擇權成交是平時的兩倍以上"},
            "hist": "成交量和 20 日平均的比較需要先累積 10 個交易日的歷史（目前 {n} 天），之後會自動加上。",
@@ -50,10 +62,16 @@ T = {
     "en": {"title": "Options activity", "intro": "After every session: options trading in the index, the main assets, key stocks and the companies insiders are buying. Calls or puts, where the money went, and whether large new positions were opened. Data from Nasdaq's public option chains, written by fixed rules; not investment advice.",
            "sumH": "In short", "topH": "Today's largest new positions", "topP": "Contracts that traded 5x or more their existing open interest, in real size, 7 days to a year out, out of the money (or at most 10% in it). Volume far above the existing position means new money, not old positions being closed.",
            "groups": {"index": "Index", "asset": "Themes and assets", "stock": "Key stocks", "insider": "Companies insiders are buying"},
-           "cols": ["Ticker", "Price", "Call vol.", "Put vol.", "Put/call", "Call premium", "Put premium", "Vol./OI", "Flags"],
+           "cols": ["Ticker", "Price", "Call vol.", "Put vol.", "Put/call", "Call premium", "Put premium", "Vol./OI", "vs previous session", "Flags"],
+           "vsTot": "volume {v}", "vsPcr": "ratio {a} → {b}", "fH": "Are yesterday's big trades still open?",
+           "fP": "Open interest is counted after each close, so today's figure includes yesterday's trades. If a contract that traded heavily yesterday shows open interest up by about as much today, those were new positions and they stayed; if it barely moved, they were closed the same day or traded back and forth.",
+           "fcols": ["Ticker", "Side", "Strike", "Expiry", "Yesterday's volume", "Open interest before", "Open interest now", "Kept"],
+           "kept_hi": "mostly kept: new positions", "kept_mid": "partly kept", "kept_lo": "barely kept: closed the same day or crossed",
+           "fNone": "From the next session on, this shows where the previous day's big trades went.",
+           "sFollow": "Yesterday {t}'s {exp} {k} {cp}s traded {vol}; today open interest is up {added} ({kept}): {verdict}.", "sPcr": " (previous session {p})",
            "ucols": ["Ticker", "Side", "Strike", "Expiry", "OTM", "Volume", "Prior OI", "Premium"],
            "call": "call", "put": "put", "days": "{n}d", "date": "Close of {wd}, {M} {d}", "wd": "Sun,Mon,Tue,Wed,Thu,Fri,Sat",
-           "mkt": "{date}: the put/call ratio was {a} on SPY and {b} on QQQ.",
+           "mkt": "{date}: the put/call ratio was {a} on SPY{pa} and {b} on QQQ{pb}.",
            "line": "{n} ({t}): {fl}", "biggest": "; the largest was the {exp} {k} {cp} for {prem}", "quiet": "Nothing else stood out.",
            "f": {"callHeavy": "calls clearly outweighed puts", "putHeavy": "puts clearly outweighed calls", "newCalls": "large new call positions", "newPuts": "large new put positions", "volSpike": "options volume twice its usual level"},
            "hist": "Comparing volume with its 20-day average needs 10 sessions of history first (now {n}); it will appear automatically.",
@@ -88,7 +106,14 @@ def summary(data, l, n=4):
     by = {i["t"]: i for i in items}
     out = []
     if "SPY" in by and "QQQ" in by:
-        out.append(t["mkt"].format(date=date_txt(data["date"], l), a=by["SPY"]["pcr"], b=by["QQQ"]["pcr"]))
+        pp = lambda x: t["sPcr"].format(p=x["vsPrev"]["pcr"]) if x.get("vsPrev") and x["vsPrev"].get("pcr") is not None else ""
+        out.append(t["mkt"].format(date=date_txt(data["date"], l), a=by["SPY"]["pcr"], b=by["QQQ"]["pcr"], pa=pp(by["SPY"]), pb=pp(by["QQQ"])))
+    fl = [f for f in data.get("follow", []) if f.get("kept") is not None]
+    if fl:
+        f = max(fl, key=lambda f: f["prem"])
+        verdict = t["kept_hi"] if f["kept"] >= 0.5 else t["kept_mid"] if f["kept"] >= 0.2 else t["kept_lo"]
+        out.append(t["sFollow"].format(t=E(f["t"]), exp=md(f["exp"], l), k=k_txt(f["k"]), cp=t["call"] if f["cp"] == "c" else t["put"],
+                                       vol=f"{f['vol']:,}", added=f"{f['added']:,}", kept=f"{f['kept']:.0%}", verdict=verdict))
     picks = [i for i in sorted(items, key=lambda i: -i["score"]) if i["flags"]][:n]
     for i in picks:
         s = t["line"].format(n=E(i["n"][l]), t=E(i["t"]), fl=("、" if l != "en" else ", ").join(t["f"][f] for f in i["flags"]))
@@ -116,7 +141,23 @@ def row(i, l):
             f'<td class="num">{i["cv"]:,}</td><td class="num">{i["pv"]:,}</td>'
             f'<td><span class="pc"><span style="width:{pw:.0f}%"></span></span><span class="num">{pcr if pcr is not None else "–"}</span></td>'
             f'<td class="num up">{money(i["cprem"])}</td><td class="num dn">{money(i["pprem"])}</td>'
-            f'<td class="num">{i["voi"] if i["voi"] is not None else "–"}</td><td class="fl">{flags}</td></tr>')
+            f'<td class="num">{i["voi"] if i["voi"] is not None else "–"}</td><td class="vs">{vs_cell(i, l)}</td><td class="fl">{flags}</td></tr>')
+
+def vs_cell(i, l):
+    t = T[l]; v = i.get("vsPrev")
+    if not v: return "–"
+    tot = "–" if v.get("vol") is None else f'<b class="{"up" if v["vol"] >= 0 else "dn"}">{v["vol"]:+.0f}%</b>'
+    pcr = t["vsPcr"].format(a=v["pcr"], b=i["pcr"]) if v.get("pcr") is not None and i.get("pcr") is not None else ""
+    return f'<span class="num">{t["vsTot"].format(v=tot)}</span><small class="num">{pcr}</small>'
+
+def frow(f, l):
+    t = T[l]; c = f["cp"] == "c"; k = f.get("kept") or 0
+    verdict = t["kept_hi"] if k >= 0.5 else t["kept_mid"] if k >= 0.2 else t["kept_lo"]
+    cls = "up" if k >= 0.5 else "dn" if k < 0.2 else ""
+    side = t["call"] if c else t["put"]
+    return (f'<tr><td><b>{E(f["t"])}</b><small>{E(f["n"][l])}</small></td><td class="{"up" if c else "dn"}">{side}</td>'
+            f'<td class="num">{k_txt(f["k"])}</td><td class="num">{md(f["exp"], l)}</td><td class="num">{f["vol"]:,}</td><td class="num">{f["oi"]:,}</td>'
+            f'<td class="num">{f["oiNow"]:,}</td><td><b class="num {cls}">{k:.0%}</b><small>{verdict}</small></td></tr>')
 
 CSS = """
 .op-hero{margin:16px 0 18px}.op-hero p{color:var(--muted);max-width:72ch;margin:0}
@@ -125,7 +166,7 @@ CSS = """
 .op-sum ul{margin:0;padding-left:1.1em}.op-sum li{margin:0 0 6px;line-height:1.65}
 .op-g h2{font-size:20px;margin:28px 0 6px;padding:0;border:0}.op-g>p{color:var(--muted);font-size:14px;margin:0 0 10px;max-width:80ch}
 .op-t{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;-webkit-overflow-scrolling:touch}
-.op-t table{min-width:860px;font-size:14px}
+.op-t table{min-width:960px;font-size:14px}
 .op-t th{font-size:12.5px;color:var(--muted);font-weight:600;background:var(--surface-2)}
 .op-t td{vertical-align:middle;padding:9px 12px}
 .op-t td:first-child{white-space:nowrap}.op-t td:first-child small{display:block;color:var(--muted);font-weight:400;font-size:12.5px}
@@ -134,6 +175,7 @@ CSS = """
 @media (prefers-color-scheme:dark){.up{color:#4fd69c}.dn{color:#ff8a80}}
 .pc{display:inline-block;width:56px;height:6px;border-radius:3px;background:color-mix(in srgb,#0b7a52 30%,transparent);vertical-align:middle;margin-right:8px;overflow:hidden}
 .pc span{display:block;height:100%;background:#c0362c}
+.op-t td small{display:block;color:var(--muted);font-size:12px;font-weight:400}.op-t td.vs b{font-weight:600}
 .fl{min-width:150px}.vf{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;margin:2px 4px 2px 0;background:var(--surface-2);color:var(--muted);white-space:nowrap}
 .vf.callHeavy,.vf.newCalls{background:color-mix(in srgb,#0b7a52 14%,transparent);color:inherit}
 .vf.putHeavy,.vf.newPuts{background:color-mix(in srgb,#c0362c 14%,transparent);color:inherit}
@@ -152,6 +194,10 @@ def build(out, page):
         t = T[l]
         top = (f'<section class="op-g"><h2>{t["topH"]}</h2><p>{t["topP"]}</p><div class="op-t"><table><thead><tr>' + "".join(f"<th>{c}</th>" for c in t["ucols"]) +
                "</tr></thead><tbody>" + "".join(urow(u, l) for u in data["unusual"]) + "</tbody></table></div></section>") if data["unusual"] else ""
+        fl = data.get("follow") or []
+        ftable = ('<div class="op-t"><table><thead><tr>' + "".join(f"<th>{c}</th>" for c in t["fcols"]) + "</tr></thead><tbody>"
+                  + "".join(frow(f, l) for f in fl) + "</tbody></table></div>") if fl else f'<p class="op-note">{t["fNone"]}</p>'
+        follow = f'<section class="op-g"><h2>{t["fH"]}</h2><p>{t["fP"]}</p>{ftable}</section>'
         groups = "".join(
             f'<section class="op-g"><h2>{t["groups"][g]}</h2><div class="op-t"><table><thead><tr>' + "".join(f"<th>{c}</th>" for c in t["cols"]) +
             "</tr></thead><tbody>" + "".join(row(i, l) for i in sorted((i for i in data["items"] if i["g"] == g), key=lambda i: -(i["cprem"] + i["pprem"]))) + "</tbody></table></div></section>"
@@ -160,7 +206,7 @@ def build(out, page):
         hist = f'<p class="op-note">{t["hist"].format(n=data.get("histDays", 0))}</p>' if data.get("histDays", 0) < 10 else ""
         blocks.append(f'<div data-l="{l}" lang="{LOC[l]}"><div class="op-hero"><h1>{t["title"]}</h1><p>{t["intro"]}</p></div>'
                       f'<div class="op-sum"><h2>{t["sumH"]}</h2><ul>' + "".join(f"<li>{s}</li>" for s in summary(data, l)) + f"</ul></div>{hist}"
-                      f'{top}{groups}<section class="op-how"><h2>{t["howH"]}</h2><dl>{how}</dl></section><p class="op-src">{t["src"]}</p></div>')
+                      f'{top}{follow}{groups}<section class="op-how"><h2>{t["howH"]}</h2><dl>{how}</dl></section><p class="op-src">{t["src"]}</p></div>')
     body = f'<main>{"".join(blocks)}</main><style>{CSS}</style>'
     titles = {l: f'{T[l]["title"]} · April\'s Stock Atlas' for l in LANGS}
     os.makedirs(f"{out}/options", exist_ok=True)

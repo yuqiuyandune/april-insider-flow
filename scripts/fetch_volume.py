@@ -65,6 +65,9 @@ def fetch(sym, cls, offline=None, days=400):
         if v is None: v = 0.0   # indices carry no volume
         out.append((f"{y}-{m}-{d}", o or c, h or c, l or c, c, v))
     out.sort()
+    # a run during US trading hours sees today's unfinished session: leave it out until after the close
+    now = dt.datetime.now(dt.timezone(dt.timedelta(hours=-5)))   # ET (EST; an hour early in summer, still after 16:00 EDT)
+    if out and out[-1][0] == now.date().isoformat() and now.hour < 17: out = out[:-1]
     if len(out) < 60: raise ValueError(f"only {len(out)} sessions")
     return out
 
