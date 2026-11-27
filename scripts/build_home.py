@@ -20,6 +20,7 @@ import os, re, json, html, glob
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 SITE = "https://april-insider-flow.com"
 SIGNAL_DAYS = 5
+DAILY_OPTIN = False   # the daily-brief checkbox needs Buttondown tags (a paid plan); off until that is sorted out
 LANGS = ("zh", "tw", "en")
 LOC = {"zh": "zh-CN", "tw": "zh-TW", "en": "en"}
 
@@ -106,7 +107,7 @@ T = {
            "calL": "本周与接下来", "calAll": "完整日历 →", "earnL": "最新财报解读", "earnAll": "全部 →", "volL": "昨日量价", "volAll": "量价分析 →", "optL": "昨日期权", "optAll": "期权异动 →", "instL": "机构动向", "instAll": "机构持仓 →", "inst": {"stake13d": "有人 13D 举牌", "stake13g": "新的 5% 大股东", "fundsBuy": "多家基金买入", "fundsSell": "多家基金卖出"},
            "insL": "内部人动向", "insH": "近 5 个交易日的有效买卖", "buy": "▲ 最大的买入", "sell": "▼ 最大的卖出",
            "expL": "探索 Stock Atlas", "soon": "即将上线",
-           "subH": "周报和每日早报", "subP": "每个周末一封周报：一周的内部人买卖要点和新上线的财报解读。勾选早报，每个交易日北京时间晚上 8 点左右还会收到当天的复盘、信号和接下来的大事。中文在前，英文在后。免费，随时退订。", "daily": "也每天收早报（已订阅的读者勾选后再提交一次即可）", "subB": "订阅", "em": "你的邮箱",
+           "subH": "每周一封周报", "subP": "每个周末汇总一周的内部人买卖要点和新上线的财报解读。中文在前，英文在后。免费，随时退订。", "daily": "也每天收早报（已订阅的读者勾选后再提交一次即可）", "subB": "订阅", "em": "你的邮箱",
            "foot": "只做公开数据的整理，不构成投资建议。", "src": "数据来源：SEC EDGAR · 美联储 · BLS · BEA · NYSE",
            "noData": "暂时读不到行情数据。", "nobody": "这几天没有多人同时买入的公司。", "allday": "全天", "bj": "北京", "next": "次日",
            },
@@ -120,7 +121,7 @@ T = {
            "calL": "本週與接下來", "calAll": "完整日曆 →", "earnL": "最新財報解讀", "earnAll": "全部 →", "volL": "昨日量價", "volAll": "量價分析 →", "optL": "昨日選擇權", "optAll": "選擇權異動 →", "instL": "機構動向", "instAll": "機構持股 →", "inst": {"stake13d": "有人 13D 舉牌", "stake13g": "新的 5% 大股東", "fundsBuy": "多家基金買入", "fundsSell": "多家基金賣出"},
            "insL": "內部人動向", "insH": "近 5 個交易日的有效買賣", "buy": "▲ 最大的買入", "sell": "▼ 最大的賣出",
            "expL": "探索 Stock Atlas", "soon": "即將上線",
-           "subH": "週報和每日早報", "subP": "每個週末一封週報：一週的內部人買賣要點和新上線的財報解讀。勾選早報，每個交易日北京時間晚上 8 點左右還會收到當天的復盤、信號和接下來的大事。中文在前，英文在後。免費，隨時退訂。", "daily": "也每天收早報（已訂閱的讀者勾選後再提交一次即可）", "subB": "訂閱", "em": "你的郵箱",
+           "subH": "每週一封週報", "subP": "每個週末彙總一週的內部人買賣要點和新上線的財報解讀。中文在前，英文在後。免費，隨時退訂。", "daily": "也每天收早報（已訂閱的讀者勾選後再提交一次即可）", "subB": "訂閱", "em": "你的郵箱",
            "foot": "只做公開資料的整理，不構成投資建議。", "src": "資料來源：SEC EDGAR · 聯準會 · BLS · BEA · NYSE",
            "noData": "暫時讀不到行情資料。", "nobody": "這幾天沒有多人同時買入的公司。", "allday": "全天", "bj": "北京", "next": "次日",
            },
@@ -134,7 +135,7 @@ T = {
            "calL": "This week and next", "calAll": "Full calendar →", "earnL": "Latest earnings reviews", "earnAll": "All →", "volL": "Price and volume", "volAll": "Full table →", "optL": "Options", "optAll": "Options activity →", "instL": "Institutions", "instAll": "Holdings →", "inst": {"stake13d": "new 13D stake", "stake13g": "new 5% holder", "fundsBuy": "several funds bought", "fundsSell": "several funds sold"},
            "insL": "Insider activity", "insH": "Effective buying and selling, last 5 trading days", "buy": "▲ Largest buys", "sell": "▼ Largest sells",
            "expL": "Explore Stock Atlas", "soon": "Coming soon",
-           "subH": "Weekly email and daily brief", "subP": "Every weekend: the week's insider trading highlights and new earnings reviews. Tick the daily brief to also get the day's recap, signals and what's coming, around 8pm Beijing time on trading days. Chinese first, English below. Free, unsubscribe anytime.", "daily": "Also send me the daily brief (already subscribed? tick it and submit again)", "subB": "Subscribe", "em": "you@example.com",
+           "subH": "A weekly email", "subP": "Every weekend: the week's insider trading highlights and new earnings reviews. Chinese first, English below. Free, unsubscribe anytime.", "daily": "Also send me the daily brief (already subscribed? tick it and submit again)", "subB": "Subscribe", "em": "you@example.com",
            "foot": "A summary of public data, not investment advice.", "src": "Sources: SEC EDGAR · Federal Reserve · BLS · BEA · NYSE",
            "noData": "Market data is not available right now.", "nobody": "No company had several insiders buying in these days.", "allday": "All day", "bj": "Beijing", "next": "next day",
            },
@@ -357,7 +358,7 @@ def body(asof, sigs, buys, sells, vol="", opt="", of=None, ol=None, inst="", inf
                         f'<form class="subf" action="https://buttondown.com/api/emails/embed-subscribe/april-insider-stock" method="post" target="_blank" rel="noopener">'
                         f'<label class="vh" for="em-{l}">{T[l]["em"]}</label><input id="em-{l}" class="js-em" type="email" name="email" required autocomplete="email" placeholder="{T[l]["em"]}">'
                         f'<input type="hidden" name="embed" value="1"><button type="submit">{T[l]["subB"]}</button>'
-                        f'<label class="dly"><input type="checkbox" name="tag" value="daily"> {T[l]["daily"]}</label></form></section>')
+                        + (f'<label class="dly"><input type="checkbox" name="tag" value="daily"> {T[l]["daily"]}</label>' if DAILY_OPTIN else "") + '</form></section>')
     foot = tri(lambda l: f'<footer class="foot"><span>April\'s Stock Atlas · {T[l]["foot"]}</span><span>{T[l]["src"]}</span></footer>')
     return (f'<main class="home"><section aria-label="Today">{tri(today)}<div class="tiles" id="tiles"></div><p class="tiles-msg" id="tiles-msg" hidden></p></section>'
             f'<div class="grid"><section class="box">{sig_box}</section><div class="side">'

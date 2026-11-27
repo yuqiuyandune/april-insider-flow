@@ -21,11 +21,6 @@
  },
  {
   "date": "2026-11-27",
-  "zh": "新增每日早报：每个交易日北京时间晚上 8 点左右，发当天的盘后复盘、内部人信号、期权和机构动向，以及接下来的大事。想收的话，在网站任意页面点「订阅」，勾选「也每天收早报」再提交一次即可，周报照常",
-  "en": "a new daily brief: the day's market recap, insider signals, options and institutional moves and what's coming, around 8pm Beijing time on trading days. To get it, click Subscribe on any page, tick \"Also send me the daily brief\" and submit again; the weekly email stays as it is"
- },
- {
-  "date": "2026-11-27",
   "zh": "网站新增期权异动、机构持仓（13F 和 13D）、宏观日历和每日盘后复盘，首页改成「今日信号」，所有页面用同一条导航",
   "en": "the site now has options activity, institutional holdings (13F and 13D), a macro calendar and a daily market recap; the homepage shows today's signals and every page shares one navigation bar"
  }
