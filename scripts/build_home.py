@@ -281,6 +281,7 @@ CSS = """
 .ev.mkt .dt{background:color-mix(in srgb,var(--t2) 16%,transparent)}
 .ev .m{font-size:11.5px;color:var(--muted)}.ev .d{font-size:18px;font-weight:700}
 .ev b{display:block;font-size:14.5px;line-height:1.45}.ev small{font-size:13px;color:var(--muted)}
+.earn3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 28px}
 .er{display:block;padding:11px 0;border-top:1px solid var(--line);margin-top:8px;color:var(--ink);text-decoration:none}
 .er small{font-size:12.5px;color:var(--faint)}.er small b{color:var(--ink)}
 .er span{display:block;font-weight:600;font-size:14.5px;line-height:1.5}.er:hover span{color:var(--accent)}
@@ -308,7 +309,7 @@ a.mod:hover{border-color:var(--accent)}
 .chip.tag.up{color:#0b7a52}.chip.tag.dn{color:#c0362c}
 .vsum{margin:8px 0 0;padding:0;list-style:none}.vsum li{padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.6}
 .empty{color:var(--muted);font-size:14px;padding:12px 0;border-top:1px solid var(--line)}
-@media (max-width:900px){.pair{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.mods{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr;gap:16px}}
+@media (max-width:900px){.earn3{grid-template-columns:1fr}.pair{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.mods{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr;gap:16px}}
 @media (max-width:700px){.tiles{display:flex;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px}.tiles::-webkit-scrollbar{display:none}.tile{flex:0 0 136px}}
 @media (max-width:560px){.box{padding:16px}.sig{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}.tk{grid-column:1/-1;justify-self:start;padding:3px 10px;font-size:13px}.home{gap:18px;padding-top:18px}}
 """
@@ -362,9 +363,10 @@ def body(asof, sigs, buys, sells, vol="", opt="", of=None, ol=None, inst="", inf
     foot = tri(lambda l: f'<footer class="foot"><span>April\'s Stock Atlas · {T[l]["foot"]}</span><span>{T[l]["src"]}</span></footer>')
     return (f'<main class="home"><section aria-label="Today">{tri(today)}<div class="tiles" id="tiles"></div><p class="tiles-msg" id="tiles-msg" hidden></p></section>'
             f'<div class="grid"><section class="box">{sig_box}</section><div class="side">'
-            f'<section class="box">{cal_h}<div id="cal"></div></section><section class="box">{earn_h}<div id="earn"></div></section>{inst}</div></div>'
+            f'<section class="box">{cal_h}<div id="cal"></div></section>{inst}</div></div>'
             + (f'<div class="pair">{vol}{opt}</div>' if vol or opt else "") +
-            f'<section class="box">{ins}</section><section>{mods}</section><div id="subscribe">{sub}</div></main>{foot}')
+            f'<section class="box">{ins}</section><section class="box">{earn_h}<div id="earn" class="earn3"></div></section>'
+            f'<section>{mods}</section><div id="subscribe">{sub}</div></main>{foot}')
 
 def inst_box(bi):
     if not bi: return ""
