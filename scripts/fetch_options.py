@@ -132,9 +132,13 @@ def main():
     universe = [(s, c, g, {"zh": zh, "tw": tw, "en": en}) for s, c, g, zh, tw, en in FIXED]
     universe += [(t, "stocks", "insider", n) for t, n in insider_symbols() if t not in fixed]
     items, missing = [], []
+    # Nasdaq stamps the chain with today's date even when the market was closed; use the last session the price data saw
+    vp = os.path.join(ROOT, "data", "volume.json")
+    last_session = json.load(open(vp, encoding="utf-8")).get("date") if os.path.exists(vp) else None
     for sym, cls, group, name in universe:
         try:
             day, px, rows = parse(fetch(sym, cls, a.offline))
+            if last_session and day.isoformat() > last_session: day = dt.date.fromisoformat(last_session)
             it = {"t": sym, "g": group, "n": name, "date": day.isoformat(), **analyse(group, day, px, rows, hist.get(sym, []))}
             items.append(it)
             h = [x for x in hist.get(sym, []) if x[0] != it["date"]] + [[it["date"], it["cv"], it["pv"], it["cprem"], it["pprem"]]]
@@ -146,6 +150,7 @@ def main():
     fixed_ok = sum(i["t"] in fixed for i in items)
     if fixed_ok < len(FIXED) // 2: sys.exit(f"too many symbols failed: {missing}")
     day = max({i["date"] for i in items}, key=lambda d: (sum(i["date"] == d for i in items), d))
+
     allu = sorted(({"t": i["t"], "n": i["n"], **u} for i in items if i["date"] == day for u in i["unusual"]), key=lambda u: -u["prem"])[:15]
     out = {"date": day, "generated_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"), "missing": missing,
            "histDays": max((len(v) for v in hist.values()), default=0), "items": items, "unusual": allu}

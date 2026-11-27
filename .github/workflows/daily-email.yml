@@ -1,0 +1,84 @@
+name: Daily brief email
+
+# Weekdays 11:40 UTC = 19:40 Beijing (06:40 ET in winter, 07:40 in summer), after the daily data run
+# (03:45 UTC) has added the previous US session. A catch-up run follows in case GitHub delays the first.
+# Only subscribers tagged "daily" receive it (scripts/bd_daily.py checks the filter before sending).
+# Every run first asks Buttondown whether this session's brief already exists, so a session is never
+# sent twice: after a US holiday the next brief would repeat the same session, and is skipped.
+# Scheduled runs SEND if the data is for the latest US session; otherwise they save a DRAFT and open an issue.
+# Manual runs save a draft unless "send" is ticked.
+on:
+  schedule:
+    - cron: "40 11 * * 1-5"
+    - cron: "17 13 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      send:
+        description: "Send to daily subscribers (leave unticked to only save a draft)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: daily-email
+  cancel-in-progress: false
+
+jobs:
+  email:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the brief (Chinese first, English after)
+        run: |
+          python3 -I scripts/daily_email.py --out daily.json
+          python3 -c "import json; d=json.load(open('daily.json')); print('OK=' + ('1' if d['ok'] else '0'))" >> "$GITHUB_ENV"
+          { echo "### $(python3 -c "import json; print(json.load(open('daily.json'))['subject'])")"; echo; python3 -c "import json; print(json.load(open('daily.json'))['body'])"; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Stop if this session's brief already exists in Buttondown
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          EVENT: ${{ github.event_name }}
+          WANT_SEND: ${{ inputs.send }}
+        run: |
+          if [ -z "$BUTTONDOWN_API_KEY" ]; then echo "BUTTONDOWN_API_KEY secret not set"; exit 1; fi
+          python3 -I scripts/bd_daily.py daily.json --existing | tee existing.txt
+          skip=""
+          if [ "$EVENT" = "schedule" ] && grep -q . existing.txt; then skip=1; fi
+          if [ "$WANT_SEND" = "true" ] && grep -qv '^draft' existing.txt; then skip=1; fi
+          if [ -n "$skip" ]; then
+            echo "SKIP=1" >> "$GITHUB_ENV"
+            { echo "### Skipped: this session's brief already exists in Buttondown"; echo; cat existing.txt; } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Send to daily subscribers, or save a draft
+        if: env.SKIP != '1'
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          EVENT: ${{ github.event_name }}
+          WANT_SEND: ${{ inputs.send }}
+        run: |
+          mode=draft
+          if [ "$OK" = "1" ] && { [ "$EVENT" = "schedule" ] || [ "$WANT_SEND" = "true" ]; }; then mode=send; fi
+          python3 -I scripts/bd_daily.py daily.json --status "$mode"
+          echo "MODE=$mode" >> "$GITHUB_ENV"
+
+      - name: Open an issue when the brief was held back
+        if: always() && env.SKIP != '1' && (env.OK != '1' || failure()) && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "Run: $RUN_URL"; echo
+            python3 -c "import json; d=json.load(open('daily.json')); print('Problems: ' + '; '.join(d['problems']))" 2>/dev/null || echo "The run failed before the brief was built."
+            echo; echo "The brief was saved as a Buttondown draft (or not created). Check the data run, then send the draft from Buttondown or re-run this workflow with send ticked."
+          } > issue.md
+          gh issue create --title "Daily brief held back ($(TZ=Asia/Shanghai date +%F))" --body-file issue.md
