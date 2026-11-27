@@ -81,6 +81,12 @@ jobs:
           python3 -I scripts/fetch_options.py
           if [ -f work/options_changed ]; then echo "OPT=1" >> "$GITHUB_ENV"; fi
 
+      - name: Institutional holdings (13D/13G daily, 13F when a fund files)
+        continue-on-error: true
+        run: |
+          python3 -I scripts/fetch_institutions.py --ua "$SEC_UA"
+          if [ -f work/inst_changed ]; then echo "INST=1" >> "$GITHUB_ENV"; fi
+
       - name: Consistency check (all stored days)
         run: python3 -I scripts/check_data.py | tee -a work/check.txt
 
@@ -97,14 +103,14 @@ jobs:
           fi
 
       - name: Build site
-        if: env.ADDED != '' || env.MACRO == '1' || env.VOL == '1' || env.OPT == '1' || inputs.deploy
+        if: env.ADDED != '' || env.MACRO == '1' || env.VOL == '1' || env.OPT == '1' || env.INST == '1' || inputs.deploy
         run: |
           python3 -I scripts/build_stack.py
           python3 -I scripts/build_stack.py energy
           python3 -I scripts/build_site.py data/days site/index.html public
 
       - name: Deploy to Cloudflare Pages
-        if: env.ADDED != '' || env.MACRO == '1' || env.VOL == '1' || env.OPT == '1' || inputs.deploy
+        if: env.ADDED != '' || env.MACRO == '1' || env.VOL == '1' || env.OPT == '1' || env.INST == '1' || inputs.deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -113,16 +119,17 @@ jobs:
           grep -q "Deployment complete" work/deploy.txt
 
       - name: Commit new data
-        if: env.ADDED != '' || env.MACRO == '1' || env.VOL == '1' || env.OPT == '1'
+        if: env.ADDED != '' || env.MACRO == '1' || env.VOL == '1' || env.OPT == '1' || env.INST == '1'
         run: |
           git config user.name "insider-flow-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/days data/macro.json data/volume.json data/options.json data/options_hist.json
+          git add data/days data/macro.json data/volume.json data/options.json data/options_hist.json data/stakes.json data/funds.json data/cusip_tickers.json
           parts=""
           [ -n "$ADDED" ] && parts="Add Form 4 data: $ADDED"
           [ "$MACRO" = "1" ] && parts="${parts:+$parts; }update macro calendar"
           [ "$VOL" = "1" ] && parts="${parts:+$parts; }update price and volume"
           [ "$OPT" = "1" ] && parts="${parts:+$parts; }update options"
+          [ "$INST" = "1" ] && parts="${parts:+$parts; }update institutional holdings"
           msg="$parts"
           git commit -m "$msg"
           # the build step rewrites tracked files (e.g. stack/data.json); keep only the data commit
