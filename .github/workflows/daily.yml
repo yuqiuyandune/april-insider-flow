@@ -136,7 +136,9 @@ jobs:
           git checkout -- . && git clean -fdq -e work -e public
           # other people or sessions also push to main: rebase on top of them and retry
           for i in 1 2 3 4 5; do
-            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            # the data files are generated: if another run committed the same files meanwhile, keep this run's (newer) version
+            git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0
+            git rebase --abort 2>/dev/null || true
             sleep $((i * 5))
           done
           echo "could not push the new data commit"; exit 1
