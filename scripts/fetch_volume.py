@@ -14,7 +14,7 @@ A symbol that fails keeps nothing for that run (it is listed under "missing"); t
     python3 -I scripts/fetch_volume.py [--offline DIR]   (DIR holds <SYM>.json Nasdaq responses, for testing)
 Standard library only.
 """
-import argparse, datetime as dt, json, os, sys, time, urllib.request
+import argparse, csv, datetime as dt, importlib.util, io, json, os, sys, time, urllib.request
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 OUT = os.path.join(ROOT, "data", "volume.json")
@@ -30,7 +30,7 @@ UNIVERSE = [
     ("XLV", "etf", "sector", "医疗保健", "醫療保健", "Health care"), ("XLI", "etf", "sector", "工业", "工業", "Industrials"),
     ("XLB", "etf", "sector", "基础材料", "基礎材料", "Materials"), ("XLRE", "etf", "sector", "房地产", "房地產", "Real estate"),
     ("XLU", "etf", "sector", "公用事业", "公用事業", "Utilities"),
-    ("SMH", "etf", "asset", "半导体", "半導體", "Semiconductors"), ("TLT", "etf", "asset", "20 年以上美债", "20 年以上美債", "20+ year Treasuries"),
+    ("SMH", "etf", "asset", "半导体", "半導體", "Semiconductors"), ("SOXX", "etf", "asset", "费城半导体", "費城半導體", "PHLX Semiconductor"), ("TLT", "etf", "asset", "20 年以上美债", "20 年以上美債", "20+ year Treasuries"),
     ("GLD", "etf", "asset", "黄金", "黃金", "Gold"), ("USO", "etf", "asset", "原油", "原油", "Crude oil"), ("IBIT", "stocks", "asset", "比特币", "比特幣", "Bitcoin"),
     ("AAPL", "stocks", "stock", "苹果", "蘋果", "Apple"), ("MSFT", "stocks", "stock", "微软", "微軟", "Microsoft"),
     ("NVDA", "stocks", "stock", "英伟达", "輝達", "NVIDIA"), ("AMZN", "stocks", "stock", "亚马逊", "亞馬遜", "Amazon"),
@@ -44,14 +44,15 @@ BIG = {"index": 1.0, "sector": 1.0, "asset": 1.5, "stock": 2.0}
 
 def num(s):
     s = str(s or "").replace("$", "").replace(",", "").strip()
-    return float(s) if s and s.upper() != "N/A" else None
+    try: return float(s)
+    except ValueError: return None   # "N/A", "--"
 
-def fetch(sym, cls, offline=None):
+def fetch(sym, cls, offline=None, days=400):
     if offline:
         j = json.load(open(os.path.join(offline, f"{sym}.json"), encoding="utf-8"))
     else:
-        to = dt.date.today(); fr = to - dt.timedelta(days=400)
-        url = f"https://api.nasdaq.com/api/quote/{sym}/historical?assetclass={cls}&fromdate={fr}&todate={to}&limit=400"
+        to = dt.date.today(); fr = to - dt.timedelta(days=days)
+        url = f"https://api.nasdaq.com/api/quote/{sym}/historical?assetclass={cls}&fromdate={fr}&todate={to}&limit={days}"
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; april-stock-atlas daily data)", "Accept": "application/json"})
         with urllib.request.urlopen(req, timeout=60) as r:
             j = json.loads(r.read().decode("utf-8"))
@@ -60,7 +61,8 @@ def fetch(sym, cls, offline=None):
     for r in rows:
         m, d, y = r["date"].split("/")
         o, h, l, c, v = num(r.get("open")), num(r.get("high")), num(r.get("low")), num(r.get("close")), num(r.get("volume"))
-        if c is None or v is None: continue
+        if c is None: continue
+        if v is None: v = 0.0   # indices carry no volume
         out.append((f"{y}-{m}-{d}", o or c, h or c, l or c, c, v))
     out.sort()
     if len(out) < 60: raise ValueError(f"only {len(out)} sessions")
@@ -105,16 +107,75 @@ def analyse(sym, group, rows):
             "pos": round(pos, 2), "ma": mas, "cross": cross, "hi52": round((last / hi - 1) * 100, 1), "lo52": round((last / lo - 1) * 100, 1),
             "flags": flags, "score": round(score, 2), "spark": spark}
 
+RECAPS = os.path.join(ROOT, "data", "recaps")
+CACHE = os.path.join(WORK, "px.json")
+
+def http(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; april-stock-atlas daily data)"})
+    with urllib.request.urlopen(req, timeout=60) as r: return r.read().decode("utf-8", "replace")
+
+def vix_history():
+    out = {}
+    for r in csv.DictReader(io.StringIO(http("https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv"))):
+        m, d, y = r["DATE"].split("/")
+        if y < "2025": continue
+        out[f"{y}-{m}-{d}"] = tuple(float(r[k]) for k in ("OPEN", "HIGH", "LOW", "CLOSE"))
+    return out
+
+def ust_history():
+    out = {}
+    for y in sorted({dt.date.today().year - 1, dt.date.today().year}):
+        url = (f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/{y}/all"
+               f"?type=daily_treasury_yield_curve&field_tdr_date_value={y}&page&_format=csv")
+        for r in csv.DictReader(io.StringIO(http(url))):
+            m, d, yy = r["Date"].split("/")
+            out[f"{yy}-{m}-{d}"] = {k: float(r[c]) for k, c in (("5", "5 Yr"), ("10", "10 Yr"), ("30", "30 Yr")) if r.get(c)}
+    return out
+
+def chain():
+    d = json.load(open(os.path.join(ROOT, "stack", "data.json"), encoding="utf-8"))
+    return {c["t"]: c["seg"] for c in d["companies"] if c.get("listed")}, {s["id"]: s["name"] for s in d["segments"]}
+
+def run_recaps(H, vix, ust, ch, segs, days):
+    spec = importlib.util.spec_from_file_location("recap", os.path.join(os.path.dirname(os.path.abspath(__file__)), "recap.py"))
+    rc = importlib.util.module_from_spec(spec); spec.loader.exec_module(rc)
+    os.makedirs(RECAPS, exist_ok=True); done = []
+    for d in days:
+        out = rc.recap(d, H, vix, ust, ch, {str(k): v for k, v in segs.items()})
+        if not out: continue
+        out["segNames"] = {str(k): v for k, v in segs.items()}
+        p = os.path.join(RECAPS, f"{d}.json")
+        old = open(p, encoding="utf-8").read() if os.path.exists(p) else None
+        new = json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n"
+        if old != new:
+            open(p, "w", encoding="utf-8").write(new); done.append(d)
+    return done
+
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--offline"); a = ap.parse_args()
-    items, missing = [], []
+    ap = argparse.ArgumentParser(); ap.add_argument("--offline"); ap.add_argument("--cache", action="store_true", help="reuse work/px.json (testing)")
+    ap.add_argument("--recap-days", type=int, default=3, help="recompute the recap of the last N sessions")
+    a = ap.parse_args()
+    items, missing, H = [], [], {}
+    cached = json.load(open(CACHE)) if a.cache and os.path.exists(CACHE) else None
+    def rows_for(sym, cls, days=400):
+        if cached and sym in cached: return [tuple(r) for r in cached[sym]]
+        r = fetch(sym, cls, a.offline, days)
+        if not a.offline: time.sleep(0.6)
+        return r
     for sym, cls, group, zh, tw, en in UNIVERSE:
         try:
-            rows = fetch(sym, cls, a.offline)
+            rows = rows_for(sym, cls, 1100 if group == "index" else 400); H[sym] = rows
             items.append({"t": sym, "g": group, "n": {"zh": zh, "tw": tw, "en": en}, **analyse(sym, group, rows)})
         except Exception as ex:
             missing.append(sym); print(f"{sym}: FAILED {ex}", file=sys.stderr)
-        if not a.offline: time.sleep(0.6)
+    # for the recap: the Nasdaq Composite itself, the Dow ETF, and every listed company in the AI chain
+    ch, segs = chain()
+    for sym, cls in [("COMP", "index"), ("DIA", "etf")] + [(t, "stocks") for t in ch]:
+        if sym in H: continue
+        try: H[sym] = rows_for(sym, cls, 1100 if sym == "COMP" else 400)
+        except Exception as ex: print(f"{sym}: FAILED {ex}", file=sys.stderr)
+    os.makedirs(WORK, exist_ok=True)
+    if not cached: json.dump(H, open(CACHE, "w"))
     if len(items) < len(UNIVERSE) // 2: sys.exit(f"too many symbols failed: {missing}")
     # the session everything should be on: the latest date most symbols share
     dates = sorted({i["date"] for i in items})
@@ -135,6 +196,18 @@ def main():
         os.makedirs(WORK, exist_ok=True)
         with open(os.path.join(WORK, "volume_problems.md"), "w", encoding="utf-8") as f:
             f.write(f"Price-and-volume read for {day}: " + (f"no data for {', '.join(missing)}. " if missing else "") + (f"older session for {', '.join(stale)}." if stale else "") + "\n")
+    try:
+        vix = cached.get("_vix") if cached and "_vix" in cached else vix_history()
+        ust = cached.get("_ust") if cached and "_ust" in cached else ust_history()
+        if not cached: H2 = dict(H); H2["_vix"] = vix; H2["_ust"] = ust; json.dump(H2, open(CACHE, "w"))
+        sessions = [r[0] for r in H["SPY"]][-a.recap_days:]
+        vix = {k: tuple(v) for k, v in vix.items()}
+        done = run_recaps(H, vix, ust, ch, segs, sessions)
+        if done:
+            os.makedirs(WORK, exist_ok=True); open(os.path.join(WORK, "volume_changed"), "w").write("1")
+        print(f"recap: {len(done)} written ({', '.join(done)})")
+    except Exception as ex:
+        import traceback; traceback.print_exc(); print(f"recap: FAILED {ex}", file=sys.stderr)
     print(f"{day}: {len(items)} symbols, missing {missing}, stale {stale}, changed={changed}")
 
 if __name__ == "__main__":

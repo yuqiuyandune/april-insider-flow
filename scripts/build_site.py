@@ -345,7 +345,7 @@ def main():
     # Price and volume (/market/volume/): from data/volume.json (scripts/fetch_volume.py)
     _spec = importlib.util.spec_from_file_location("build_volume", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_volume.py"))
     _bv = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bv)
-    if (vol := _bv.build(out, _ba.page)): art_paths.insert(0, vol)
+    if (vol := _bv.build(out, _ba.page, _ba.md)): art_paths.insert(0, vol)
     # Options (/options/): from data/options.json (scripts/fetch_options.py)
     _spec = importlib.util.spec_from_file_location("build_options", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_options.py"))
     _bo = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bo)

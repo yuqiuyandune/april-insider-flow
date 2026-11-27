@@ -15,7 +15,7 @@ MON = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 
 T = {
     "zh": {"title": "量价分析", "back": "← 市场观察",
-           "intro": "每个交易日收盘后，看大盘、11 个板块、主要资产和重点个股的涨跌和成交量：放量还是缩量、站上还是跌破均线、离一年高点多远。数据来自 Nasdaq，按固定规则自动生成，不构成投资建议。",
+           "intro": "每个交易日收盘后的复盘：先看盘中真正发生了什么，再看板块、成交量、资金去向、债市和 AI 产业链。每一句都来自固定的读盘规则，只在条件成立时才写，所以平淡的日子短、剧烈的日子长。数据来自 Nasdaq、CBOE 和美国财政部，不构成投资建议。",
            "sumH": "一句话总结", "groups": {"index": "大盘", "sector": "板块", "asset": "主题与资产", "stock": "重点个股"},
            "cols": ["代码", "收盘", "涨跌", "量比", "当日位置", "均线 20 · 50 · 200", "距一年高点", "近 30 日", "标记"],
            "breadth": "{u}/{s} 个板块上涨 · {a50}/{n} 站上 50 日线 · {a200}/{n} 站上 200 日线",
@@ -32,7 +32,7 @@ T = {
                ("标记", "放量上涨或下跌：涨跌幅超过门槛（ETF 1%，个股 2%）且量比 1.5 倍以上。站上或跌破：当天收盘从均线一侧穿到另一侧。一年新高或新低按收盘价算。")],
            "miss": "这些代码今天没有拿到数据：", "src": "数据来源：Nasdaq（每日开高低收和成交量）。每个交易日收盘后自动更新。"},
     "tw": {"title": "量價分析", "back": "← 市場觀察",
-           "intro": "每個交易日收盤後，看大盤、11 個板塊、主要資產和重點個股的漲跌和成交量：放量還是縮量、站上還是跌破均線、離一年高點多遠。資料來自 Nasdaq，按固定規則自動產生，不構成投資建議。",
+           "intro": "每個交易日收盤後的復盤：先看盤中真正發生了什麼，再看板塊、成交量、資金去向、債市和 AI 產業鏈。每一句都來自固定的讀盤規則，只在條件成立時才寫，所以平淡的日子短、劇烈的日子長。資料來自 Nasdaq、CBOE 和美國財政部，不構成投資建議。",
            "sumH": "一句話總結", "groups": {"index": "大盤", "sector": "板塊", "asset": "主題與資產", "stock": "重點個股"},
            "cols": ["代碼", "收盤", "漲跌", "量比", "當日位置", "均線 20 · 50 · 200", "距一年高點", "近 30 日", "標記"],
            "breadth": "{u}/{s} 個板塊上漲 · {a50}/{n} 站上 50 日線 · {a200}/{n} 站上 200 日線",
@@ -49,7 +49,7 @@ T = {
                ("標記", "放量上漲或下跌：漲跌幅超過門檻（ETF 1%，個股 2%）且量比 1.5 倍以上。站上或跌破：當天收盤從均線一側穿到另一側。一年新高或新低按收盤價算。")],
            "miss": "這些代碼今天沒有拿到資料：", "src": "資料來源：Nasdaq（每日開高低收和成交量）。每個交易日收盤後自動更新。"},
     "en": {"title": "Price and volume", "back": "← Market watch",
-           "intro": "After every session: how the index, the 11 sectors, the main assets and key stocks moved, and on how much volume. Heavy or light trading, above or below the moving averages, how far from the one-year high. Data from Nasdaq, written by fixed rules; not investment advice.",
+           "intro": "A recap after every session: first what really happened during the day, then sectors, volume, where the money went, bonds and the AI supply chain. Every sentence comes from a fixed reading rule and appears only when its condition holds, so quiet days are short and wild days are long. Data from Nasdaq, CBOE and the US Treasury; not investment advice.",
            "sumH": "In short", "groups": {"index": "Index", "sector": "Sectors", "asset": "Themes and assets", "stock": "Key stocks"},
            "cols": ["Ticker", "Close", "Change", "Rel. volume", "Close in range", "MA 20 · 50 · 200", "From 1-yr high", "30 days", "Flags"],
            "breadth": "{u}/{s} sectors up · {a50}/{n} above the 50-day · {a200}/{n} above the 200-day",
@@ -141,26 +141,105 @@ CSS = """
 .vl-src{color:var(--faint);font-size:13px;margin:18px 0 40px}
 """
 
-def build(out, page):
-    data = load()
-    if not data: return None
+RECAPS = os.path.join(ROOT, "data", "recaps")
+NOTES = os.path.join(ROOT, "data", "notes")
+
+def _rt():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("recap_text", os.path.join(os.path.dirname(os.path.abspath(__file__)), "recap_text.py"))
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+
+def recaps():
+    """[(date, recap)] newest first"""
+    if not os.path.isdir(RECAPS): return []
+    out = []
+    for f in sorted(os.listdir(RECAPS), reverse=True):
+        if f.endswith(".json"): out.append((f[:-5], json.load(open(os.path.join(RECAPS, f), encoding="utf-8"))))
+    return out
+
+def note(day, l, md):
+    """April's own notes for a day: data/notes/<date>.md (Simplified Chinese), optional .tw.md and .en.md; Simplified is used when a language is missing"""
+    for name in ([f"{day}.{l}.md"] if l != "zh" else []) + [f"{day}.md"]:
+        p = os.path.join(NOTES, name)
+        if os.path.exists(p) and md: return md(open(p, encoding="utf-8").read())
+    return ""
+
+def home_points(l):
+    """the homepage's price-and-volume box: the latest recap's points worth remembering"""
+    rs = recaps()
+    if not rs: return []
+    rt = _rt(); d, r = rs[0]
+    return [html.escape(x) for x in rt.key_points(r, l)]
+
+RC_CSS = """
+.rc-date{color:var(--muted);font-size:15px;margin:-4px 0 18px}
+.rc-key{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px;margin:0 0 10px}
+.rc-key h2{margin:0 0 8px;padding:0;border:0;font-size:13px;letter-spacing:.08em;color:var(--muted);font-family:var(--body)}
+.rc-key ol{margin:0;padding-left:1.3em}.rc-key li{margin:0 0 8px;line-height:1.7;font-weight:600}
+.rc-s{margin:26px 0 0}.rc-s>h2{font-size:20px;margin:0 0 10px;padding:14px 0 0;border-top:1px solid var(--line)}
+.rc-s h3{font-size:14px;margin:14px 0 6px;color:var(--muted)}
+.rc-s p{margin:8px 0;line-height:1.75;max-width:80ch}
+.rc-t{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;margin:0 0 6px}
+.rc-t table{min-width:720px;font-size:14px}.rc-t td{padding:8px 12px}.rc-t td small{color:var(--muted);margin-left:6px;font-size:12px}
+.rc-board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 24px;max-width:640px}
+.bd{display:flex;gap:8px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--line);font-size:14px}.bd i{margin-left:auto;font-style:normal;font-weight:600}
+.rc-chips{display:flex;flex-wrap:wrap;gap:6px 8px}
+.vb{display:inline-flex;gap:6px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:13.5px}
+.vb i{font-style:normal}.vb i.hot{color:var(--accent);font-weight:700}.vb i.cold{color:var(--faint)}.vb a{text-decoration:none;color:var(--ink)}
+.rc-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px}
+.rc-notes{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px 18px}
+.rc-note{color:var(--faint);font-size:12.5px;margin:18px 0 0}
+.rc-arch{margin:28px 0 0}.rc-arch h2{font-size:16px;margin:0 0 8px;padding:12px 0 0;border-top:1px solid var(--line)}
+.rc-arch a{display:inline-block;margin:0 10px 6px 0;font-size:14px}.rc-arch b{display:inline-block;margin:0 10px 6px 0;font-size:14px}
+.rc-all{margin:40px 0 0}.rc-all>h2{font-size:22px;padding-top:18px;border-top:2px solid var(--line)}
+@media (max-width:560px){.rc-board,.rc-two{grid-template-columns:1fr}}
+"""
+
+def build(out, page, md=None):
+    data = load(); rs = recaps()
+    if not data and not rs: return None
+    rt = _rt() if rs else None
+    def archive(l, cur):
+        u = rt.UI[l]
+        links = "".join(f'<b>{rt.day_lbl(d, l)}</b>' if d == cur else f'<a href="/market/volume/{"" if i == 0 else d + "/"}">{rt.day_lbl(d, l)}</a>' for i, (d, _) in enumerate(rs[:30]))
+        return f'<nav class="rc-arch" aria-label="{u["archive"]}"><h2>{u["archive"]}</h2>{links}</nav>'
+    def recap_block(l, d, r):
+        u = rt.UI[l]
+        return f'<p class="rc-date">{rt.day_lbl(d, l)} · {u["title"]}</p>' + rt.sections(r, l, note(d, l, md)) + archive(l, d)
     blocks = []
     for l in LANGS:
-        t = T[l]; b = data["breadth"]
-        groups = "".join(
-            f'<section class="vl-g"><h2>{t["groups"][g]}</h2><div class="vl-t"><table><thead><tr>' + "".join(f"<th>{c}</th>" for c in t["cols"]) +
-            "</tr></thead><tbody>" + "".join(row(i, l) for i in data["items"] if i["g"] == g) + "</tbody></table></div></section>"
-            for g in ("index", "sector", "asset", "stock"))
-        how = "".join(f"<dt>{E(a)}</dt><dd>{E(d)}</dd>" for a, d in t["how"])
-        miss = f'<p class="vl-src">{t["miss"]}{E(", ".join(data["missing"]))}</p>' if data.get("missing") else ""
-        blocks.append(f'<div data-l="{l}" lang="{LOC[l]}"><div class="vl-hero"><p class="crumb"><a href="/market/">{t["back"]}</a></p><h1>{t["title"]}</h1><p>{t["intro"]}</p></div>'
-                      f'<div class="vl-sum"><h2>{t["sumH"]}</h2><ul>' + "".join(f"<li>{s}</li>" for s in summary(data, l)) + "</ul></div>"
+        t = T[l]
+        hero = f'<div class="vl-hero"><p class="crumb"><a href="/market/">{t["back"]}</a></p><h1>{t["title"]}</h1><p>{t["intro"]}</p></div>'
+        rec = recap_block(l, rs[0][0], rs[0][1]) if rs else ""
+        tables = ""
+        if data:
+            b = data["breadth"]
+            groups = "".join(
+                f'<section class="vl-g"><h2>{t["groups"][g]}</h2><div class="vl-t"><table><thead><tr>' + "".join(f"<th>{c}</th>" for c in t["cols"]) +
+                "</tr></thead><tbody>" + "".join(row(i, l) for i in data["items"] if i["g"] == g) + "</tbody></table></div></section>"
+                for g in ("index", "sector", "asset", "stock"))
+            how = "".join(f"<dt>{E(a)}</dt><dd>{E(d)}</dd>" for a, d in t["how"])
+            miss = f'<p class="vl-src">{t["miss"]}{E(", ".join(data["missing"]))}</p>' if data.get("missing") else ""
+            tables = (f'<section class="rc-all"><h2>{(rt.UI[l]["table"] if rt else "")}</h2>'
                       f'<p class="vl-br">{t["breadth"].format(u=b["sectorsUp"], s=b["sectors"], a50=b["above50"], a200=b["above200"], n=b["n"])}</p>'
-                      f'{groups}<section class="vl-how"><h2>{t["howH"]}</h2><dl>{how}</dl></section>{miss}<p class="vl-src">{t["src"]}</p></div>')
-    body = f'<main>{"".join(blocks)}</main><style>{CSS}</style>'
+                      f'{groups}<section class="vl-how"><h2>{t["howH"]}</h2><dl>{how}</dl></section>{miss}</section>')
+        blocks.append(f'<div data-l="{l}" lang="{LOC[l]}">{hero}{rec}{tables}<p class="vl-src">{t["src"]}</p></div>')
+    body = f'<main>{"".join(blocks)}</main><style>{CSS}{RC_CSS}</style>'
     titles = {l: f'{T[l]["title"]} · April\'s Stock Atlas' for l in LANGS}
     os.makedirs(f"{out}/market/volume", exist_ok=True)
     open(f"{out}/market/volume/index.html", "w", encoding="utf-8").write(page("market/volume/", titles, T["zh"]["intro"], body))
-    with open(f"{out}/market/volume/data.json", "w", encoding="utf-8") as fh:
-        json.dump(data, fh, ensure_ascii=False, separators=(",", ":"))
+    if data:
+        with open(f"{out}/market/volume/data.json", "w", encoding="utf-8") as fh:
+            json.dump(data, fh, ensure_ascii=False, separators=(",", ":"))
+    # one page per earlier recap
+    for d, r in rs[1:60]:
+        blocks = []
+        for l in LANGS:
+            t = T[l]
+            blocks.append(f'<div data-l="{l}" lang="{LOC[l]}"><div class="vl-hero"><p class="crumb"><a href="/market/volume/">← {t["title"]}</a></p>'
+                          f'<h1>{t["title"]}</h1></div>{recap_block(l, d, r)}<p class="vl-src">{t["src"]}</p></div>')
+        titles = {l: f'{rt.day_lbl(d, l)} · {T[l]["title"]} · April\'s Stock Atlas' for l in LANGS}
+        os.makedirs(f"{out}/market/volume/{d}", exist_ok=True)
+        open(f"{out}/market/volume/{d}/index.html", "w", encoding="utf-8").write(
+            page(f"market/volume/{d}/", titles, T["zh"]["intro"], f'<main>{"".join(blocks)}</main><style>{CSS}{RC_CSS}</style>'))
     return "market/volume/"

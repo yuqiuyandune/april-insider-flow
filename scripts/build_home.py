@@ -382,7 +382,7 @@ def vol_box(bv):
     data = bv.load() if bv else None
     if not data: return ""
     inner = tri(lambda l: f'<div class="box-h"><h2 class="lbl">{T[l]["volL"]}</h2><a href="/market/volume/">{T[l]["volAll"]}</a></div>'
-                          '<ul class="vsum">' + "".join(f"<li>{x}</li>" for x in bv.summary(data, l, 3)) + "</ul>")
+                          '<ul class="vsum">' + "".join(f"<li>{x}</li>" for x in (bv.home_points(l) or bv.summary(data, l, 3))) + "</ul>")
     return f'<section class="box">{inner}</section>'
 
 JS = r"""<script>
