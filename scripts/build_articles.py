@@ -299,13 +299,13 @@ def insider_sectors(days_dir=DAYS):
 
 MK = {
     "zh": {"title": "市场观察", "intro": "美股整体的宏观与板块面貌：利率、油价、资金在板块之间的流动，以及本站内部人数据的板块视角。每个交易日更新，只做公开数据的汇总，不是买卖建议。",
-           "dashH": "宏观仪表盘", "dashP": "六个最影响整体估值的指标。不需要每天看，每周看一次变化方向就够了。",
-           "secH": "板块轮动", "secP": "11个板块的表现，对照近30天内部人的有效买卖（已排除10b5-1计划、期权行权、税务代扣等，与内部人动向页口径一致）。点表头可以排序。",
+           "dashH": "宏观仪表盘", "dashP": "四个最影响整体估值的指标。不需要每天看，每周看一次变化方向就够了。",
+           "secH": "板块轮动", "secP": "11个板块的状态灯和表现，对照近30天内部人的有效净买卖（“内部人”列；已排除10b5-1计划、期权行权、税务代扣等，与内部人动向页口径一致）。点表头可以排序。",
            "artH": "文章", "artP": "对单一主题的长篇研究笔记，每篇附资料来源。",
            "chH": "资金与仓位", "chP": "大资金现在站在哪一边：趋势跟踪基金（CTA）等的仓位，对照历史和指数走势，附可交互的图。", "chGo": "查看图表 →",
            "loading": "价格数据加载中…", "err": "价格数据暂时无法加载，请稍后再试。",
            "wk": "近一周", "m1": "近1个月", "ytd": "今年以来", "hi": "距52周高点", "sector": "板块", "etf": "ETF",
-           "ib": "内部人有效买入", "is": "有效卖出", "nb": "买入公司数", "flag": "股价跌、内部人净买入",
+           "ib": "内部人有效买入", "is": "有效卖出", "nb": "买入公司数", "net": "内部人", "lt": "灯", "m1s": "1个月", "ytds": "今年", "flag": "股价跌、内部人净买入",
            "eqw": "等权", "cap": "市值加权", "small": "小盘", "large": "大盘", "ahead": "跑赢", "behind": "跑输",
            "note": "价格截至 {p}，每个交易日收盘后更新。内部人数据为 {f} 至 {t} 的 SEC Form 4 申报。这是公开数据的汇总，不是买卖建议。",
            "insLink": "查看内部人动向明细 →",
@@ -318,13 +318,13 @@ MK = {
                      "BRD": ["等权 vs 市值加权", "等权跑赢，说明上涨在向更多股票扩散"],
                      "SML": ["小盘 vs 大盘", "小盘领涨，说明市场开始相信利率见顶"]}},
     "tw": {"title": "市場觀察", "intro": "美股整體的總體經濟與板塊面貌：利率、油價、資金在板塊之間的流動，以及本站內部人資料的板塊視角。每個交易日更新，只做公開資料的彙總，不是買賣建議。",
-           "dashH": "總經儀表板", "dashP": "六個最影響整體估值的指標。不需要每天看，每週看一次變化方向就夠了。",
-           "secH": "板塊輪動", "secP": "11個板塊的表現，對照近30天內部人的有效買賣（已排除10b5-1計畫、選擇權行權、稅務代扣等，與內部人動向頁口徑一致）。點表頭可以排序。",
+           "dashH": "總經儀表板", "dashP": "四個最影響整體估值的指標。不需要每天看，每週看一次變化方向就夠了。",
+           "secH": "板塊輪動", "secP": "11個板塊的狀態燈和表現，對照近30天內部人的有效淨買賣（「內部人」欄；已排除10b5-1計畫、選擇權行權、稅務代扣等，與內部人動向頁口徑一致）。點表頭可以排序。",
            "artH": "文章", "artP": "對單一主題的長篇研究筆記，每篇附資料來源。",
            "chH": "資金與倉位", "chP": "大資金現在站在哪一邊：趨勢跟蹤基金（CTA）等的倉位，對照歷史和指數走勢，附可互動的圖。", "chGo": "查看圖表 →",
            "loading": "價格資料載入中…", "err": "價格資料暫時無法載入，請稍後再試。",
            "wk": "近一週", "m1": "近1個月", "ytd": "今年以來", "hi": "距52週高點", "sector": "板塊", "etf": "ETF",
-           "ib": "內部人有效買入", "is": "有效賣出", "nb": "買入公司數", "flag": "股價跌、內部人淨買入",
+           "ib": "內部人有效買入", "is": "有效賣出", "nb": "買入公司數", "net": "內部人", "lt": "燈", "m1s": "1個月", "ytds": "今年", "flag": "股價跌、內部人淨買入",
            "eqw": "等權", "cap": "市值加權", "small": "小型股", "large": "大型股", "ahead": "跑贏", "behind": "跑輸",
            "note": "價格截至 {p}，每個交易日收盤後更新。內部人資料為 {f} 至 {t} 的 SEC Form 4 申報。這是公開資料的彙總，不是買賣建議。",
            "insLink": "查看內部人動向明細 →",
@@ -337,13 +337,13 @@ MK = {
                      "BRD": ["等權 vs 市值加權", "等權跑贏，說明上漲在向更多股票擴散"],
                      "SML": ["小型股 vs 大型股", "小型股領漲，說明市場開始相信利率見頂"]}},
     "en": {"title": "Market watch", "intro": "The macro and sector picture of the whole US stock market: rates, oil, how money moves between sectors, and this site's insider data seen by sector. Updated every trading day; a summary of public data, not trading advice.",
-           "dashH": "Macro dashboard", "dashP": "Six indicators that move valuations across the market. No need to check daily; the weekly direction is enough.",
-           "secH": "Sector rotation", "secP": "How the 11 sectors are doing, next to effective insider buying and selling over the last 30 days (10b5-1 plans, option exercises, tax withholding and similar excluded, as on the insider page). Click a column header to sort.",
+           "dashH": "Macro dashboard", "dashP": "Four indicators that move valuations across the market. No need to check daily; the weekly direction is enough.",
+           "secH": "Sector rotation", "secP": "The 11 sectors' lights and performance, next to net effective insider buying and selling over the last 30 days (the Insider net column; 10b5-1 plans, option exercises, tax withholding and similar excluded, as on the insider page). Click a column header to sort.",
            "artH": "Articles", "artP": "Long-form research notes on a single theme, each with its sources.",
            "chH": "Money and positioning", "chP": "Where big money stands now: trend-following funds (CTAs) and other positioning, against history and the index, with interactive charts.", "chGo": "Open the chart →",
            "loading": "Loading price data…", "err": "Price data could not be loaded. Please try again later.",
            "wk": "1 week", "m1": "1 month", "ytd": "Year to date", "hi": "From 52-week high", "sector": "Sector", "etf": "ETF",
-           "ib": "Insider effective buying", "is": "Effective selling", "nb": "Companies buying", "flag": "Price down, insiders net buying",
+           "ib": "Insider effective buying", "is": "Effective selling", "nb": "Companies buying", "net": "Insider net", "lt": "Light", "m1s": "1 mo", "ytds": "YTD", "flag": "Price down, insiders net buying",
            "eqw": "Equal weight", "cap": "Cap weight", "small": "Small caps", "large": "Large caps", "ahead": "ahead", "behind": "behind",
            "note": "Prices as of {p}, updated after every close. Insider data covers SEC Form 4 filings from {f} to {t}. A summary of public data, not trading advice.",
            "insLink": "See insider trade details →",
@@ -360,8 +360,8 @@ MK = {
 MARKET_CSS = """
 .mk-hero{margin:16px 0 22px}.mk-hero h1{margin-bottom:8px}.mk-hero p{color:var(--muted);max-width:68ch;margin:0}.mk-hero .mk-cal{margin-top:10px;font-weight:700}.mk-cal a{text-decoration:none}
 .mk-sec{margin:0 0 40px}.mk-sec>h2{border:0;padding:0;margin:0 0 6px}.mk-sec>p.lead{color:var(--muted);margin:0 0 16px;max-width:72ch;font-size:15px}
-.dash{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-@media (max-width:860px){.dash{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dash{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:1000px){.dash{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.dash{grid-template-columns:1fr}}
 .kpi{min-width:0;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px 18px;display:grid;gap:4px}
 .kpi .lab{font-size:13.5px;color:var(--muted);font-weight:600}
@@ -373,7 +373,7 @@ MARKET_CSS = """
 .kpi .why{font-size:13px;color:var(--faint);line-height:1.5}
 .kpi svg{width:104px;height:34px;flex:0 1 104px;min-width:64px;color:var(--accent)}
 .sect{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow-x:auto;-webkit-overflow-scrolling:touch}
-.sect table{min-width:820px;font-size:14px}
+.sect table{min-width:0;font-size:14px}.sect small.etf{color:var(--faint);font-size:11.5px;margin-left:4px}
 .sect th{cursor:pointer;user-select:none;background:var(--surface-2)}
 .sect th[aria-sort]::after{content:" ↓";color:var(--accent)}.sect th[aria-sort=ascending]::after{content:" ↑"}
 .sect td,.sect th{white-space:nowrap}
@@ -390,7 +390,7 @@ MARKET_CSS = """
 
 MARKET_JS = r"""<script>
 (function(){
-var MK=__MK__,INS=__INS__,SEC=__SEC__,ETF=__ETF__,DATA=null,FAIL=false,sortKey="ytd",sortDir=-1;
+var MK=__MK__,INS=__INS__,SEC=__SEC__,ETF=__ETF__,REG=__REG__,DATA=null,FAIL=false,sortKey="lt",sortDir=-1;
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function ser(k){return DATA&&DATA.t[k]||null}
@@ -414,22 +414,19 @@ function dash(l){var u=MK[l],h=[],r;
  if((r=ser("WTI"))){var v2=at(r,0);h.push(card(l,"WTI","$"+v2.toFixed(2),u.wk+' <b class="'+cls(pct(v2,at(r,5)))+'">'+sgn(pct(v2,at(r,5)),1,"%")+'</b>',spark(tail(r,126))))}
  if((r=ser("DXY"))){var v3=at(r,0);h.push(card(l,"DXY",(fund("DXY")?"$":"")+v3.toFixed(2),u.wk+' <b class="'+cls(pct(v3,at(r,5)))+'">'+sgn(pct(v3,at(r,5)),1,"%")+'</b>',spark(tail(r,126))))}
  if((r=ser("VIX"))){var v4=at(r,0),w4=at(r,5);h.push(card(l,"VIX",v4.toFixed(1),u.wk+' <b>'+sgn(v4-w4,1)+'</b>',spark(tail(r,126))))}
- [["BRD","RSP","SPY",u.eqw,u.cap],["SML","IWM","SPY",u.small,u.large]].forEach(function(x){var a=ser(x[1]),b=ser(x[2]);if(!a||!b)return;
-  var ra=pct(at(a,0),at(a,21)),rb=pct(at(b,0),at(b,21)),d=ra-rb;
-  h.push(card(l,x[0],'<span class="'+cls(d)+'">'+sgn(d,1,"pp")+'</span>',u.m1+": "+esc(x[3])+" "+sgn(ra,1,"%")+" · "+esc(x[4])+" "+sgn(rb,1,"%"),spark(ratio(a,b,126))))});
  return h.length?'<div class="dash">'+h.join("")+'</div>':'<p class="mk-msg">'+esc(u.err)+'</p>'}
 function rows(){return Object.keys(ETF).map(function(s){var r=ser(ETF[s]),i=(INS&&INS.s[s])||{buy:0,sell:0,nb:0,ns:0};
- var o={s:s,etf:ETF[s],ytd:null,m1:null,hi:null,buy:i.buy,sell:i.sell,nb:i.nb};
+ var g=REG&&REG[ETF[s]],o={s:s,etf:ETF[s],ytd:null,m1:null,hi:null,buy:i.buy,sell:i.sell,nb:i.nb,net:i.buy-i.sell,st:g?g.state:null,lt:g?{green:3,yellow:2,red:1}[g.state]:null};
  if(r){var v=at(r,0);o.ytd=pct(v,ytdBase(r));o.m1=pct(v,at(r,21));o.hi=pct(v,hi52(r))}
  o.flag=o.m1!=null&&o.m1<0&&i.buy>i.sell;return o})}
 function table(l){var u=MK[l],R=rows();
  R.sort(function(a,b){var x=a[sortKey],y=b[sortKey];if(sortKey==="s"){x=SEC[l][a.s];y=SEC[l][b.s];return sortDir*(x<y?-1:x>y?1:0)}
   if(x==null)return 1;if(y==null)return -1;return sortDir*(x-y)});
- var cols=[["s",u.sector,""],["etf",u.etf,""],["ytd",u.ytd,"n"],["m1",u.m1,"n"],["hi",u.hi,"n"],["buy",u.ib,"n"],["sell",u.is,"n"],["nb",u.nb,"n"]];
+ var cols=[["s",u.sector,""],["lt",u.lt,"lt"],["m1",u.m1s,"n"],["ytd",u.ytds,"n"],["net",u.net,"n"]];
  var th=cols.map(function(c){return '<th class="'+c[2]+'" data-k="'+c[0]+'"'+(c[0]===sortKey?' aria-sort="'+(sortDir<0?"descending":"ascending")+'"':"")+'>'+esc(c[1])+'</th>'}).join("");
- var tb=R.map(function(o){return '<tr'+(o.flag?' class="flag"':'')+'><td>'+esc(SEC[l][o.s])+(o.flag?'<span class="tag">'+esc(u.flag)+'</span>':'')+'</td><td>'+o.etf+'</td>'+
-  '<td class="n '+cls(o.ytd)+'">'+sgn(o.ytd,1,"%")+'</td><td class="n '+cls(o.m1)+'">'+sgn(o.m1,1,"%")+'</td><td class="n">'+sgn(o.hi,1,"%")+'</td>'+
-  '<td class="n">'+money(o.buy)+'</td><td class="n">'+money(o.sell)+'</td><td class="n">'+(o.nb||"–")+'</td></tr>'}).join("");
+ var tb=R.map(function(o){return '<tr'+(o.flag?' class="flag"':'')+'><td>'+esc(SEC[l][o.s])+' <small class="etf">'+esc(o.etf)+'</small>'+(o.flag?'<span class="tag">'+esc(u.flag)+'</span>':'')+'</td><td class="lt" title="'+esc(o.etf)+'">'+(o.st?{green:"🟢",yellow:"🟡",red:"🔴"}[o.st]:"–")+'</td>'+
+  '<td class="n '+cls(o.m1)+'">'+sgn(o.m1,1,"%")+'</td><td class="n '+cls(o.ytd)+'">'+sgn(o.ytd,1,"%")+'</td>'+
+  '<td class="n '+cls(o.net)+'">'+(o.net?(o.net>0?"+":"−")+money(o.net):"–")+'</td></tr>'}).join("");
  return '<div class="sect"><table><thead><tr>'+th+'</tr></thead><tbody>'+tb+'</tbody></table></div>'}
 function render(l){var u=MK[l];
  var d=$("mk-dash"),t=$("mk-sect"),n=$("mk-note");if(!d)return;
@@ -441,6 +438,80 @@ window.onPageLang=function(l){render(l)};
 fetch("/earnings/data/market.json",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){DATA=j;render(window.PAGE_LANG||"zh")}).catch(function(){FAIL=true;render(window.PAGE_LANG||"zh")});
 })();
 </script>"""
+
+
+# ------------------------------------------------------------------ market state light (data/volume.json "regime", scripts/regime.py)
+VOLUME = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "volume.json")
+RG = {
+    "zh": {"h": "市场状态灯", "p": "用几条公开、固定的规则，判断大盘现在处于什么状态。它描述的是现在，不预测未来，也不是买卖建议。",
+           "state": {"green": "多头趋势", "yellow": "修正 / 不明朗", "red": "空头趋势"},
+           "pass": "{ok} / {n} 项通过", "asof": "截至 {d} 收盘",
+           "chk": {"above200": ("标普500在200日线上方", "距200日线 {v}%"), "rising200": ("200日线向上", "较20个交易日前 {v}%"),
+                   "above50": ("标普500在50日线上方", "距50日线 {v}%"), "dist": ("近25个交易日派发日少于5个", "现有 {v} 个"),
+                   "dd": ("距52周高点不到10%", "{v}%"), "breadth": ("过半板块在200日线上方", "{v} 个板块"), "vix": ("VIX低于25", "VIX {v}")},
+           "ftd": "{d} 出现跟进日（反弹第4天以后、放量上涨1.25%以上），状态由红转黄。",
+           "theme": "主题", "soxx": "半导体（SOXX）",
+           "rule": "规则：在200日线上方且200日线向上、最多两项不通过为绿；跌破200日线且200日线不再向上、或距高点20%以上、或只有两项以下通过为红；其余为黄。派发日：标普500下跌0.2%以上且成交量高于前一天，25个交易日后或指数收复该日收盘5%后不再计入。板块灯：ETF在200日线上方且200日线向上（绝对强弱），ETF相对标普500的比值在其50日均线上方（相对强弱）；两项都有为绿，有一项为黄，都没有为红。",
+           "lgd": "板块灯（见下表）：绿 = 自身趋势向上、且跑赢大盘；黄 = 二者有其一；红 = 二者都没有。"},
+    "tw": {"h": "市場狀態燈", "p": "用幾條公開、固定的規則，判斷大盤現在處於什麼狀態。它描述的是現在，不預測未來，也不是買賣建議。",
+           "state": {"green": "多頭趨勢", "yellow": "修正 / 不明朗", "red": "空頭趨勢"},
+           "pass": "{ok} / {n} 項通過", "asof": "截至 {d} 收盤",
+           "chk": {"above200": ("標普500在200日線上方", "距200日線 {v}%"), "rising200": ("200日線向上", "較20個交易日前 {v}%"),
+                   "above50": ("標普500在50日線上方", "距50日線 {v}%"), "dist": ("近25個交易日派發日少於5個", "現有 {v} 個"),
+                   "dd": ("距52週高點不到10%", "{v}%"), "breadth": ("過半板塊在200日線上方", "{v} 個板塊"), "vix": ("VIX低於25", "VIX {v}")},
+           "ftd": "{d} 出現跟進日（反彈第4天以後、放量上漲1.25%以上），狀態由紅轉黃。",
+           "theme": "主題", "soxx": "半導體（SOXX）",
+           "rule": "規則：在200日線上方且200日線向上、最多兩項不通過為綠；跌破200日線且200日線不再向上、或距高點20%以上、或只有兩項以下通過為紅；其餘為黃。派發日：標普500下跌0.2%以上且成交量高於前一天，25個交易日後或指數收復該日收盤5%後不再計入。板塊燈：ETF在200日線上方且200日線向上（絕對強弱），ETF相對標普500的比值在其50日均線上方（相對強弱）；兩項都有為綠，有一項為黃，都沒有為紅。",
+           "lgd": "板塊燈（見下表）：綠 = 自身趨勢向上、且跑贏大盤；黃 = 二者有其一；紅 = 二者都沒有。"},
+    "en": {"h": "Market state light", "p": "A few fixed, public rules for what state the market is in now. It describes the present, does not forecast, and is not trading advice.",
+           "state": {"green": "Uptrend", "yellow": "Correction / unclear", "red": "Downtrend"},
+           "pass": "{ok} of {n} checks pass", "asof": "As of the {d} close",
+           "chk": {"above200": ("S&P 500 above its 200-day average", "{v}% from it"), "rising200": ("200-day average rising", "{v}% vs 20 sessions ago"),
+                   "above50": ("S&P 500 above its 50-day average", "{v}% from it"), "dist": ("Fewer than 5 distribution days in 25 sessions", "{v} now"),
+                   "dd": ("Within 10% of the 52-week high", "{v}%"), "breadth": ("Most sectors above their 200-day", "{v} sectors"), "vix": ("VIX below 25", "VIX {v}")},
+           "ftd": "Follow-through day on {d} (day 4 or later of a rally, up 1.25%+ on higher volume): red lifted to yellow.",
+           "theme": "Theme", "soxx": "Semiconductors (SOXX)",
+           "rule": "Rules: above a rising 200-day with at most two checks failing is green; below a 200-day that is no longer rising, 20%+ off the high, or at most two checks passing is red; anything else is yellow. A distribution day is the S&P 500 down 0.2%+ on higher volume than the day before; it stops counting after 25 sessions or once the index closes 5% above it. Sector light: the ETF above a rising 200-day (absolute strength) and the ETF/S&P 500 ratio above its own 50-day average (relative strength); both green, one yellow, neither red.",
+           "lgd": "Sector lights (table below): green = own trend up and beating the market; yellow = one of the two; red = neither."},
+}
+DOT = {"green": "🟢", "yellow": "🟡", "red": "🔴"}
+
+def regime():
+    try: return json.load(open(VOLUME, encoding="utf-8")).get("regime")
+    except (OSError, ValueError): return None
+
+def regime_block(l, rg):
+    m = rg and rg.get("market")
+    if not m: return ""
+    u = RG[l]
+    li = "".join(f'<li class="{"ok" if c["ok"] else "no"}"><span>{"✓" if c["ok"] else "✗"}</span>{html.escape(u["chk"][c["k"]][0])}'
+                 f'<small>{html.escape(u["chk"][c["k"]][1].format(v=c["v"]))}</small></li>' for c in m["checks"])
+    ftd = f'<p class="rg-ftd">{html.escape(u["ftd"].format(d=m["ftd"]))}</p>' if m.get("ftd") and m["state"] == "yellow" else ""
+    th = rg["sectors"].get("SOXX")
+    theme = (f'<p class="rg-theme">{u["theme"]}：{DOT[th["state"]]} {html.escape(u["soxx"])}</p>' if th and l != "en" else
+             f'<p class="rg-theme">{u["theme"]}: {DOT[th["state"]]} {html.escape(u["soxx"])}</p>' if th else "")
+    return (f'<h2>{u["h"]}</h2><p class="lead">{u["p"]}</p>'
+            f'<div class="rg rg-{m["state"]}"><div class="rg-top"><span class="rg-dot" aria-hidden="true"></span>'
+            f'<div><div class="rg-state">{u["state"][m["state"]]}</div><div class="rg-sub">{u["pass"].format(ok=m["ok"], n=m["n"])} · {u["asof"].format(d=rg["date"])}</div></div></div>'
+            f'<ul class="rg-chk">{li}</ul>{ftd}{theme}<p class="rg-lgd">{u["lgd"]}</p>'
+            f'<details class="rg-rule"><summary>{"Rules" if l == "en" else "规则" if l == "zh" else "規則"}</summary><p>{u["rule"]}</p></details></div>')
+
+REG_CSS = """
+.rg{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px 18px}
+.rg-top{display:flex;align-items:center;gap:14px;margin:0 0 10px}
+.rg-dot{width:34px;height:34px;border-radius:50%;flex:0 0 34px;box-shadow:0 0 0 4px color-mix(in srgb,currentColor 18%,transparent);background:currentColor}
+.rg-green{color:inherit}.rg-green .rg-dot{color:#16a34a}.rg-yellow .rg-dot{color:#eab308}.rg-red .rg-dot{color:#dc2626}
+.rg-state{font:700 24px/1.15 var(--display)}.rg-sub{font-size:13px;color:var(--muted)}
+.rg-chk{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px}
+@media (max-width:620px){.rg-chk{grid-template-columns:1fr}}
+.rg-chk li{display:flex;gap:8px;align-items:baseline;font-size:14px;padding:4px 0;border-bottom:1px solid var(--line)}
+.rg-chk li span{font-weight:700;width:1em}.rg-chk li.ok span{color:#0f9d6e}.rg-chk li.no span{color:#e0483f}
+.rg-chk small{margin-left:auto;color:var(--muted);font-size:12.5px;white-space:nowrap;padding-left:8px}
+.rg-ftd,.rg-theme{margin:10px 0 0;font-size:14px;font-weight:600}.rg-lgd{margin:8px 0 0;font-size:13px;color:var(--muted)}
+.rg-rule{margin:8px 0 0;font-size:13px;color:var(--faint)}.rg-rule summary{cursor:pointer;color:var(--muted)}.rg-rule p{margin:6px 0 0;line-height:1.6}
+.sect td.lt{text-align:center}
+@media (max-width:620px){.sect .tag{display:table;margin:3px 0 0;font-size:10.5px;margin-left:0}.sect small.etf{display:none}.sect table{font-size:13px}.sect td,.sect th{padding-left:7px;padding-right:7px}}
+"""
 
 VOL_GO = {"zh": "昨日量价：大盘、板块和重点个股的放量与缩量 →", "tw": "昨日量價：大盤、板塊和重點個股的放量與縮量 →", "en": "Price and volume: yesterday's moves and volume across the market →"}
 CAL_GO = {"zh": "本周宏观日程：CPI、议息、PCE、休市 →", "tw": "本週總經日程：CPI、利率決議、PCE、休市 →", "en": "This week's macro calendar: CPI, Fed, PCE, holidays →"}
@@ -460,18 +531,18 @@ def market_page(arts, out):
                    f'<a class="card" href="/market/cta/"><h2>{html.escape(ch[0])}</h2><p>{html.escape(ch[1])}</p><span class="go">{m["chGo"]}</span></a></div></div>'
                    if (ch := build_cta.card(l)) else ""))
     pick = lambda i: "".join(sec[l][i] for l in LANGS)
-    # sector liquidity from the latest market recap (scripts/build_volume.py), when there is one
-    _sp = importlib.util.spec_from_file_location("build_volume", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_volume.py"))
-    _bv = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_bv)
-    liq = "".join(f'<div data-l="{l}" lang="{LOC[l]}">{_bv.market_liquidity(l)}</div>' for l in LANGS) if _bv.recaps() else ""
-    body = (f'<main>{pick(0)}<section class="mk-sec">{pick(1)}<div id="mk-dash"></div></section>'
-            + (f'<section class="mk-sec" id="liquidity">{liq}</section>' if liq else "")
+    # the sector liquidity table now lives only on /market/volume/ (the daily recap); the state light leads this page
+    rg = regime()
+    light = "".join(f'<div data-l="{l}" lang="{LOC[l]}">{regime_block(l, rg)}</div>' for l in LANGS) if rg and rg.get("market") else ""
+    body = (f'<main>{pick(0)}' + (f'<section class="mk-sec" id="state">{light}</section>' if light else "")
+            + f'<section class="mk-sec">{pick(1)}<div id="mk-dash"></div></section>'
             + f'<section class="mk-sec">{pick(2)}<div id="mk-sect"></div><p class="mk-note" id="mk-note"></p></section>'
             + (f'<section class="mk-sec" id="charts">{pick(4)}</section>' if build_cta.card("zh") else "")
             + f'<section class="mk-sec" id="articles">{pick(3)}</section></main>'
-            f'<style>{MARKET_CSS}</style>')
+            f'<style>{MARKET_CSS}{REG_CSS}</style>')
     js = (MARKET_JS.replace("__MK__", json.dumps(MK, ensure_ascii=False)).replace("__INS__", json.dumps(ins))
-          .replace("__SEC__", json.dumps(SEC_NAME, ensure_ascii=False)).replace("__ETF__", json.dumps(SECTOR_ETF)))
+          .replace("__SEC__", json.dumps(SEC_NAME, ensure_ascii=False)).replace("__ETF__", json.dumps(SECTOR_ETF))
+          .replace("__REG__", json.dumps({k: {"state": v["state"]} for k, v in (rg or {}).get("sectors", {}).items()})))
     titles = {l: f'{MK[l]["title"]} · April\'s Stock Atlas' for l in LANGS}
     os.makedirs(f"{out}/market", exist_ok=True)
     open(f"{out}/market/index.html", "w", encoding="utf-8").write(page("market/", titles, MK["zh"]["intro"], body, js))

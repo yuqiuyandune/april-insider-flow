@@ -185,12 +185,24 @@ def main():
     day = max(dates, key=lambda d: (sum(i["date"] == d for i in items), d))
     stale = [i["t"] for i in items if i["date"] != day]
     sectors = [i for i in items if i["g"] == "sector" and i["date"] == day]
+    # the market state light (scripts/regime.py); VIX is read here once and reused by the recap below
+    try:
+        vix = cached.get("_vix") if cached and "_vix" in cached else vix_history()
+    except Exception as ex:
+        vix = None; print(f"VIX: FAILED {ex}", file=sys.stderr)
+    try:
+        _rs = importlib.util.spec_from_file_location("regime", os.path.join(os.path.dirname(os.path.abspath(__file__)), "regime.py"))
+        _rg = importlib.util.module_from_spec(_rs); _rs.loader.exec_module(_rg)
+        regime = _rg.compute(H, {k: tuple(v) for k, v in vix.items()} if vix else None)
+    except Exception as ex:
+        import traceback; traceback.print_exc(); regime = None; print(f"regime: FAILED {ex}", file=sys.stderr)
     out = {"date": day, "generated_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"), "missing": missing, "stale": stale,
            "breadth": {"sectorsUp": sum(i["chg"] > 0 for i in sectors), "sectors": len(sectors),
                        "above50": sum(i["ma"].get(50) == 1 for i in items), "above200": sum(i["ma"].get(200) == 1 for i in items), "n": len(items)},
            "items": items}
+    if regime: out["regime"] = regime
     old = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
-    changed = old.get("date") != out["date"] or old.get("items") != out["items"]
+    changed = old.get("date") != out["date"] or old.get("items") != out["items"] or old.get("regime") != out.get("regime")
     if changed:
         with open(OUT, "w", encoding="utf-8") as f:
             json.dump(out, f, ensure_ascii=False, separators=(",", ":")); f.write("\n")
@@ -200,7 +212,7 @@ def main():
         with open(os.path.join(WORK, "volume_problems.md"), "w", encoding="utf-8") as f:
             f.write(f"Price-and-volume read for {day}: " + (f"no data for {', '.join(missing)}. " if missing else "") + (f"older session for {', '.join(stale)}." if stale else "") + "\n")
     try:
-        vix = cached.get("_vix") if cached and "_vix" in cached else vix_history()
+        if vix is None: vix = vix_history()
         ust = cached.get("_ust") if cached and "_ust" in cached else ust_history()
         if not cached: H2 = dict(H); H2["_vix"] = vix; H2["_ust"] = ust; json.dump(H2, open(CACHE, "w"))
         sessions = [r[0] for r in H["SPY"]][-a.recap_days:]
