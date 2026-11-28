@@ -460,8 +460,13 @@ def market_page(arts, out):
                    f'<a class="card" href="/market/cta/"><h2>{html.escape(ch[0])}</h2><p>{html.escape(ch[1])}</p><span class="go">{m["chGo"]}</span></a></div></div>'
                    if (ch := build_cta.card(l)) else ""))
     pick = lambda i: "".join(sec[l][i] for l in LANGS)
+    # sector liquidity from the latest market recap (scripts/build_volume.py), when there is one
+    _sp = importlib.util.spec_from_file_location("build_volume", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_volume.py"))
+    _bv = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_bv)
+    liq = "".join(f'<div data-l="{l}" lang="{LOC[l]}">{_bv.market_liquidity(l)}</div>' for l in LANGS) if _bv.recaps() else ""
     body = (f'<main>{pick(0)}<section class="mk-sec">{pick(1)}<div id="mk-dash"></div></section>'
-            f'<section class="mk-sec">{pick(2)}<div id="mk-sect"></div><p class="mk-note" id="mk-note"></p></section>'
+            + (f'<section class="mk-sec" id="liquidity">{liq}</section>' if liq else "")
+            + f'<section class="mk-sec">{pick(2)}<div id="mk-sect"></div><p class="mk-note" id="mk-note"></p></section>'
             + (f'<section class="mk-sec" id="charts">{pick(4)}</section>' if build_cta.card("zh") else "")
             + f'<section class="mk-sec" id="articles">{pick(3)}</section></main>'
             f'<style>{MARKET_CSS}</style>')

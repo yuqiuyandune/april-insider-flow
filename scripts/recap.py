@@ -66,6 +66,65 @@ class S:
             if sg != sign: break
             s += 1
         return s * sign
+    # ---- the liquidity reading (after "where tops and bottoms come from": who ran out of liquidity)
+    def eff(self, i):
+        """price efficiency: the size of the move per unit of relative volume"""
+        c, rv = self.chg(i), self.rvol(i)
+        return abs(c) / rv if c is not None and rv else None
+    def eff_pct(self, i, n=60):
+        e = self.eff(i)
+        if e is None: return None
+        xs = [x for x in (self.eff(k) for k in range(max(21, i - n), i)) if x is not None]
+        return sum(x < e for x in xs) / len(xs) if len(xs) >= 20 else None
+    def liq_tags(self, i):
+        """the day's signals: absorb (heavy volume, little progress), thin (light volume, a fast move),
+        sweep_hi / sweep_lo (broke the 20-day high / low intraday and closed back inside)"""
+        if i is None or i < 25: return []
+        out, rv, pc = [], self.rvol(i), self.eff_pct(i)
+        if rv and pc is not None:
+            if rv >= 1.3 and pc <= 0.25: out.append("absorb")
+            if rv <= 0.95 and pc >= 0.8 and abs(self.chg(i)) >= 1: out.append("thin")
+        hi, lo = max(self.h[i - 20:i]), min(self.l[i - 20:i])
+        if self.h[i] > hi and self.c[i] < hi: out.append("sweep_hi")
+        if self.l[i] < lo and self.c[i] > lo: out.append("sweep_lo")
+        return out
+    def push_fading(self, i, up, n=20, look=15):
+        """the last three pushes to a new n-day closing extreme in the same direction, each one smaller than the last"""
+        pushes = []
+        for k in range(i - look + 1, i + 1):
+            w = self.c[k - n:k]
+            if len(w) < n: continue
+            if (up and self.c[k] > max(w)) or (not up and self.c[k] < min(w)): pushes.append(abs(self.chg(k) or 0))
+        p3 = pushes[-3:]
+        return len(p3) == 3 and p3[0] > p3[1] > p3[2]
+    def liquidity(self, i):
+        """today's tags, the signals of the last five sessions and who holds control:
+        a bottom-type signal (absorption on a down day, a sweep of the low, fading pushes down) followed by a close above
+        the previous 10-session high confirms buyers; the mirror image confirms sellers. Unconfirmed signals are 'watch'."""
+        tags = self.liq_tags(i)
+        recent = []
+        for k in range(i - 4, i + 1):
+            for t in self.liq_tags(k):
+                c = self.chg(k) or 0
+                kind = ("bottom" if t in ("sweep_lo",) or (t == "absorb" and c < 0) else
+                        "top" if t in ("sweep_hi",) or (t == "absorb" and c > 0) else
+                        "accel_down" if t == "thin" and c < 0 else "accel_up" if t == "thin" else None)
+                if kind: recent.append({"d": self.d[k], "t": t, "kind": kind})
+        if self.push_fading(i, False): recent.append({"d": self.d[i], "t": "fade_down", "kind": "bottom"})
+        if self.push_fading(i, True): recent.append({"d": self.d[i], "t": "fade_up", "kind": "top"})
+        hi10, lo10 = max(self.c[i - 10:i]), min(self.c[i - 10:i])
+        bottoms = [r for r in recent if r["kind"] == "bottom"]; tops = [r for r in recent if r["kind"] == "top"]
+        if bottoms and self.c[i] > hi10: state = "buyers"
+        elif tops and self.c[i] < lo10: state = "sellers"
+        elif bottoms and tops: state = "mixed"
+        elif bottoms and not tops: state = "watch_bottom"
+        elif tops and not bottoms: state = "watch_top"
+        elif any(r["kind"] == "accel_down" for r in recent): state = "accel_down"
+        elif any(r["kind"] == "accel_up" for r in recent): state = "accel_up"
+        else: state = None
+        return {"tags": tags, "recent": recent, "state": state, "effPct": (round(self.eff_pct(i), 2) if self.eff_pct(i) is not None else None),
+                "hi10": round(hi10, 2), "lo10": round(lo10, 2)}
+
     def best_since(self, i):
         """the last earlier session with a move at least as large in the same direction: (date, sessions back) or (None, n)"""
         c = self.chg(i)
@@ -291,6 +350,33 @@ def recap(day, H, VIX, UST, CHAIN, SEGS):
         if stk: fact("chain", "streak", 4, t=stk[0]["t"], n=stk[0]["streak"])
         chain["avgRvol"] = r2(avg_rv); chain["ampx"] = r2(amp_ratio)
 
+    # ---- liquidity view: who ran out of liquidity, who absorbed it, who holds control
+    liq = {}
+    for t in BOARD + list(CHAIN):
+        s2 = sy.get(t); k2 = s2.at(day) if s2 else None
+        if s2 and k2 and k2 >= 30: liq[t] = s2.liquidity(k2)
+    board_set = [t for t in BOARD if t in liq]
+    pick = lambda cond: [t for t in board_set if cond(liq[t])]
+    absorb_up = [t for t in board_set if "absorb" in liq[t]["tags"] and (by.get(t, {}).get("chg") or 0) > 0]
+    absorb_down = [t for t in board_set if "absorb" in liq[t]["tags"] and (by.get(t, {}).get("chg") or 0) <= 0]
+    thin = pick(lambda x: "thin" in x["tags"])
+    sweep_lo = pick(lambda x: "sweep_lo" in x["tags"]); sweep_hi = pick(lambda x: "sweep_hi" in x["tags"])
+    conf_up = pick(lambda x: x["state"] == "buyers"); conf_dn = pick(lambda x: x["state"] == "sellers")
+    if absorb_down: fact("liquidity", "absorb_down", 7, names=absorb_down)
+    if absorb_up: fact("liquidity", "absorb_up", 7, names=absorb_up)
+    if thin: fact("liquidity", "thin_fast", 6, names=[{"t": t, "chg": by.get(t, {}).get("chg"), "rvol": by.get(t, {}).get("rvol")} for t in thin])
+    if sweep_lo: fact("liquidity", "sweep_lo", 7, names=sweep_lo)
+    if sweep_hi: fact("liquidity", "sweep_hi", 7, names=sweep_hi)
+    if conf_up: fact("liquidity", "confirmed_up", 8, names=conf_up)
+    if conf_dn: fact("liquidity", "confirmed_down", 8, names=conf_dn)
+    chain_l = {t: liq[t] for t in CHAIN if t in liq}
+    if chain_l:
+        cnt = lambda st_: sorted(t for t, x in chain_l.items() if x["state"] == st_)
+        cs = {"buyers": cnt("buyers"), "sellers": cnt("sellers"), "watch_bottom": cnt("watch_bottom"), "watch_top": cnt("watch_top"),
+              "sweep_lo": sorted(t for t, x in chain_l.items() if "sweep_lo" in x["tags"]), "absorb": sorted(t for t, x in chain_l.items() if "absorb" in x["tags"])}
+        if len(cs["sweep_lo"]) + len(cs["absorb"]) >= 3 or cs["buyers"] or cs["sellers"]:
+            fact("liquidity", "chain_liq", 5, n=len(chain_l), **cs)
+
     # the last five sessions side by side: each ETF's change, relative volume and close in range, and its rank among them
     days5 = [spy.d[kk] for kk in range(i - 4, i + 1)]
     grid = []
@@ -300,7 +386,7 @@ def recap(day, H, VIX, UST, CHAIN, SEGS):
         cells = []
         for d in days5:
             k2 = s2.at(d)
-            cells.append({"chg": r2(s2.chg(k2)), "rvol": r2(s2.rvol(k2)), "pos": r2(s2.pos(k2))} if k2 else None)
+            cells.append({"chg": r2(s2.chg(k2)), "rvol": r2(s2.rvol(k2)), "pos": r2(s2.pos(k2)), "liq": s2.liq_tags(k2)} if k2 else None)
         grid.append({"t": t, "cells": cells})
     def ranks(col):
         xs = sorted((g for g in grid if g["cells"][col] and g["cells"][col]["chg"] is not None), key=lambda g: -g["cells"][col]["chg"])
@@ -309,5 +395,5 @@ def recap(day, H, VIX, UST, CHAIN, SEGS):
     for g in grid: g["rank"] = r_now.get(g["t"]); g["rankPrev"] = r_prev.get(g["t"])
     F.sort(key=lambda f: -f["w"])
     key = [f for f in F if f["w"] >= 6][:2]
-    return {"date": day, "prev": prev, "index": idx, "vix": vx, "board": board, "volumes": vols, "volMedian": r2(med), "spyTrail": trail, "days5": days5, "grid": grid,
+    return {"date": day, "prev": prev, "index": idx, "vix": vx, "board": board, "volumes": vols, "volMedian": r2(med), "spyTrail": trail, "days5": days5, "grid": grid, "liq": {t: liq[t] for t in BOARD if t in liq}, "liqChain": {t: liq[t] for t in CHAIN if t in liq},
             "bonds": bonds, "chain": chain, "facts": F, "key": [f["k"] for f in key]}

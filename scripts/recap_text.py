@@ -27,12 +27,12 @@ UI = {
            "chain": "AI 产业链", "notes": "导火索 · April 的笔记", "archive": "往日复盘", "table": "全部数据",
            "cols": ["", "收盘", "涨跌", "点数", "盘中最低", "收盘距最低", "离一年高点", "年内"], "vix": "VIX", "vixHigh": "盘中最高",
            "yields": "美债收益率", "bp": "个基点", "up": "涨得最多", "down": "跌得最多", "segs": "各环节平均", "trail": "最近四天的收盘位置和振幅",
-           "pos": "收盘位置", "rng": "平均振幅", "x": "倍", "five": "最近五个交易日对比", "fiveP": "每格上面是涨跌，下面是量比（当天成交量 ÷ 前 20 日平均）。右边是今天在这些 ETF 里的涨幅排名，箭头是和上个交易日比排名升降。", "rank": "排名", "note": "大盘行情：纳斯达克综合指数；标普 500、道指和罗素 2000 用 SPY、DIA、IWM 的涨跌代替。量比 = 当天成交量 ÷ 前 20 个交易日平均。"},
+           "pos": "收盘位置", "rng": "平均振幅", "x": "倍", "five": "最近五个交易日对比", "liq": "流动性视角", "liqP": "看谁的流动性在枯竭、谁在吸收成交、谁取得了控制权：放量却推不动价格，是有人在吸收；缩量却走得快，是对手盘稀薄、容易加速；跌破（或突破）20 日低点（高点）又收回，是流动性扫荡。这些只是反转的前提，要等收盘突破前 10 日的高点（或低点）才算控制权转移。只用日线数据，看不到逐笔成交和订单簿。", "liqCols": ["", "今天", "量比", "价格效率", "今天的信号", "近 5 日信号", "控制权"], "effNote": "价格效率 = 涨跌幅 ÷ 量比，和自己过去 60 天比的分位：越低越推不动，越高越容易走。", "tag": {"absorb": "放量推不动", "thin": "缩量走得快", "sweep_lo": "扫低点后收回", "sweep_hi": "扫高点后回落", "fade_down": "下跌越来越弱", "fade_up": "上涨越来越弱"}, "short": {"absorb": "吸收", "thin": "薄", "sweep_lo": "扫低", "sweep_hi": "扫高"}, "state": {"buyers": "买方确认", "sellers": "卖方确认", "watch_bottom": "底部信号 · 待确认", "watch_top": "顶部信号 · 待确认", "accel_down": "缩量加速下跌", "accel_up": "缩量加速上涨", "mixed": "信号混杂"}, "quiet": "其余没有流动性信号：{x}。", "fiveP": "每格上面是涨跌，下面是量比（当天成交量 ÷ 前 20 日平均）。右边是今天在这些 ETF 里的涨幅排名，箭头是和上个交易日比排名升降。", "rank": "排名", "note": "大盘行情：纳斯达克综合指数；标普 500、道指和罗素 2000 用 SPY、DIA、IWM 的涨跌代替。量比 = 当天成交量 ÷ 前 20 个交易日平均。"},
     "en": {"title": "Daily market recap", "key": "Worth remembering", "index": "The index", "sector": "Sectors", "volume": "Volume", "flows": "Where the money went",
            "bonds": "Bonds", "chain": "The AI supply chain", "notes": "Catalysts · April's notes", "archive": "Earlier recaps", "table": "All the numbers",
            "cols": ["", "Close", "Change", "Points", "Intraday low", "Close vs low", "From 1-yr high", "YTD"], "vix": "VIX", "vixHigh": "intraday high",
            "yields": "Treasury yields", "bp": "bp", "up": "Biggest gainers", "down": "Biggest losers", "segs": "Average by segment", "trail": "Close in range and range, last four sessions",
-           "pos": "close in range", "rng": "average range", "x": "x", "five": "The last five sessions side by side", "fiveP": "Each cell: the change on top, relative volume below (the day's volume ÷ the previous 20-day average). On the right, today's rank by change among these ETFs, with the move since the previous session.", "rank": "Rank", "note": "Index: the Nasdaq Composite; the S&P 500, the Dow and the Russell 2000 use the moves of SPY, DIA and IWM. Relative volume = the day's volume ÷ the average of the previous 20 sessions."},
+           "pos": "close in range", "rng": "average range", "x": "x", "five": "The last five sessions side by side", "liq": "Liquidity view", "liqP": "Whose liquidity is running out, who is absorbing trades, who holds control: heavy volume that barely moves price means someone is absorbing; light volume with a fast move means the other side is thin and price can speed up; breaking the 20-day low (or high) and closing back inside is a liquidity sweep. These are only preconditions for a reversal; control changes hands when a close clears the previous 10 sessions' high (or low). Daily data only: individual trades and the order book are not visible.", "liqCols": ["", "Today", "Rel. vol.", "Efficiency", "Today's signals", "Last 5 sessions", "Control"], "effNote": "Efficiency = the move ÷ relative volume, as a percentile of its own last 60 sessions: low means hard to move, high means it moves easily.", "tag": {"absorb": "heavy, no progress", "thin": "light, fast", "sweep_lo": "swept the low", "sweep_hi": "swept the high", "fade_down": "weaker pushes down", "fade_up": "weaker pushes up"}, "short": {"absorb": "abs", "thin": "thin", "sweep_lo": "sw↓", "sweep_hi": "sw↑"}, "state": {"buyers": "buyers confirmed", "sellers": "sellers confirmed", "watch_bottom": "bottom signal, unconfirmed", "watch_top": "top signal, unconfirmed", "accel_down": "fast on light volume, down", "accel_up": "fast on light volume, up", "mixed": "mixed signals"}, "quiet": "No liquidity signals for the rest: {x}.", "fiveP": "Each cell: the change on top, relative volume below (the day's volume ÷ the previous 20-day average). On the right, today's rank by change among these ETFs, with the move since the previous session.", "rank": "Rank", "note": "Index: the Nasdaq Composite; the S&P 500, the Dow and the Russell 2000 use the moves of SPY, DIA and IWM. Relative volume = the day's volume ÷ the average of the previous 20 sessions."},
 }
 
 ZH = {
@@ -88,6 +88,15 @@ ZH = {
     "new_high_low": "全链 {n} 只里，{hi} 只创一年新高，{lo} 只创一年新低。",
     "big_mover": "单日大幅波动：{names}。",
     "streak": "{t} 连续 {n} 个交易日下跌。",
+    "absorb_down": "{names}放量下跌却跌不动：成交量很大，价格几乎没有往下走，主动卖盘可能正在被吸收。这是形成底部的前提之一，还不是反转信号。",
+    "absorb_up": "{names}放量上涨却涨不动：大量买入没能有效推高价格，买盘可能正在被吸收。这是形成顶部的前提之一。",
+    "thin_fast": "{names}缩量却走得很快：对手盘稀薄，价格容易沿原方向加速。",
+    "sweep_lo": "{names}盘中跌破 20 日低点又收了回来：止损卖盘被触发后被承接，是典型的流动性扫荡。要等之后收盘站上近期高点，才算买方取得控制权。",
+    "sweep_hi": "{names}盘中突破 20 日高点又跌了回去：假突破，追涨的买盘被吸收。",
+    "confirmed_up": "{names}在出现底部信号之后，收盘站上了前 10 个交易日的最高点：买方取得控制权，底部得到确认。",
+    "confirmed_down": "{names}在出现顶部信号之后，收盘跌破了前 10 个交易日的最低点：卖方取得控制权，顶部得到确认。",
+    "chain_liq": "AI 产业链 {n} 只里，{sw} 只盘中跌破 20 日低点后收回{swl}，{ab} 只放量但价格推不动{abl}。{conf}",
+    "chain_liq_eg": "（如 {x}）", "chain_conf_up": "买方已确认的：{x}。", "chain_conf_dn": "卖方已确认的：{x}。",
 }
 EN = {
     "never_back": "The {name}'s high of the day, {high}, was below yesterday's close of {prev}: it never got back to yesterday's level, not for a moment.",
@@ -143,6 +152,15 @@ EN = {
     "new_high_low": "Of the chain's {n} stocks, {hi} made a one-year high and {lo} a one-year low.",
     "big_mover": "Big single-day moves: {names}.",
     "streak": "{t} has fallen {n} sessions in a row.",
+    "absorb_down": "{names} fell on heavy volume but barely moved: a lot traded and price hardly went lower, so selling may be getting absorbed. A precondition for a bottom, not a reversal signal yet.",
+    "absorb_up": "{names} rose on heavy volume but barely moved: heavy buying failed to lift price much, so buying may be getting absorbed. A precondition for a top.",
+    "thin_fast": "{names} moved fast on light volume: the other side is thin, and price can speed up in the same direction.",
+    "sweep_lo": "{names} broke the 20-day low intraday and closed back above it: stop-loss selling was triggered and absorbed, a classic liquidity sweep. Buyers take control only once a close clears the recent high.",
+    "sweep_hi": "{names} broke the 20-day high intraday and fell back below it: a false breakout, with the chasing buyers absorbed.",
+    "confirmed_up": "{names}, after a bottom signal, closed above the previous 10 sessions' high: buyers have taken control and the bottom is confirmed.",
+    "confirmed_down": "{names}, after a top signal, closed below the previous 10 sessions' low: sellers have taken control and the top is confirmed.",
+    "chain_liq": "Of the AI chain's {n} stocks, {sw} broke the 20-day low intraday and closed back above it{swl}, and {ab} traded heavily without moving much{abl}. {conf}",
+    "chain_liq_eg": " (e.g. {x})", "chain_conf_up": "Buyers confirmed: {x}.", "chain_conf_dn": "Sellers confirmed: {x}.",
 }
 
 def _tw():
@@ -254,6 +272,14 @@ def sentence(f, l, r):
     if k == "new_high_low": return T[k].format(n=p["n"], hi=p["hi"], lo=p["lo"])
     if k == "big_mover": return T[k].format(names=lst([f'{x["t"]} {pct(x["chg"])}' for x in p["names"]], l))
     if k == "streak": return T[k].format(t=p["t"], n=abs(p["n"]))
+    if k in ("absorb_down", "absorb_up", "sweep_lo", "sweep_hi", "confirmed_up", "confirmed_down"):
+        return T[k].format(names=lst([tnm(t, l) for t in p["names"]], l))
+    if k == "thin_fast":
+        return T[k].format(names=lst([f'{tnm(x["t"], l)}（{pct(x["chg"])}，{num(x["rvol"])} {UI[l]["x"]}）' if l != "en" else f'{tnm(x["t"], l)} ({pct(x["chg"])}, {num(x["rvol"])}x)' for x in p["names"]], l))
+    if k == "chain_liq":
+        eg = lambda xs: T["chain_liq_eg"].format(x=lst(xs[:4], l)) if xs else ""
+        conf = (T["chain_conf_up"].format(x=lst(p["buyers"][:6], l)) if p["buyers"] else "") + (T["chain_conf_dn"].format(x=lst(p["sellers"][:6], l)) if p["sellers"] else "")
+        return T[k].format(n=p["n"], sw=len(p["sweep_lo"]), swl=eg(p["sweep_lo"]), ab=len(p["absorb"]), abl=eg(p["absorb"]), conf=conf)
     return None
 
 def sentences(r, l):
@@ -268,6 +294,55 @@ def key_points(r, l):
     for f in r["facts"]:
         by.setdefault(f["k"], f)
     return [sentence(by[k], l, r) for k in r.get("key", []) if k in by]
+
+# ------------------------------------------------------------------ liquidity table (also used on /market/)
+def liq_table(r, l, symbols=None, active_only=False):
+    """active_only: only rows with a signal today, in the last five sessions or a control state; the rest are named below"""
+    u = UI[l]; liq = r.get("liq") or {}
+    by = {b["t"]: b for b in r.get("board", [])}
+    syms = [t for t in (symbols or list(liq)) if t in liq]
+    quiet = []
+    if active_only:
+        quiet = [t for t in syms if not (liq[t]["tags"] or liq[t]["recent"] or liq[t]["state"])]
+        syms = [t for t in syms if t not in quiet]
+    if not syms: return f'<p class="rc-small">{u["quiet"].format(x=lst(quiet, l))}</p>' if quiet else ""
+    def tags(xs): return " ".join(f'<span class="lq lq-{x}">{u["tag"].get(x, x)}</span>' for x in xs) or '<span class="lq-none">–</span>'
+    def recent(x):
+        seen = []
+        for e in x["recent"]:
+            lab = f'{short_day(e["d"], l)} {u["tag"].get(e["t"], e["t"])}'
+            if lab not in seen: seen.append(lab)
+        return "<br>".join(E(s_) for s_ in seen[-3:]) or "–"
+    def state(x):
+        st_ = x.get("state")
+        if not st_: return '<span class="lq-none">–</span>'
+        cls = "up" if st_ in ("buyers", "watch_bottom", "accel_up") else "" if st_ == "mixed" else "dn"
+        return f'<span class="ls ls-{st_} {cls}">{u["state"][st_]}</span>'
+    rows = ""
+    for t in syms:
+        x = liq[t]; b = by.get(t, {})
+        ep = x.get("effPct")
+        rows += (f'<tr><th><b>{t}</b><small>{E(nm(t, l))}</small></th><td class="num {"up" if (b.get("chg") or 0) >= 0 else "dn"}">{pct(b.get("chg"))}</td>'
+                 f'<td class="num">{num(b.get("rvol"))}x</td><td class="num">{"–" if ep is None else f"{ep:.0%}"}</td><td>{tags(x["tags"])}</td>'
+                 f'<td class="rc-rec">{recent(x)}</td><td>{state(x)}</td></tr>')
+    return (f'<div class="rc-t rc-liq"><table><thead><tr>{"".join(f"<th>{c}</th>" for c in u["liqCols"])}</tr></thead><tbody>{rows}</tbody></table></div>'
+            + (f'<p class="rc-small">{u["quiet"].format(x=lst(quiet, l))}</p>' if quiet else "") + f'<p class="rc-small">{u["effNote"]}</p>')
+
+RC_CSS_MIN = """
+.rc-t{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;margin:0 0 6px}
+.rc-small{color:var(--muted);font-size:13.5px;margin:6px 0 8px}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+"""
+
+LIQ_CSS = """
+.rc-liq table{min-width:820px;font-size:13.5px}.rc-liq tbody th{text-align:left;font-weight:400;white-space:nowrap}.rc-liq tbody th b{display:block}
+.rc-liq tbody th small{color:var(--muted);font-size:12px}.rc-liq td{vertical-align:middle;padding:7px 10px}.rc-rec{font-size:12.5px;color:var(--muted);line-height:1.5}
+.lq{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;margin:1px 2px;white-space:nowrap;background:var(--surface-2);color:var(--muted)}
+.lq-absorb{background:color-mix(in srgb,var(--t2) 18%,transparent);color:var(--ink)}.lq-thin{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--ink)}
+.lq-sweep_lo,.lq-sweep_hi{background:color-mix(in srgb,#7a5cff 16%,transparent);color:var(--ink)}
+.lq-none{color:var(--faint)}.ls{font-weight:700;font-size:13px;white-space:nowrap}
+.rc-five td em{display:block;font-style:normal;font-size:11px;font-weight:700;color:var(--t2)}
+"""
 
 # ------------------------------------------------------------------ sections
 def _sec(title, body): return f'<section class="rc-s"><h2>{title}</h2>{body}</section>'
@@ -296,7 +371,8 @@ def sections(r, l, notes_html=""):
         def cell(c):
             if not c or c["chg"] is None: return "<td>–</td>"
             hot = " hot" if (c["rvol"] or 0) >= 1.5 else " cold" if (c["rvol"] or 1) < 0.8 else ""
-            return f'<td><b class="num {"up" if c["chg"] >= 0 else "dn"}">{pct(c["chg"])}</b><i class="num{hot}">{num(c["rvol"])}x</i></td>'
+            mk = " ".join(u["short"][x] for x in (c.get("liq") or []) if x in u["short"])
+            return f'<td><b class="num {"up" if c["chg"] >= 0 else "dn"}">{pct(c["chg"])}</b><i class="num{hot}">{num(c["rvol"])}x</i>{f"<em>{mk}</em>" if mk else ""}</td>'
         def rk(g):
             if not g.get("rank"): return "<td></td>"
             mv = (g["rankPrev"] or g["rank"]) - g["rank"]
@@ -328,6 +404,7 @@ def sections(r, l, notes_html=""):
            + _sec(u["index"], idx_tbl + para("index"))
            + _sec(u["sector"], f'<div class="rc-board">{board}</div>' + para("sector"))
            + _sec(u["volume"], f'<div class="rc-chips">{vols}</div><h3>SPY</h3><div class="rc-chips">{trail}</div>' + para("volume") + five)
+           + _sec(u["liq"], f'<p class="rc-small">{u["liqP"]}</p>' + para("liquidity") + liq_table(r, l, active_only=True))
            + (_sec(u["flows"], para("flows")) if para("flows") else "")
            + _sec(u["bonds"], bonds + para("bonds"))
            + (_sec(u["chain"], chain) if chain else "")

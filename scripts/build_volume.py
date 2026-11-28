@@ -164,6 +164,22 @@ def note(day, l, md):
         if os.path.exists(p) and md: return md(open(p, encoding="utf-8").read())
     return ""
 
+SECTOR_LIQ = ["SPY", "QQQ", "IWM", "SMH", "XLK", "XLC", "XLY", "XLP", "XLE", "XLF", "XLV", "XLI", "XLB", "XLRE", "XLU", "GLD", "TLT"]
+LIQ_H = {"zh": ("板块流动性", "每个板块现在谁在控制：放量推不动价格是有人在吸收，缩量走得快是对手盘稀薄，跌破或突破 20 日高低点又收回是流动性扫荡，收盘突破前 10 日高低点才算控制权转移。来自 {d} 的盘后复盘。", "完整的盘后复盘 →"),
+         "tw": ("板塊流動性", "每個板塊現在誰在控制：放量推不動價格是有人在吸收，縮量走得快是對手盤稀薄，跌破或突破 20 日高低點又收回是流動性掃蕩，收盤突破前 10 日高低點才算控制權轉移。來自 {d} 的盤後復盤。", "完整的盤後復盤 →"),
+         "en": ("Sector liquidity", "Who controls each sector now: heavy volume that barely moves price means absorption, light volume with a fast move means a thin other side, breaking a 20-day high or low and closing back inside is a sweep, and control changes hands only when a close clears the previous 10 sessions' high or low. From the recap of {d}.", "Full market recap →")}
+
+def market_liquidity(l):
+    """the sector liquidity block for /market/ (HTML for language l), from the latest recap; "" when there is none"""
+    rs = recaps()
+    if not rs: return ""
+    rt = _rt(); d, r = rs[0]
+    if not r.get("liq"): return ""
+    h, p, go = LIQ_H[l]
+    sent = "".join(f"<p>{html.escape(s)}</p>" for k, sec, s in rt.sentences(r, l) if sec == "liquidity" and k != "chain_liq")
+    return (f'<h2>{h}</h2><p class="lead">{p.format(d=rt.day_lbl(d, l))}</p>{sent}{rt.liq_table(r, l, SECTOR_LIQ)}'
+            f'<p class="mk-cal"><a href="/market/volume/">{go}</a></p><style>{rt.RC_CSS_MIN}{rt.LIQ_CSS}</style>')
+
 def home_points(l):
     """the homepage's price-and-volume box: the latest recap's points worth remembering"""
     rs = recaps()
@@ -231,7 +247,7 @@ def build(out, page, md=None):
                       f'<p class="vl-br">{t["breadth"].format(u=b["sectorsUp"], s=b["sectors"], a50=b["above50"], a200=b["above200"], n=b["n"])}</p>'
                       f'{groups}<section class="vl-how"><h2>{t["howH"]}</h2><dl>{how}</dl></section>{miss}</section>')
         blocks.append(f'<div data-l="{l}" lang="{LOC[l]}">{hero}{rec}{tables}<p class="vl-src">{t["src"]}</p></div>')
-    body = f'<main>{"".join(blocks)}</main><style>{CSS}{RC_CSS}</style>'
+    body = f'<main>{"".join(blocks)}</main><style>{CSS}{RC_CSS}{rt.LIQ_CSS if rt else ""}</style>'
     titles = {l: f'{T[l]["title"]} · April\'s Stock Atlas' for l in LANGS}
     os.makedirs(f"{out}/market/volume", exist_ok=True)
     open(f"{out}/market/volume/index.html", "w", encoding="utf-8").write(page("market/volume/", titles, T["zh"]["intro"], body))
@@ -248,5 +264,5 @@ def build(out, page, md=None):
         titles = {l: f'{rt.day_lbl(d, l)} · {T[l]["title"]} · April\'s Stock Atlas' for l in LANGS}
         os.makedirs(f"{out}/market/volume/{d}", exist_ok=True)
         open(f"{out}/market/volume/{d}/index.html", "w", encoding="utf-8").write(
-            page(f"market/volume/{d}/", titles, T["zh"]["intro"], f'<main>{"".join(blocks)}</main><style>{CSS}{RC_CSS}</style>'))
+            page(f"market/volume/{d}/", titles, T["zh"]["intro"], f'<main>{"".join(blocks)}</main><style>{CSS}{RC_CSS}{rt.LIQ_CSS}</style>'))
     return "market/volume/"
