@@ -75,12 +75,6 @@ jobs:
           python3 -I scripts/fetch_volume.py
           if [ -f work/volume_changed ]; then echo "VOL=1" >> "$GITHUB_ENV"; fi
 
-      - name: Options of key ETFs, stocks and insider buys (Nasdaq)
-        continue-on-error: true
-        run: |
-          python3 -I scripts/fetch_options.py
-          if [ -f work/options_changed ]; then echo "OPT=1" >> "$GITHUB_ENV"; fi
-
       - name: Institutional holdings (13D/13G daily, 13F when a fund files)
         continue-on-error: true
         run: |

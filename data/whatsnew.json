@@ -21,7 +21,7 @@
  },
  {
   "date": "2026-11-27",
-  "zh": "网站新增期权异动、机构持仓（13F 和 13D）、宏观日历和每日盘后复盘，首页改成「今日信号」，所有页面用同一条导航",
-  "en": "the site now has options activity, institutional holdings (13F and 13D), a macro calendar and a daily market recap; the homepage shows today's signals and every page shares one navigation bar"
+  "zh": "网站新增机构持仓（13F 和 13D）、宏观日历和每日盘后复盘，首页改成「今日信号」，所有页面用同一条导航",
+  "en": "the site now has institutional holdings (13F and 13D), a macro calendar and a daily market recap; the homepage shows today's signals and every page shares one navigation bar"
  }
 ]

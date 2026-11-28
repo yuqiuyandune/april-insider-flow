@@ -28,7 +28,6 @@ LOC = {"zh": "zh-CN", "tw": "zh-TW", "en": "en"}
 NAV = [  # (key, href, zh, tw, en)
     ("home", "/", "今日", "今日", "Today"),
     ("ins", "/insider/", "内部人", "內部人", "Insiders"),
-    ("opt", "/options/", "期权", "選擇權", "Options"),
     ("inst", "/institutions/", "机构", "機構", "Funds"),
     ("earn", "/earnings/", "财报", "財報", "Earnings"),
     ("cal", "/calendar/", "日历", "日曆", "Calendar"),
@@ -102,7 +101,7 @@ T = {
            "asof": "内部人数据截至 {a}", "mkAsof": "行情截至 {a}", 
            "d1": "上个交易日",
            "sigL": "今日信号", "sigH": "内部人在买什么", "sigAll": "打开内部人页面 →",
-           "sigP": "近 5 个交易日，多位高管和董事同时买入的公司排在最前。同一家公司的期权或机构持仓如果也有动静，对应的标签会亮起并标出方向；内部人在买、期权却偏看跌的，同样值得留意。",
+           "sigP": "近 5 个交易日，多位高管和董事同时买入的公司排在最前。同一家公司的机构持仓如果也有动静，对应的标签会亮起。",
            "srcIns": "内部人", "srcOpt": "期权", "srcEarn": "财报", "srcInst": "机构",
            "calL": "本周与接下来", "calAll": "完整日历 →", "earnL": "最新财报解读", "earnAll": "全部 →", "volL": "昨日量价", "volAll": "量价分析 →", "optL": "昨日期权", "optAll": "期权异动 →", "instL": "机构动向", "instAll": "机构持仓 →", "inst": {"stake13d": "有人 13D 举牌", "stake13g": "新的 5% 大股东", "fundsBuy": "多家基金买入", "fundsSell": "多家基金卖出"},
            "insL": "内部人动向", "insH": "近 5 个交易日的有效买卖", "buy": "▲ 最大的买入", "sell": "▼ 最大的卖出",
@@ -116,7 +115,7 @@ T = {
            "asof": "內部人資料截至 {a}", "mkAsof": "行情截至 {a}", 
            "d1": "上個交易日",
            "sigL": "今日信號", "sigH": "內部人在買什麼", "sigAll": "打開內部人頁面 →",
-           "sigP": "近 5 個交易日，多位高管和董事同時買入的公司排在最前。同一家公司的選擇權或機構持股如果也有動靜，對應的標籤會亮起並標出方向；內部人在買、選擇權卻偏看跌的，同樣值得留意。",
+           "sigP": "近 5 個交易日，多位高管和董事同時買入的公司排在最前。同一家公司的機構持股如果也有動靜，對應的標籤會亮起。",
            "srcIns": "內部人", "srcOpt": "選擇權", "srcEarn": "財報", "srcInst": "機構",
            "calL": "本週與接下來", "calAll": "完整日曆 →", "earnL": "最新財報解讀", "earnAll": "全部 →", "volL": "昨日量價", "volAll": "量價分析 →", "optL": "昨日選擇權", "optAll": "選擇權異動 →", "instL": "機構動向", "instAll": "機構持股 →", "inst": {"stake13d": "有人 13D 舉牌", "stake13g": "新的 5% 大股東", "fundsBuy": "多家基金買入", "fundsSell": "多家基金賣出"},
            "insL": "內部人動向", "insH": "近 5 個交易日的有效買賣", "buy": "▲ 最大的買入", "sell": "▼ 最大的賣出",
@@ -130,7 +129,7 @@ T = {
            "asof": "Insider data through {a}", "mkAsof": "Prices as of {a}", 
            "d1": "last session",
            "sigL": "Today's signals", "sigH": "What insiders are buying", "sigAll": "Open the insider page →",
-           "sigP": "Companies where several officers and directors bought in the last 5 trading days come first. When the same company's options or institutional holders also moved, that tag lights up with the direction; insiders buying while options lean bearish is worth a look too.",
+           "sigP": "Companies where several officers and directors bought in the last 5 trading days come first. When the same company's institutional holders also moved, that tag lights up.",
            "srcIns": "Insiders", "srcOpt": "Options", "srcEarn": "Earnings", "srcInst": "Institutions",
            "calL": "This week and next", "calAll": "Full calendar →", "earnL": "Latest earnings reviews", "earnAll": "All →", "volL": "Price and volume", "volAll": "Full table →", "optL": "Options", "optAll": "Options activity →", "instL": "Institutions", "instAll": "Holdings →", "inst": {"stake13d": "new 13D stake", "stake13g": "new 5% holder", "fundsBuy": "several funds bought", "fundsSell": "several funds sold"},
            "insL": "Insider activity", "insH": "Effective buying and selling, last 5 trading days", "buy": "▲ Largest buys", "sell": "▼ Largest sells",
@@ -142,7 +141,6 @@ T = {
 }
 MODULES = [  # (href or None, zh name, zh desc, tw name, tw desc, en name, en desc)
     ("/insider/", "内部人", "高管和董事在公开市场的真实买卖，每天更新。", "內部人", "高管和董事在公開市場的真實買賣，每天更新。", "Insiders", "Open-market buying and selling by officers and directors, daily."),
-    ("/options/", "期权", "大盘、重点个股和内部人在买的公司，期权成交和大额新开仓。", "選擇權", "大盤、重點個股和內部人在買的公司，選擇權成交和大額新建倉。", "Options", "Options volume and large new positions in the index, key stocks and insider buys."),
     ("/earnings/", "财报", "重点公司的季度财报解读和三情景估值。", "財報", "重點公司的季度財報解讀和三情境估值。", "Earnings", "Quarterly earnings reviews with three valuation scenarios."),
     ("/calendar/", "日历", "CPI、议息、PCE 和休市，美东和北京时间。", "日曆", "CPI、利率決議、PCE 和休市，美東和北京時間。", "Calendar", "CPI, the Fed, PCE and holidays, in ET and Beijing time."),
     ("/market/volume/", "量价分析", "每天收盘后，大盘、板块和重点个股的涨跌和成交量。", "量價分析", "每天收盤後，大盤、板塊和重點個股的漲跌和成交量。", "Price and volume", "After every close: moves and volume for the index, sectors and key stocks."),
@@ -328,7 +326,7 @@ def sig_html(l, sigs, of=None, ol=None, inf=None):
         fl = of.get(s["t"], []); il = inf.get(s["t"], [])
         inst = (f'<span class="chip on">{t["srcInst"]}</span>' if il else f'<span class="chip off">{t["srcInst"]}</span>')
         intag = "".join(f'<span class="chip tag {"dn" if f == "fundsSell" else "up" if f == "fundsBuy" else ""}">{E(t["inst"][f])}</span>' for f in il)
-        opt = (f'<span class="chip on">{t["srcOpt"]}</span>' if fl else f'<span class="chip off">{t["srcOpt"]}</span>')
+        opt = ((f'<span class="chip on">{t["srcOpt"]}</span>' if fl else f'<span class="chip off">{t["srcOpt"]}</span>') if ol else "")
         optag = "".join(f'<span class="chip tag {"up" if f in ("callHeavy", "newCalls") else "dn" if f in ("putHeavy", "newPuts") else ""}">{E(ol[l][f])}</span>' for f in fl) if ol else ""
         out.append(f'<a class="sig" href="/s/{E(s["t"])}.html"><span class="tk">{E(s["t"])}</span><span><span class="st">{E(s["title"][l])}</span>'
                    f'<span class="sw">{E(s["why"][l])}</span><span class="chips"><span class="chip on">{t["srcIns"]}</span>{opt}'
@@ -365,7 +363,7 @@ def body(asof, sigs, buys, sells, vol="", opt="", of=None, ol=None, inst="", inf
     return (f'<main class="home"><section aria-label="Today">{tri(today)}<div class="tiles" id="tiles"></div><p class="tiles-msg" id="tiles-msg" hidden></p></section>'
             f'<div class="grid"><section class="box">{sig_box}</section><div class="side">'
             f'<section class="box">{cal_h}<div id="cal"></div></section></div></div>'
-            + (f'<div class="pair">{vol}{opt}</div>' if vol or opt else "") + inst.replace('<section class="box">', '<section class="box wide">', 1) +
+            + (f'<div class="pair">{vol}{opt}</div>' if vol and opt else (vol or opt).replace('<section class="box">', '<section class="box wide">', 1)) + inst.replace('<section class="box">', '<section class="box wide">', 1) +
             f'<section class="box">{ins}</section><section class="box">{earn_h}<div id="earn" class="earn3"></div></section>'
             f'<section>{mods}</section><div id="subscribe">{sub}</div></main>{foot}')
 

@@ -349,7 +349,11 @@ def main():
     # Options (/options/): from data/options.json (scripts/fetch_options.py)
     _spec = importlib.util.spec_from_file_location("build_options", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_options.py"))
     _bo = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bo)
-    if (opt := _bo.build(out, _ba.page)): art_paths.insert(0, opt)
+    # options are paused (owner's call, 2026-11-28): no page, no homepage box or tags; /options/ redirects home.
+    # The code stays (scripts/fetch_options.py, build_options.py) to switch back on: set OPTIONS = True here and
+    # restore the workflow step.
+    OPTIONS = False
+    if OPTIONS and (opt := _bo.build(out, _ba.page)): art_paths.insert(0, opt)
     # Institutional holdings (/institutions/): data/stakes.json and data/funds.json (scripts/fetch_institutions.py)
     _spec = importlib.util.spec_from_file_location("build_institutions", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_institutions.py"))
     _bi = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bi)
@@ -359,7 +363,7 @@ def main():
     # Homepage (/): built by scripts/build_home.py, the entry point to every section
     _spec = importlib.util.spec_from_file_location("build_home", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_home.py"))
     _bh = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bh)
-    _bh.build(out, days, pages, _ba, _bc, _bv, _bo, _bi)
+    _bh.build(out, days, pages, _ba, _bc, _bv, _bo if OPTIONS else None, _bi)
     sm += [f"<url><loc>{SITE}/{p}</loc><lastmod>{dates[-1]}</lastmod></url>" for p in art_paths]
     open(f"{out}/sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(sm) + "</urlset>")
     open(f"{out}/favicon.svg", "w").write(ICON_SVG)
@@ -377,7 +381,7 @@ def main():
                                        "/s/*\n  Cache-Control: public, max-age=3600\n/tw/s/*\n  Cache-Control: public, max-age=3600\n/articles/*\n  Cache-Control: public, max-age=300\n/market/*\n  Cache-Control: public, max-age=300\n/calendar/*\n  Cache-Control: public, max-age=300\n/options/*\n  Cache-Control: public, max-age=300\n/institutions/*\n  Cache-Control: public, max-age=300\n")
     open(f"{out}/_redirects", "w").write("/stack /themes/ai/ 301\n/stack/ /themes/ai/ 301\n/ai /themes/ai/ 301\n/ai/ /themes/ai/ 301\n"
                                          "/energy /themes/energy/ 301\n/energy/ /themes/energy/ 301\n/themes /themes/ai/ 302\n/themes/ /themes/ai/ 302\n"
-                                         "/articles /market/ 301\n/articles/ /market/ 301\n")
+                                         "/articles /market/ 301\n/articles/ /market/ 301\n/options / 302\n/options/ / 302\n")
     print(f"built {len(dates)} days: {dates[0]} .. {dates[-1]}; {len(pages)} company pages; feeds + sitemap")
 
 

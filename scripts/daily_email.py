@@ -115,7 +115,7 @@ def main():
     if r["date"] != expected: problems.append(f"latest recap is for {r['date']}, expected {expected}")
     days = [json.load(open(p, encoding="utf-8")) for p in sorted(glob.glob(os.path.join(ROOT, "data", "days", "*.json")))[-bh.SIGNAL_DAYS:]]
     _, sigs, _, _ = bh.insider(days)
-    od = bo.load(); of = bo.flags_for(od) if od else {}; ol = {l: bo.T[l]["f"] for l in ("zh", "en")} if od else None
+    od = None; of = {}; ol = None   # options are paused (2026-11-28)
     inf = bi.flags_for(); il = {l: bh.T[l]["inst"] for l in ("zh", "en")}
     now_et = dt.datetime.now(ET).date().isoformat() if not a.today else a.today
     events = [e for e in macro["events"] if e["date"] >= now_et and e["kind"] in ("fomc", "cpi", "jobs", "pce", "closed", "early")][:4]
