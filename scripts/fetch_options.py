@@ -58,7 +58,7 @@ def fetch(sym, cls, offline=None):
         return json.loads(r.read().decode("utf-8"))
 
 def parse(j):
-    """-> (session date, underlying price, [(cp, strike, expiry date, last, volume, open interest)])"""
+    """-> (session date, underlying price, [(cp, strike, expiry date, last, volume, open interest, bid, ask)])"""
     d = j.get("data") or {}
     m = re.search(r"\$([\d,.]+)\s*\(AS OF ([A-Z]{3}) (\d{1,2}), (\d{4})\)", d.get("lastTrade") or "", re.I)
     if not m: raise ValueError("no last trade line")
@@ -71,9 +71,56 @@ def parse(j):
         k = num(r["strike"])
         for cp in ("c", "p"):
             v = num(r.get(f"{cp}_Volume"))
-            rows.append((cp, k, exp, num(r.get(f"{cp}_Last")), v, num(r.get(f"{cp}_Openinterest"))))
+            rows.append((cp, k, exp, num(r.get(f"{cp}_Last")), v, num(r.get(f"{cp}_Openinterest")), num(r.get(f"{cp}_Bid")), num(r.get(f"{cp}_Ask"))))
     if not rows: raise ValueError("empty chain")
     return day, px, rows
+
+def side(last, bid, ask):
+    """the likely aggressor of the LAST trade only: near the ask = a buyer paid up, near the bid = a seller hit the bid.
+    None when there is no usable quote. Quotes after the close can be stale, so this is a hint, not a fact."""
+    if not (bid and ask and ask > bid and last): return None
+    mid, half = (bid + ask) / 2, (ask - bid) / 2
+    if last >= mid + 0.5 * half: return "buy"
+    if last <= mid - 0.5 * half: return "sell"
+    return "mid"
+
+def max_pain(rows, exp):
+    """the expiry price at which option holders, all together, would collect the least"""
+    cs = [(k, oi) for cp, k, e, last, v, oi, b, a in rows if e == exp and cp == "c" and oi]
+    ps = [(k, oi) for cp, k, e, last, v, oi, b, a in rows if e == exp and cp == "p" and oi]
+    strikes = sorted({k for k, _ in cs + ps})
+    if not strikes: return None
+    pay = lambda S: sum(oi * max(0, S - k) for k, oi in cs) + sum(oi * max(0, k - S) for k, oi in ps)
+    return min(strikes, key=pay)
+
+def wall_for(rows, px, exps):
+    """open interest by strike over the given expiries: the largest call open interest above the price (the call wall)
+    and the largest put open interest below it (the put wall), with each one's distance from the price"""
+    c, pt = {}, {}
+    for cp, k, e, last, v, oi, b, a in rows:
+        if e not in exps or not oi: continue
+        (c if cp == "c" else pt)[k] = (c if cp == "c" else pt).get(k, 0) + oi
+    # only strikes within 15% of the price: far-away open interest is mostly long-dated protection, not a level anyone trades around
+    up = [(k, oi) for k, oi in c.items() if px <= k <= px * 1.15]; dn = [(k, oi) for k, oi in pt.items() if px * 0.85 <= k <= px]
+    if not up or not dn: return None
+    ck, coi = max(up, key=lambda x: x[1]); pk, poi = max(dn, key=lambda x: x[1])
+    return {"call": {"k": ck, "oi": int(coi), "dist": round((ck / px - 1) * 100, 1)}, "put": {"k": pk, "oi": int(poi), "dist": round((pk / px - 1) * 100, 1)}}
+
+def walls(rows, px, day):
+    exps = sorted({e for cp, k, e, *_ in rows if e > day})   # contracts expiring on the session itself are done
+    if not exps: return None
+    front = exps[0]
+    # the monthly expiry: the third Friday of a month, the first one on or after the front expiry
+    monthly = next((e for e in exps if e.weekday() == 4 and 15 <= e.day <= 21), None)
+    out = {}
+    for key, ex in (("front", [front]), ("monthly", [monthly] if monthly else [])):
+        if not ex: continue
+        w = wall_for(rows, px, set(ex))
+        if w: out[key] = {"exp": ex[0].isoformat(), "dte": (ex[0] - day).days, **w, "maxPain": max_pain(rows, ex[0])}
+    near = {e for e in exps if (e - day).days <= 60}
+    w = wall_for(rows, px, near)
+    if w: out["d60"] = w
+    return out or None
 
 def analyse(group, day, px, rows, hist):
     cv = sum(r[4] for r in rows if r[0] == "c"); pv = sum(r[4] for r in rows if r[0] == "p")
@@ -81,7 +128,7 @@ def analyse(group, day, px, rows, hist):
     cprem = sum(r[4] * r[3] * 100 for r in rows if r[0] == "c"); pprem = sum(r[4] * r[3] * 100 for r in rows if r[0] == "p")
     pcr = pv / cv if cv else None
     unusual = []
-    for cp, k, exp, last, v, oi in rows:
+    for cp, k, exp, last, v, oi, bid, ask in rows:
         prem = v * last * 100
         otm = (k / px - 1) * 100 if cp == "c" else (1 - k / px) * 100
         # new money in a directional contract: volume well above existing open interest, real size, out of the money
@@ -89,7 +136,7 @@ def analyse(group, day, px, rows, hist):
         # and contracts expiring within a week always trade far above their open interest
         if v >= 500 and v >= 5 * max(oi, 100) and prem >= BIG[group] and -10 <= otm <= 60 and 7 <= (exp - day).days <= 365:
             unusual.append({"cp": cp, "k": k, "exp": exp.isoformat(), "dte": (exp - day).days, "last": last, "vol": int(v), "oi": int(oi),
-                            "prem": round(prem), "otm": round(otm, 1)})
+                            "prem": round(prem), "otm": round(otm, 1), "bid": bid, "ask": ask, "side": side(last, bid, ask)})
     unusual.sort(key=lambda u: -u["prem"])
     past = [h for h in hist if h[0] < day.isoformat()][-20:]
     avg = sum(h[1] + h[2] for h in past) / len(past) if len(past) >= 10 else None
@@ -103,12 +150,21 @@ def analyse(group, day, px, rows, hist):
     share = (ucp + upp) / (cprem + pprem) if cprem + pprem else 0   # how much of the day's premium went into those contracts
     if ucp >= 3 * BIG[group] and ucp >= 2 * upp and ucp >= 0.05 * cprem: flags.append("newCalls")
     if upp >= 3 * BIG[group] and upp >= 2 * ucp and upp >= 0.05 * pprem: flags.append("newPuts")
+    def lean(cp):
+        """buy or sell, when at least two thirds of the unusual premium on that side shows the same last-trade side"""
+        xs = [u for u in unusual if u["cp"] == cp and u["side"] in ("buy", "sell")]
+        tot = sum(u["prem"] for u in xs)
+        for sd in ("buy", "sell"):
+            if tot and sum(u["prem"] for u in xs if u["side"] == sd) >= 2 / 3 * tot: return sd
+        return None
+    leans = {"c": lean("c"), "p": lean("p")}
     if rvol and rvol >= 2: flags.append("volSpike")
     tot = cv + pv
     score = 20 * share + 2 * len(flags) + (2 if rvol and rvol >= 2 else 0)
     return {"px": px, "cv": int(cv), "pv": int(pv), "coi": int(coi), "poi": int(poi), "pcr": round(pcr, 2) if pcr is not None else None,
             "cprem": round(cprem), "pprem": round(pprem), "voi": round(tot / (coi + poi), 3) if coi + poi else None,
-            "rvol": round(rvol, 2) if rvol else None, "share": round(share, 3), "unusual": unusual[:6], "nUnusual": len(unusual), "flags": flags, "score": round(score, 2)}
+            "rvol": round(rvol, 2) if rvol else None, "share": round(share, 3), "unusual": unusual[:6], "nUnusual": len(unusual), "flags": flags, "score": round(score, 2),
+            "lean": leans, "wall": walls(rows, px, day)}
 
 def insider_symbols():
     """Companies on the homepage's insider signals and the largest insider buys (same rules as build_home)."""
@@ -137,7 +193,7 @@ def compare(day, hist, cv, pv, cprem, pprem):
 def follow(prev_unusual, rows):
     """did yesterday's unusual contracts stay open? today's open interest against yesterday's volume
     (open interest is counted overnight, so today's figure includes yesterday's trades)"""
-    oi = {(cp, k, e.isoformat()): o for cp, k, e, last, v, o in rows}
+    oi = {(cp, k, e.isoformat()): o for cp, k, e, last, v, o, b, a in rows}
     out = []
     for u in prev_unusual:
         now = oi.get((u["cp"], u["k"], u["exp"]))
@@ -164,13 +220,16 @@ def main():
     universe = [(s, c, g, {"zh": zh, "tw": tw, "en": en}) for s, c, g, zh, tw, en in FIXED]
     universe += [(t, "stocks", "insider", n) for t, n in insider_symbols() if t not in fixed]
     items, missing = [], []
-    # Nasdaq stamps the chain with today's date even when the market was closed; use the last session the price data saw
-    vp = os.path.join(ROOT, "data", "volume.json")
-    last_session = json.load(open(vp, encoding="utf-8")).get("date") if os.path.exists(vp) else None
+    # Nasdaq stamps the chain with today's date even on a weekend or a market holiday: roll those back to the last session
+    mp = os.path.join(ROOT, "data", "macro.json")
+    closed = {e["date"] for e in json.load(open(mp, encoding="utf-8"))["events"] if e["kind"] == "closed"} if os.path.exists(mp) else set()
+    def session(d):
+        while d.weekday() >= 5 or d.isoformat() in closed: d -= dt.timedelta(days=1)
+        return d
     for sym, cls, group, name in universe:
         try:
             day, px, rows = parse(fetch(sym, cls, a.offline))
-            if last_session and day.isoformat() > last_session: day = dt.date.fromisoformat(last_session)
+            day = session(day)
             it = {"t": sym, "g": group, "n": name, "date": day.isoformat(), **analyse(group, day, px, rows, hist.get(sym, []))}
             it["vsPrev"] = compare(day, hist.get(sym, []), it["cv"], it["pv"], it["cprem"], it["pprem"])
             pd_, pu = prev_u.get(sym, (None, []))
@@ -188,6 +247,9 @@ def main():
     day = max({i["date"] for i in items}, key=lambda d: (sum(i["date"] == d for i in items), d))
 
     allu = sorted(({"t": i["t"], "n": i["n"], **u} for i in items if i["date"] == day for u in i["unusual"]), key=lambda u: -u["prem"])[:15]
+    # open interest is published the next business day; if none of yesterday's contracts moved at all, it has not been refreshed yet
+    if all(f["added"] == 0 for i in items for f in i.get("follow", [])):
+        for i in items: i["follow"] = []; i["followDay"] = None
     allf = sorted(({"t": i["t"], "n": i["n"], "day": i["followDay"], **f} for i in items if i["date"] == day for f in i.get("follow", [])), key=lambda f: -f["prem"])[:15]
     out = {"date": day, "generated_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"), "missing": missing,
            "histDays": max((len(v) for v in hist.values()), default=0), "items": items, "unusual": allu, "follow": allf}

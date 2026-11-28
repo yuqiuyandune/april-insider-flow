@@ -21,17 +21,22 @@ T = {
            "cols": ["代码", "现价", "看涨成交", "看跌成交", "看跌/看涨比", "看涨金额", "看跌金额", "成交/未平仓", "比上个交易日", "标记"],
            "vsTot": "成交 {v}", "vsPcr": "比值 {a} → {b}", "fH": "昨天的大单，今天还在吗",
            "fP": "未平仓量每天收盘后才统计，所以今天的未平仓量包含了昨天的交易。昨天成交的合约，如果今天未平仓量增加了差不多同样多，说明是新开的仓位而且留下来了；如果几乎没增加，说明当天就平掉了，或者是一买一卖的对倒。",
-           "fcols": ["代码", "方向", "行权价", "到期", "昨天成交", "昨天之前的未平仓", "今天的未平仓", "留下"],
+           "fcols": ["代码", "类型", "行权价", "到期", "昨天成交", "昨天之前的未平仓", "今天的未平仓", "留下"],
            "kept_hi": "大部分留下了，是新开的仓位", "kept_mid": "留下了一部分", "kept_lo": "几乎没留下，当天就平掉了或是对倒",
            "fNone": "从下一个交易日开始，这里会显示前一天大单的去向。",
            "sFollow": "昨天 {t} {exp} 到期、行权价 {k} 的{cp}成交 {vol} 张，今天未平仓增加了 {added} 张（{kept}）：{verdict}。", "sPcr": "（上个交易日 {p}）",
-           "ucols": ["代码", "方向", "行权价", "到期", "价外", "成交量", "原未平仓", "金额"],
-           "call": "看涨", "put": "看跌", "days": "{n} 天", "date": "{m}月{d}日（{wd}）收盘", "wd": "周日,周一,周二,周三,周四,周五,周六",
+           "ucols": ["代码", "类型", "行权价", "到期", "价外", "成交量", "原未平仓", "金额", "最后一笔成交价"],
+           "call": "看涨期权", "put": "看跌期权", "days": "{n} 天", "date": "{m}月{d}日（{wd}）收盘", "wd": "周日,周一,周二,周三,周四,周五,周六",
            "mkt": "{date}：标普 500（SPY）期权的看跌/看涨比是 {a}{pa}，纳指 100（QQQ）是 {b}{pb}。",
            "line": "{n}（{t}）：{fl}", "biggest": "，最大一笔是 {exp} 到期、行权价 {k} 的{cp}，金额 {prem}", "quiet": "其余没有明显的异动。",
-           "f": {"callHeavy": "看涨成交明显偏多", "putHeavy": "看跌成交明显偏多", "newCalls": "有大额新开看涨", "newPuts": "有大额新开看跌", "volSpike": "期权成交是平时的两倍以上"},
+           "f": {"callHeavy": "看涨期权成交明显偏多", "putHeavy": "看跌期权成交明显偏多", "newCalls": "有大额新开的看涨期权", "newPuts": "有大额新开的看跌期权", "volSpike": "期权成交是平时的两倍以上"},
+           "lean": {"cbuy": "看涨期权多半是买入", "csell": "看涨期权多半是卖出", "pbuy": "看跌期权多半是买入", "psell": "看跌期权多半是卖出"},
+           "side": {"buy": "靠近卖价，多半是买入", "sell": "靠近买价，多半是卖出", "mid": "在买卖价中间，看不出"}, "hedge": "指数看跌期权，常见于对冲",
            "hist": "成交量和 20 日平均的比较需要先积累 10 个交易日的历史（目前 {n} 天），之后会自动加上。",
+           "wH": "期权墙", "wP": "未平仓量最集中的行权价：现价上方看涨期权未平仓最多的是「看涨墙」，常被当作压力；下方看跌期权未平仓最多的是「看跌墙」，常被当作支撑。临近到期时，价格也容易被吸向这些位置，或吸向「最大痛点」（到期时期权持有人整体赚得最少的价格）。只看现价上下 15% 以内的行权价。墙看的是已有的仓位，不需要知道买卖方向，所以比单日的成交更稳定，对大盘 ETF 尤其有用。",
+           "wcols": ["代码", "现价", "看跌墙（支撑）", "看涨墙（压力）", "最大痛点"], "wFront": "最近到期", "wMonthly": "月度到期", "wSum": "{t} {exp} 月度到期：看跌墙 {pk}（{pd}），看涨墙 {ck}（{cd}），最大痛点 {mp}。",
            "howH": "怎么读", "how": [
+               ("看涨期权不一定是看涨，看跌期权也不一定是看跌", "买看跌期权常常是给手上的股票买保护，卖看跌期权反而是看涨；卖看涨期权常见于持股的人收租。免费数据看不到每笔交易是谁主动，这里用最后一笔成交价靠近卖价还是买价来推测：靠近卖价多半是买方主动，靠近买价多半是卖方主动。它只代表最后一笔，不代表全天。"),
                ("看跌/看涨比", "看跌期权成交量除以看涨期权成交量。个股低于 0.4 偏看涨，高于 1.2 偏看跌；大盘 ETF 平时就有很多对冲，所以门槛放宽到 0.8 和 2.0。"),
                ("金额", "成交量 × 最新价 × 100，粗略代表花在期权上的钱。比单看张数更能看出大资金押在哪边。"),
                ("成交/未平仓", "当天成交量除以前一天的未平仓量。越高说明当天换手越多、新开的仓位越多。"),
@@ -43,17 +48,22 @@ T = {
            "cols": ["代碼", "現價", "買權成交", "賣權成交", "賣權/買權比", "買權金額", "賣權金額", "成交/未平倉", "比上個交易日", "標記"],
            "vsTot": "成交 {v}", "vsPcr": "比值 {a} → {b}", "fH": "昨天的大單，今天還在嗎",
            "fP": "未平倉量每天收盤後才統計，所以今天的未平倉量包含了昨天的交易。昨天成交的合約，如果今天未平倉量增加了差不多同樣多，說明是新建的部位而且留下來了；如果幾乎沒增加，說明當天就平掉了，或者是一買一賣的對敲。",
-           "fcols": ["代碼", "方向", "履約價", "到期", "昨天成交", "昨天之前的未平倉", "今天的未平倉", "留下"],
+           "fcols": ["代碼", "類型", "履約價", "到期", "昨天成交", "昨天之前的未平倉", "今天的未平倉", "留下"],
            "kept_hi": "大部分留下了，是新建的部位", "kept_mid": "留下了一部分", "kept_lo": "幾乎沒留下，當天就平掉了或是對敲",
            "fNone": "從下一個交易日開始，這裡會顯示前一天大單的去向。",
            "sFollow": "昨天 {t} {exp} 到期、履約價 {k} 的{cp}成交 {vol} 口，今天未平倉增加了 {added} 口（{kept}）：{verdict}。", "sPcr": "（上個交易日 {p}）",
-           "ucols": ["代碼", "方向", "履約價", "到期", "價外", "成交量", "原未平倉", "金額"],
+           "ucols": ["代碼", "類型", "履約價", "到期", "價外", "成交量", "原未平倉", "金額", "最後一筆成交價"],
            "call": "買權", "put": "賣權", "days": "{n} 天", "date": "{m}月{d}日（{wd}）收盤", "wd": "週日,週一,週二,週三,週四,週五,週六",
            "mkt": "{date}：標普 500（SPY）選擇權的賣權/買權比是 {a}{pa}，那指 100（QQQ）是 {b}{pb}。",
            "line": "{n}（{t}）：{fl}", "biggest": "，最大一筆是 {exp} 到期、履約價 {k} 的{cp}，金額 {prem}", "quiet": "其餘沒有明顯的異動。",
-           "f": {"callHeavy": "買權成交明顯偏多", "putHeavy": "賣權成交明顯偏多", "newCalls": "有大額新建倉買權", "newPuts": "有大額新建倉賣權", "volSpike": "選擇權成交是平時的兩倍以上"},
+           "f": {"callHeavy": "買權成交明顯偏多", "putHeavy": "賣權成交明顯偏多", "newCalls": "有大額新建倉的買權", "newPuts": "有大額新建倉的賣權", "volSpike": "選擇權成交是平時的兩倍以上"},
+           "lean": {"cbuy": "買權多半是買入", "csell": "買權多半是賣出", "pbuy": "賣權多半是買入", "psell": "賣權多半是賣出"},
+           "side": {"buy": "靠近賣價，多半是買入", "sell": "靠近買價，多半是賣出", "mid": "在買賣價中間，看不出"}, "hedge": "指數賣權，常見於避險",
            "hist": "成交量和 20 日平均的比較需要先累積 10 個交易日的歷史（目前 {n} 天），之後會自動加上。",
+           "wH": "選擇權牆", "wP": "未平倉量最集中的履約價：現價上方買權未平倉最多的是「買權牆」，常被當作壓力；下方賣權未平倉最多的是「賣權牆」，常被當作支撐。臨近到期時，價格也容易被吸向這些位置，或吸向「最大痛點」（到期時選擇權持有人整體賺得最少的價格）。只看現價上下 15% 以內的履約價。牆看的是已有的部位，不需要知道買賣方向，所以比單日的成交更穩定，對大盤 ETF 尤其有用。",
+           "wcols": ["代碼", "現價", "賣權牆（支撐）", "買權牆（壓力）", "最大痛點"], "wFront": "最近到期", "wMonthly": "月度到期", "wSum": "{t} {exp} 月度到期：賣權牆 {pk}（{pd}），買權牆 {ck}（{cd}），最大痛點 {mp}。",
            "howH": "怎麼讀", "how": [
+               ("買權不一定是看漲，賣權也不一定是看跌", "買進賣權常常是給手上的股票買保護，賣出賣權反而是看漲；賣出買權常見於持股的人收租。免費資料看不到每筆交易是誰主動，這裡用最後一筆成交價靠近賣價還是買價來推測：靠近賣價多半是買方主動，靠近買價多半是賣方主動。它只代表最後一筆，不代表全天。"),
                ("賣權/買權比", "賣權成交量除以買權成交量。個股低於 0.4 偏看漲，高於 1.2 偏看跌；大盤 ETF 平時就有很多避險，所以門檻放寬到 0.8 和 2.0。"),
                ("金額", "成交量 × 最新價 × 100，粗略代表花在選擇權上的錢。比單看口數更能看出大資金押在哪邊。"),
                ("成交/未平倉", "當天成交量除以前一天的未平倉量。越高說明當天換手越多、新建的部位越多。"),
@@ -65,17 +75,22 @@ T = {
            "cols": ["Ticker", "Price", "Call vol.", "Put vol.", "Put/call", "Call premium", "Put premium", "Vol./OI", "vs previous session", "Flags"],
            "vsTot": "volume {v}", "vsPcr": "ratio {a} → {b}", "fH": "Are yesterday's big trades still open?",
            "fP": "Open interest is counted after each close, so today's figure includes yesterday's trades. If a contract that traded heavily yesterday shows open interest up by about as much today, those were new positions and they stayed; if it barely moved, they were closed the same day or traded back and forth.",
-           "fcols": ["Ticker", "Side", "Strike", "Expiry", "Yesterday's volume", "Open interest before", "Open interest now", "Kept"],
+           "fcols": ["Ticker", "Type", "Strike", "Expiry", "Yesterday's volume", "Open interest before", "Open interest now", "Kept"],
            "kept_hi": "mostly kept: new positions", "kept_mid": "partly kept", "kept_lo": "barely kept: closed the same day or crossed",
            "fNone": "From the next session on, this shows where the previous day's big trades went.",
            "sFollow": "Yesterday {t}'s {exp} {k} {cp}s traded {vol}; today open interest is up {added} ({kept}): {verdict}.", "sPcr": " (previous session {p})",
-           "ucols": ["Ticker", "Side", "Strike", "Expiry", "OTM", "Volume", "Prior OI", "Premium"],
+           "ucols": ["Ticker", "Type", "Strike", "Expiry", "OTM", "Volume", "Prior OI", "Premium", "Last trade"],
            "call": "call", "put": "put", "days": "{n}d", "date": "Close of {wd}, {M} {d}", "wd": "Sun,Mon,Tue,Wed,Thu,Fri,Sat",
            "mkt": "{date}: the put/call ratio was {a} on SPY{pa} and {b} on QQQ{pb}.",
            "line": "{n} ({t}): {fl}", "biggest": "; the largest was the {exp} {k} {cp} for {prem}", "quiet": "Nothing else stood out.",
-           "f": {"callHeavy": "calls clearly outweighed puts", "putHeavy": "puts clearly outweighed calls", "newCalls": "large new call positions", "newPuts": "large new put positions", "volSpike": "options volume twice its usual level"},
+           "f": {"callHeavy": "call volume clearly above put volume", "putHeavy": "put volume clearly above call volume", "newCalls": "large new call positions", "newPuts": "large new put positions", "volSpike": "options volume twice its usual level"},
+           "lean": {"cbuy": "calls mostly bought", "csell": "calls mostly sold", "pbuy": "puts mostly bought", "psell": "puts mostly sold"},
+           "side": {"buy": "near the ask, likely bought", "sell": "near the bid, likely sold", "mid": "mid-quote, unclear"}, "hedge": "index puts, often hedges",
            "hist": "Comparing volume with its 20-day average needs 10 sessions of history first (now {n}); it will appear automatically.",
+           "wH": "Options wall", "wP": "The strikes where open interest piles up: above the price, the strike with the most call open interest is the call wall, often read as resistance; below it, the strike with the most put open interest is the put wall, often read as support. Near expiry, price also tends to drift toward these strikes or toward max pain (the price at which option holders together collect the least). Only strikes within 15% of the price count. Walls describe positions already held and need no buy/sell side, so they are steadier than one day's flow, especially for the index ETFs.",
+           "wcols": ["Ticker", "Price", "Put wall (support)", "Call wall (resistance)", "Max pain"], "wFront": "Next expiry", "wMonthly": "Monthly expiry", "wSum": "{t}, {exp} monthly expiry: put wall {pk} ({pd}), call wall {ck} ({cd}), max pain {mp}.",
            "howH": "How to read it", "how": [
+               ("A call is not always bullish, a put not always bearish", "Buying puts is often protection for stock already held, and selling puts is a bullish bet; selling calls is common income for holders. Free data does not say who started each trade, so the last trade price is used as a hint: near the ask usually means a buyer paid up, near the bid usually means a seller hit the bid. It describes the last trade only, not the whole day."),
                ("Put/call", "Put volume divided by call volume. For stocks below 0.4 leans bullish, above 1.2 leans bearish; index ETFs always carry a lot of hedging, so their thresholds are 0.8 and 2.0."),
                ("Premium", "Volume × last price × 100, roughly the money spent on the options. It shows where big money went better than contract counts."),
                ("Vol./OI", "The day's volume divided by the prior day's open interest. Higher means more turnover and more new positions."),
@@ -114,9 +129,16 @@ def summary(data, l, n=4):
         verdict = t["kept_hi"] if f["kept"] >= 0.5 else t["kept_mid"] if f["kept"] >= 0.2 else t["kept_lo"]
         out.append(t["sFollow"].format(t=E(f["t"]), exp=md(f["exp"], l), k=k_txt(f["k"]), cp=t["call"] if f["cp"] == "c" else t["put"],
                                        vol=f"{f['vol']:,}", added=f"{f['added']:,}", kept=f"{f['kept']:.0%}", verdict=verdict))
+    for x in (by.get("SPY"), by.get("QQQ")):
+        m = (x or {}).get("wall", {}).get("monthly") if x else None
+        if m:
+            out.append(t["wSum"].format(t=x["t"], exp=md(m["exp"], l), pk=k_txt(m["put"]["k"]), pd=f'{m["put"]["dist"]:+.1f}%',
+                                        ck=k_txt(m["call"]["k"]), cd=f'{m["call"]["dist"]:+.1f}%', mp=k_txt(m["maxPain"]) if m.get("maxPain") is not None else "–"))
     picks = [i for i in sorted(items, key=lambda i: -i["score"]) if i["flags"]][:n]
     for i in picks:
-        s = t["line"].format(n=E(i["n"][l]), t=E(i["t"]), fl=("、" if l != "en" else ", ").join(t["f"][f] for f in i["flags"]))
+        ln = i.get("lean") or {}
+        fl = [t["f"][f] for f in i["flags"]] + [t["lean"][cp + ln[cp]] for cp in ("c", "p") if ln.get(cp) in ("buy", "sell")]
+        s = t["line"].format(n=E(i["n"][l]), t=E(i["t"]), fl=("、" if l != "en" else ", ").join(fl))
         u = next((u for u in i["unusual"] if ("newPuts" in i["flags"]) == (u["cp"] == "p")), i["unusual"][0] if i["unusual"] else None)
         if u: s += t["biggest"].format(exp=md(u["exp"], l), k=k_txt(u["k"]), cp=t["call"] if u["cp"] == "c" else t["put"], prem=money(u["prem"]))
         out.append(s + ("。" if l != "en" else "."))
@@ -130,12 +152,24 @@ def urow(u, l):
     t = T[l]; c = u["cp"] == "c"
     return (f'<tr><td><b>{E(u["t"])}</b><small>{E(u["n"][l])}</small></td><td class="{"up" if c else "dn"}">{t["call"] if c else t["put"]}</td>'
             f'<td class="num">{k_txt(u["k"])}</td><td class="num">{md(u["exp"], l)} · {t["days"].format(n=u["dte"])}</td><td class="num">{u["otm"]:+.1f}%</td>'
-            f'<td class="num">{u["vol"]:,}</td><td class="num">{u["oi"]:,}</td><td class="num"><b>{money(u["prem"])}</b></td></tr>')
+            f'<td class="num">{u["vol"]:,}</td><td class="num">{u["oi"]:,}</td><td class="num"><b>{money(u["prem"])}</b></td>'
+            f'<td class="sd">{side_txt(u, l)}</td></tr>')
+
+INDEX = {"SPY", "QQQ", "IWM"}
+
+def side_txt(u, l):
+    t = T[l]; sd = u.get("side")
+    out = (f'<span class="sd-{sd}">{t["side"][sd]}</span>' if sd else "–")
+    if u["cp"] == "p" and u.get("t") in INDEX: out += f'<small>{t["hedge"]}</small>'
+    if sd and u.get("bid") and u.get("ask"): out += f'<small class="num">{u["bid"]:g} / {u["ask"]:g} · {u["last"]:g}</small>'
+    return out
 
 def row(i, l):
     t = T[l]
     pcr = i["pcr"]; pw = min((pcr or 0) / 3, 1) * 100
     flags = "".join(f'<span class="vf {f}">{E(t["f"][f])}</span>' for f in i["flags"])
+    ln = i.get("lean") or {}
+    flags += "".join(f'<span class="vf lean">{E(t["lean"][cp + ln[cp]])}</span>' for cp in ("c", "p") if ln.get(cp) in ("buy", "sell"))
     tot = i["cprem"] + i["pprem"] or 1
     return (f'<tr><td><b>{E(i["t"])}</b><small>{E(i["n"][l])}</small></td><td class="num">{i["px"]:,.2f}</td>'
             f'<td class="num">{i["cv"]:,}</td><td class="num">{i["pv"]:,}</td>'
@@ -149,6 +183,20 @@ def vs_cell(i, l):
     tot = "–" if v.get("vol") is None else f'<b class="{"up" if v["vol"] >= 0 else "dn"}">{v["vol"]:+.0f}%</b>'
     pcr = t["vsPcr"].format(a=v["pcr"], b=i["pcr"]) if v.get("pcr") is not None and i.get("pcr") is not None else ""
     return f'<span class="num">{t["vsTot"].format(v=tot)}</span><small class="num">{pcr}</small>'
+
+def wall_rows(data, l):
+    t = T[l]; out = []
+    order = {"index": 0, "asset": 1, "stock": 2, "insider": 3}
+    for i in sorted((i for i in data["items"] if i.get("wall")), key=lambda i: (order.get(i["g"], 9), -(i["coi"] + i["poi"]))):
+        w = i["wall"]
+        def cell(key):
+            x = w.get(key)
+            if not x: return "<td>–</td><td>–</td><td>–</td>"
+            return (f'<td class="num">{k_txt(x["put"]["k"])} <small>{x["put"]["dist"]:+.1f}% · {x["put"]["oi"]:,}</small></td>'
+                    f'<td class="num">{k_txt(x["call"]["k"])} <small>{x["call"]["dist"]:+.1f}% · {x["call"]["oi"]:,}</small></td>'
+                    f'<td class="num">{k_txt(x["maxPain"]) if x.get("maxPain") is not None else "–"}</td>')
+        out.append(f'<tr><td><b>{E(i["t"])}</b><small>{E(i["n"][l])}</small></td><td class="num">{i["px"]:,.2f}</td>{cell("front")}{cell("monthly")}</tr>')
+    return "".join(out)
 
 def frow(f, l):
     t = T[l]; c = f["cp"] == "c"; k = f.get("kept") or 0
@@ -176,6 +224,9 @@ CSS = """
 .pc{display:inline-block;width:56px;height:6px;border-radius:3px;background:color-mix(in srgb,#0b7a52 30%,transparent);vertical-align:middle;margin-right:8px;overflow:hidden}
 .pc span{display:block;height:100%;background:#c0362c}
 .op-t td small{display:block;color:var(--muted);font-size:12px;font-weight:400}.op-t td.vs b{font-weight:600}
+.sd{font-size:13px;min-width:150px}.sd small{display:block;color:var(--muted);font-size:11.5px}.sd-buy{color:inherit;font-weight:600}.sd-sell{color:inherit;font-weight:600}.sd-mid{color:var(--muted)}
+#wall thead th{text-align:center}#wall td small{display:block;color:var(--muted);font-size:11.5px}
+.vf.lean{background:color-mix(in srgb,var(--t2) 16%,transparent);color:inherit}
 .fl{min-width:150px}.vf{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;margin:2px 4px 2px 0;background:var(--surface-2);color:var(--muted);white-space:nowrap}
 .vf.callHeavy,.vf.newCalls{background:color-mix(in srgb,#0b7a52 14%,transparent);color:inherit}
 .vf.putHeavy,.vf.newPuts{background:color-mix(in srgb,#c0362c 14%,transparent);color:inherit}
@@ -198,6 +249,14 @@ def build(out, page):
         ftable = ('<div class="op-t"><table><thead><tr>' + "".join(f"<th>{c}</th>" for c in t["fcols"]) + "</tr></thead><tbody>"
                   + "".join(frow(f, l) for f in fl) + "</tbody></table></div>") if fl else f'<p class="op-note">{t["fNone"]}</p>'
         follow = f'<section class="op-g"><h2>{t["fH"]}</h2><p>{t["fP"]}</p>{ftable}</section>'
+        wr = wall_rows(data, l)
+        def wexp(key):
+            x = next((i["wall"].get(key) for i in data["items"] if i.get("wall") and i["wall"].get(key)), None)
+            return f'<small>{md(x["exp"], l)}</small>' if x else ""
+        wall = (f'<section class="op-g" id="wall"><h2>{t["wH"]}</h2><p>{t["wP"]}</p><div class="op-t"><table><thead>'
+                f'<tr><th rowspan="2">{t["wcols"][0]}</th><th rowspan="2">{t["wcols"][1]}</th><th colspan="3">{t["wFront"]} {wexp("front")}</th><th colspan="3">{t["wMonthly"]} {wexp("monthly")}</th></tr>'
+                f'<tr>{"".join(f"<th>{c}</th>" for c in t["wcols"][2:])}{"".join(f"<th>{c}</th>" for c in t["wcols"][2:])}</tr>'
+                f'</thead><tbody>{wr}</tbody></table></div></section>') if wr else ""
         groups = "".join(
             f'<section class="op-g"><h2>{t["groups"][g]}</h2><div class="op-t"><table><thead><tr>' + "".join(f"<th>{c}</th>" for c in t["cols"]) +
             "</tr></thead><tbody>" + "".join(row(i, l) for i in sorted((i for i in data["items"] if i["g"] == g), key=lambda i: -(i["cprem"] + i["pprem"]))) + "</tbody></table></div></section>"
@@ -206,7 +265,7 @@ def build(out, page):
         hist = f'<p class="op-note">{t["hist"].format(n=data.get("histDays", 0))}</p>' if data.get("histDays", 0) < 10 else ""
         blocks.append(f'<div data-l="{l}" lang="{LOC[l]}"><div class="op-hero"><h1>{t["title"]}</h1><p>{t["intro"]}</p></div>'
                       f'<div class="op-sum"><h2>{t["sumH"]}</h2><ul>' + "".join(f"<li>{s}</li>" for s in summary(data, l)) + f"</ul></div>{hist}"
-                      f'{top}{follow}{groups}<section class="op-how"><h2>{t["howH"]}</h2><dl>{how}</dl></section><p class="op-src">{t["src"]}</p></div>')
+                      f'{top}{follow}{wall}{groups}<section class="op-how"><h2>{t["howH"]}</h2><dl>{how}</dl></section><p class="op-src">{t["src"]}</p></div>')
     body = f'<main>{"".join(blocks)}</main><style>{CSS}</style>'
     titles = {l: f'{T[l]["title"]} · April\'s Stock Atlas' for l in LANGS}
     os.makedirs(f"{out}/options", exist_ok=True)
